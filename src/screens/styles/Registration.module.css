@@ -1,0 +1,20 @@
+#title {
+    text-align: center;
+}
+#buttonContainer {
+    display: flex;
+}
+#button {
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    margin: 0px 16px;
+    margin-bottom: 12px;
+    text-align: start;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+    width: 100%;
+    text-align: center;
+}

@@ -1,23 +1,23 @@
+import {useEffect} from 'react'
+import Registration from './screens/Registration'
+import Header from './components/Header'
+
 import './App.css'
 
+const tg = window.Telegram.WebApp
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  useEffect(() => {
+    tg.ready()
+    if (!tg.isExpanded) {
+      tg.expand()
+    }
+  }, [])
+
+  return <div>
+    <Header />
+    <Registration />
+  </div>
 }
 
 export default App;
