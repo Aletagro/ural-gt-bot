@@ -18,3 +18,17 @@
     width: 100%;
     text-align: center;
 }
+#disableButton {
+    background: rgb(201, 200, 199);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    margin: 0px 16px;
+    margin-bottom: 12px;
+    text-align: start;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+    width: 100%;
+    text-align: center;
+}

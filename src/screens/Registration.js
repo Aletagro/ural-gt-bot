@@ -1,7 +1,5 @@
 import React, {useState} from 'react'
 import Autocomplete from '@mui/joy/Autocomplete'
-import {ToastContainer, toast} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 
 import Styles from './styles/Registration.module.css'
@@ -40,22 +38,14 @@ const cities = [
     'Барнаул'
 ]
 
-const toastParams = {
-    position: 'bottom-center',
-    autoClose: 2000,
-    hideProgressBar: true,
-    closeOnClick: true,
-    draggable: true,
-    theme: 'colored',
-    pauseOnHove: false
-}
-
 const Registration = () => {
     const user = tg.initDataUnsafe?.user
-
+    const [isButtonPress, setIsButtonPress] = useState(false)
     const [name, setName] = useState(user?.first_name || '')
     const [surname, setSurname] = useState(user?.last_name || '')
     const [city, setCity] = useState('')
+
+    const isDisableButton = !name || !surname || !city
 
     const handleChangeName = (e) => {
         setName(e.target.value)
@@ -70,46 +60,46 @@ const Registration = () => {
     }
 
     const handleClickButton = () => {
-        toast.success(`Name: ${name}, Surname: ${surname}, City: ${city}, ID: ${user?.id}`, {
-            position: 'bottom-center',
-            autoClose: 2000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            draggable: true,
-            theme: 'colored',
-            pauseOnHove: false
-        })
+        setIsButtonPress(true)
     }
 
-    return <div>
-        <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangeName}
-            label='Ваше имя'
-            value={name}
-        />
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangeSurname}
-            label='Ваша фамилия'
-            value={surname}
-        />
-        <Autocomplete
-            placeholder='Город'
-            onInputChange={handleChangeCity}
-            options={cities.sort()}
-            sx={inputStyle}
-            value={city}
-            autoComplete={true}
-            autoSelect={true}
-            freeSolo={true}
-        />
-        <div id={Styles.buttonContainer}>
-            <button id={Styles.button} onClick={handleClickButton}>Зарегистрироваться</button>
+    return isButtonPress
+        ? <div>
+            <h2 id={Styles.title}>Вы успешно зарегистрированы на Ural GT 2025</h2>
+            <h3 id={Styles.title}>Ждём вас 1 марта в Екатеринбурге</h3>
         </div>
-        <ToastContainer />
-    </div>
+        : <div>
+            <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
+            <FloatingLabelInput
+                style={inputStyle}
+                onChange={handleChangeName}
+                label='Ваше имя'
+                value={name}
+            />
+            <FloatingLabelInput
+                style={inputStyle}
+                onChange={handleChangeSurname}
+                label='Ваша фамилия'
+                value={surname}
+            />
+            <Autocomplete
+                placeholder='Город'
+                onInputChange={handleChangeCity}
+                options={cities.sort()}
+                sx={inputStyle}
+                value={city}
+                autoComplete={true}
+                autoSelect={true}
+                freeSolo={true}
+            />
+            <div id={Styles.buttonContainer}>
+                <button
+                    id={isDisableButton ? Styles.disableButton : Styles.button}
+                    onClick={handleClickButton}
+                    disabled={isDisableButton}
+                >Зарегистрироваться</button>
+            </div>
+        </div>
 }
 
 export default Registration
