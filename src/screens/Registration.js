@@ -55,6 +55,7 @@ const Registration = () => {
     const handleGetData = useCallback(async () => {
         // const result = await fetch('https://openlibrary.org/search/authors.json?q=j%20k%20rowling')
         const result = await fetch('http://78.155.197.84/players/', {
+        // const result = await fetch('/players/', {
             headers: {
                 'Access-Control-Allow-Method': 'GET, OPTIONS',
                 'Access-Control-Allow-Origin': '*'
@@ -94,6 +95,7 @@ const Registration = () => {
         </div>
         : <div>
             <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
+            <h2 id={Styles.title}>{data && data[0]?.name}</h2>
             <FloatingLabelInput
                 style={inputStyle}
                 onChange={handleChangeName}
