@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Autocomplete from '@mui/joy/Autocomplete'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 
@@ -46,6 +46,19 @@ const Registration = () => {
     const [city, setCity] = useState('')
 
     const isDisableButton = !name || !surname || !city
+
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        fetch('http://78.155.197.84/players/', {mode: 'no-cors'})
+        .then(response => {
+            console.log('response', response)
+            return response.json()
+        })
+        .then(json => setData(json))
+        .catch(error => console.error(error))
+    }, [])
+    console.log('data', data)
 
     const handleChangeName = (e) => {
         setName(e.target.value)
