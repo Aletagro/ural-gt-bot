@@ -4,6 +4,9 @@ import FloatingLabelInput from '../components/FloatingLabelInput'
 
 import Styles from './styles/Registration.module.css'
 
+// Добавить в package при тестирование
+// "proxy": "http://78.155.197.84"
+
 const tg = window.Telegram.WebApp
 
 const inputStyle = {
@@ -51,7 +54,7 @@ const Registration = () => {
 
     const handleGetData = useCallback(async () => {
         // const result = await fetch('https://openlibrary.org/search/authors.json?q=j%20k%20rowling')
-        const result = await fetch('/players/', {
+        const result = await fetch('http://78.155.197.84/players/', {
             headers: {
                 'Access-Control-Allow-Method': 'GET, OPTIONS',
                 'Access-Control-Allow-Origin': '*'
