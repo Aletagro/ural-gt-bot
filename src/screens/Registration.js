@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import Autocomplete from '@mui/joy/Autocomplete'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 
@@ -49,16 +49,24 @@ const Registration = () => {
 
     const [data, setData] = useState(null);
 
-    useEffect(() => {
-        fetch('http://78.155.197.84/players/', {mode: 'no-cors'})
-        .then(response => {
-            console.log('response', response)
-            return response.json()
+    const handleGetData = useCallback(async () => {
+        // const result = await fetch('https://openlibrary.org/search/authors.json?q=j%20k%20rowling')
+        const result = await fetch('/players/', {
+            headers: {
+                'Access-Control-Allow-Method': 'GET, OPTIONS',
+                'Access-Control-Allow-Origin': '*'
+            }
         })
-        .then(json => setData(json))
-        .catch(error => console.error(error))
-    }, [])
+            .then(response => response.json())
+            .then(json => setData(json))
+            .catch(error => console.error(error))
+        console.log(result)
+      }, [])
     console.log('data', data)
+
+    useEffect(() => {
+        handleGetData()
+    }, [handleGetData])
 
     const handleChangeName = (e) => {
         setName(e.target.value)
