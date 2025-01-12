@@ -54,7 +54,7 @@ const Registration = () => {
 
     const handleGetData = useCallback(async () => {
         // const result = await fetch('https://openlibrary.org/search/authors.json?q=j%20k%20rowling')
-        const result = await fetch('http://78.155.197.84/players/', {
+        const result = await fetch('https://78.155.197.84/players/', {
         // const result = await fetch('/players/', {
             headers: {
                 'Access-Control-Allow-Method': 'GET, OPTIONS',
