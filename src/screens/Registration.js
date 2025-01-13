@@ -55,7 +55,7 @@ const Registration = () => {
     const handleRegUser = useCallback(async () => {
         await fetch('https://78.155.197.84/players/reg', {
             method: 'POST',
-            body: JSON.stringify({tgId: 32, name, surname, city}),
+            body: JSON.stringify({tgId: 33, name, surname, city}),
             // body: JSON.stringify({tgId: user?.id, name, surname, city}),
             headers: {
                 'Content-Type': 'application/json',
