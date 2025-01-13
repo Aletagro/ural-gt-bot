@@ -52,7 +52,6 @@ const Registration = () => {
 
     const isDisableButton = !name || !surname || !city
 
-
     const handleRegUser = useCallback(async () => {
         await fetch('https://78.155.197.84/players/reg', {
             method: 'POST',
@@ -114,6 +113,7 @@ const Registration = () => {
             </div>
             : <div>
                 <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
+                <h2 id={Styles.title}>{JSON.stringify(user)}</h2>
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeName}
