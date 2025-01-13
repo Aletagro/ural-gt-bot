@@ -68,7 +68,7 @@ const Registration = () => {
                 setUserId(json?.player_info?.id)
             })
             .catch(error => console.error(error))
-      }, [name, surname, city])
+      }, [name, surname, city, user?.id])
 
     useEffect(() => {
         fetch(`https://78.155.197.84/players/player/?q=${user?.id}`)
