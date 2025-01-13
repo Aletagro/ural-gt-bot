@@ -58,8 +58,10 @@ const Registration = () => {
         // const result = await fetch('/players/', {
             method: 'GET',
             headers: {
-                'Access-Control-Allow-Method': 'GET, OPTIONS',
-                'Access-Control-Allow-Origin': '*'
+                // 'Access-Control-Allow-Method': 'OPTIONS, TRACE, GET, HEAD, POST, PUT',
+                // 'Access-Control-Allow-Origin': '*',
+                // 'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, X-Requested-With',
+                // 'Content-Type': 'application/json'
             }
         })
             .then(response => response.json())
