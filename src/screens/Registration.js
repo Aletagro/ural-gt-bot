@@ -50,13 +50,14 @@ const Registration = () => {
     const [userAlreadyReg, setUserAlreadyReg] = useState(false)
     const [userId, setUserId] = useState(null)
     const [data, setData] = useState(null)
+    const [_response, setResponse] = useState(null)
 
     const isDisableButton = !name || !surname || !city
 
     const handleRegUser = useCallback(async () => {
         await fetch('https://78.155.197.84/players/reg', {
             method: 'POST',
-            body: JSON.stringify({tgId: user?.id, name, surname, city}),
+            body: JSON.stringify({tgId: 35, name, surname, city}),
             // body: JSON.stringify({tgId: user?.id, name, surname, city}),
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +69,8 @@ const Registration = () => {
                 setUserId(json?.player_info?.id)
             })
             .catch(error => console.error(error))
-      }, [name, surname, city, user?.id])
+      }, [name, surname, city])
+    //   }, [name, surname, city, user?.id])
 
     useEffect(() => {
         fetch(`https://78.155.197.84/players/player/?q=${user?.id}`)
@@ -83,7 +85,11 @@ const Registration = () => {
 
     useEffect(() => {
         fetch('https://78.155.197.84/players/')
-            .then(response => response.json())
+            .then(response => {
+                console.log(response)
+                setResponse(response)
+                return response.json()
+            })
             .then(json => setData(json[24]))
             .catch(error => console.error(error))
     }, [user?.id])
@@ -104,7 +110,7 @@ const Registration = () => {
         setIsButtonPress(true)
         handleRegUser()
     }
-
+    console.log('_response', _response?.status)
     return isButtonPress
         ? userId > 60
             ? <div id={Styles.container}>
@@ -124,6 +130,7 @@ const Registration = () => {
                 <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
                 <h2 id={Styles.title}>Имя {data?.name}</h2>
                 <h2 id={Styles.title}>Id {user?.id}</h2>
+                <h2 id={Styles.title}>Response {_response?.status} {_response?.url}</h2>
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeName}
