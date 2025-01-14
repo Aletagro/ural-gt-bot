@@ -49,16 +49,15 @@ const Registration = () => {
     const [city, setCity] = useState('')
     const [userAlreadyReg, setUserAlreadyReg] = useState(false)
     const [userId, setUserId] = useState(null)
-    const [data, setData] = useState(null)
-    const [_response, setResponse] = useState(null)
+    // const [data, setData] = useState(null)
+    // const [_response, setResponse] = useState(null)
 
     const isDisableButton = !name || !surname || !city
 
     const handleRegUser = useCallback(async () => {
         await fetch('https://78.155.197.84/players/reg', {
             method: 'POST',
-            body: JSON.stringify({tgId: 35, name, surname, city}),
-            // body: JSON.stringify({tgId: user?.id, name, surname, city}),
+            body: JSON.stringify({tgId: user?.id, name, surname, city}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -69,8 +68,7 @@ const Registration = () => {
                 setUserId(json?.player_info?.id)
             })
             .catch(error => console.error(error))
-      }, [name, surname, city])
-    //   }, [name, surname, city, user?.id])
+      }, [name, surname, city, user?.id])
 
     useEffect(() => {
         fetch(`https://78.155.197.84/players/player/?q=${user?.id}`)
@@ -83,23 +81,16 @@ const Registration = () => {
             .catch(error => console.error(error))
     }, [user?.id])
 
-    useEffect(() => {
-        let headers = new Headers({
-            'Test': '123',
-            "User-Agent"   : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
-        });
-
-        fetch('https://78.155.197.84/players/', {
-            headers: headers
-        })
-            .then(response => {
-                console.log(response)
-                setResponse(response)
-                return response.json()
-            })
-            .then(json => setData(json[24]))
-            .catch(error => console.error(error))
-    }, [user?.id])
+    // useEffect(() => {
+    //     fetch('https://78.155.197.84/players/')
+    //         .then(response => {
+    //             console.log(response)
+    //             setResponse(response)
+    //             return response.json()
+    //         })
+    //         // .then(json => setData(json[24]))
+    //         .catch(error => console.error(error))
+    // }, [user?.id])
 
     const handleChangeName = (e) => {
         setName(e.target.value)
@@ -117,7 +108,7 @@ const Registration = () => {
         setIsButtonPress(true)
         handleRegUser()
     }
-    console.log('_response', _response?.status)
+    // console.log('_response', _response?.status)
     return isButtonPress
         ? userId > 60
             ? <div id={Styles.container}>
@@ -135,9 +126,9 @@ const Registration = () => {
             </div>
             : <div>
                 <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
-                <h2 id={Styles.title}>Имя {data?.name}</h2>
+                {/* <h2 id={Styles.title}>Имя {data?.name}</h2>
                 <h2 id={Styles.title}>Id {user?.id}</h2>
-                <h2 id={Styles.title}>Response {_response?.status} {_response?.url}</h2>
+                <h2 id={Styles.title}>Response {_response?.status} {_response?.url}</h2> */}
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeName}
