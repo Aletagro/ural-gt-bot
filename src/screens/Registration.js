@@ -72,7 +72,8 @@ const Registration = () => {
     //   }, [name, surname, city])
 
     useEffect(() => {
-        fetch(`https://78.155.197.84/players/player/?q=${user?.id}`)
+        fetch(`https://78.155.197.84/players/player/?tg_id=${3253453}`)
+        // fetch(`https://78.155.197.84/players/player/?tg_id=${user?.id}`)
             .then(response => response.json())
             .then(json => {
                 if (json.tgId) {
@@ -127,9 +128,9 @@ const Registration = () => {
             </div>
             : <div>
                 <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
-                <h2 id={Styles.title}>Имя {data?.name}</h2>
+                {/* <h2 id={Styles.title}>Имя {data?.name}</h2> */}
                 <h2 id={Styles.title}>Id {user?.id}</h2>
-                <h2 id={Styles.title}>Response {_response?.status} {_response?.url}</h2>
+                {/* <h2 id={Styles.title}>Response {_response?.status} {_response?.url}</h2> */}
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeName}
