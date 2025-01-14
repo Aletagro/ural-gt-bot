@@ -84,7 +84,14 @@ const Registration = () => {
     }, [user?.id])
 
     useEffect(() => {
-        fetch('https://78.155.197.84/players/')
+        let headers = new Headers({
+            'Test': '123',
+            "User-Agent"   : 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
+        });
+
+        fetch('https://78.155.197.84/players/', {
+            headers: headers
+        })
             .then(response => {
                 console.log(response)
                 setResponse(response)
