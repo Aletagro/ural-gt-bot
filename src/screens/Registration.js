@@ -57,8 +57,8 @@ const Registration = () => {
     const handleRegUser = useCallback(async () => {
         await fetch('https://78.155.197.84/players/reg', {
             method: 'POST',
-            body: JSON.stringify({tgId: 37, name, surname, city}),
-            // body: JSON.stringify({tgId: user?.id || 37, name, surname, city}),
+            // body: JSON.stringify({tgId: 37, name, surname, city}),
+            body: JSON.stringify({tgId: user?.id, name, surname, city}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -69,8 +69,8 @@ const Registration = () => {
                 setUserId(json?.player_info?.id)
             })
             .catch(error => console.error(error))
-    //   }, [name, surname, city, user?.id])
-      }, [name, surname, city])
+      }, [name, surname, city, user?.id])
+    //   }, [name, surname, city])
 
     useEffect(() => {
         fetch(`https://78.155.197.84/players/player/?tg_id=${3253453}`)
