@@ -50,12 +50,11 @@ const Registration = () => {
     const [userAlreadyReg, setUserAlreadyReg] = useState(false)
     const [userId, setUserId] = useState(null)
     const [players, setPlayers] = useState([])
-    const [book, setBook] = useState('')
 
     const isDisableButton = !name || !surname || !city
 
     const handleRegUser = useCallback(async () => {
-        await fetch('https://78.155.197.84/players/reg', {
+        await fetch('https://aoscom.online/players/reg', {
             method: 'POST',
             body: JSON.stringify({tgId: user?.id, name, surname, city}),
             headers: {
@@ -71,7 +70,7 @@ const Registration = () => {
       }, [name, surname, city, user?.id])
 
     const handleGetPlayers = useCallback(async () => {
-        await fetch('https://78.155.197.84/players/')
+        await fetch('https://aoscom.online/players/')
             .then(response => response.json())
             .then(json => {
                 console.log('json', json)
@@ -82,7 +81,7 @@ const Registration = () => {
 
     useEffect(() => {
         handleGetPlayers()
-        fetch(`https://78.155.197.84/players/player/?tg_id=${3253453}`)
+        fetch(`https://aoscom.online/players/player/?tg_id=${3253453}`)
         // fetch(`https://78.155.197.84/players/player/?tg_id=${user?.id}`)
             .then(response => response.json())
             .then(json => {
@@ -92,15 +91,6 @@ const Registration = () => {
             })
             .catch(error => console.error(error))
     }, [user?.id, handleGetPlayers])
-
-    useEffect(() => {
-        fetch('https://openlibrary.org/search.json?q=rowling&_spellcheck_count=0&limit=10&fields=key,cover_i,title,subtitle,author_name,name&mode=everything')
-            .then(response => response.json())
-            .then(json => {
-                setBook(json?.docs[0]?.title)
-            })
-            .catch(error => console.error(error))
-    }, [])
 
     const handleChangeName = (e) => {
         setName(e.target.value)
@@ -142,7 +132,6 @@ const Registration = () => {
                 </div>
                 : <div>
                     <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
-                    <h2 id={Styles.title}>{book}</h2>
                     <FloatingLabelInput
                         style={inputStyle}
                         onChange={handleChangeName}
