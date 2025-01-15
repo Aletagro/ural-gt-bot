@@ -50,6 +50,7 @@ const Registration = () => {
     const [userAlreadyReg, setUserAlreadyReg] = useState(false)
     const [userId, setUserId] = useState(null)
     const [players, setPlayers] = useState([])
+    const [book, setBook] = useState('')
 
     const isDisableButton = !name || !surname || !city
 
@@ -92,6 +93,15 @@ const Registration = () => {
             .catch(error => console.error(error))
     }, [user?.id, handleGetPlayers])
 
+    useEffect(() => {
+        fetch('https://openlibrary.org/search.json?q=rowling&_spellcheck_count=0&limit=10&fields=key,cover_i,title,subtitle,author_name,name&mode=everything')
+            .then(response => response.json())
+            .then(json => {
+                setBook(json?.docs[0]?.title)
+            })
+            .catch(error => console.error(error))
+    }, [])
+
     const handleChangeName = (e) => {
         setName(e.target.value)
     }
@@ -132,6 +142,7 @@ const Registration = () => {
                 </div>
                 : <div>
                     <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
+                    <h2 id={Styles.title}>{book}</h2>
                     <FloatingLabelInput
                         style={inputStyle}
                         onChange={handleChangeName}
