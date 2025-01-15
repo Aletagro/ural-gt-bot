@@ -49,7 +49,7 @@ const Registration = () => {
     const [city, setCity] = useState('')
     const [userAlreadyReg, setUserAlreadyReg] = useState(false)
     const [userId, setUserId] = useState(null)
-    const [title, setTitle] = useState('')
+    const [players, setPlayers] = useState([])
 
     const isDisableButton = !name || !surname || !city
 
@@ -69,7 +69,18 @@ const Registration = () => {
             .catch(error => console.error(error))
       }, [name, surname, city, user?.id])
 
+    const handleGetPlayers = useCallback(async () => {
+        await fetch('https://78.155.197.84/players/')
+            .then(response => response.json())
+            .then(json => {
+                console.log('json', json)
+                setPlayers(json)
+            })
+            .catch(error => console.error(error))
+    }, [])
+
     useEffect(() => {
+        handleGetPlayers()
         fetch(`https://78.155.197.84/players/player/?tg_id=${3253453}`)
         // fetch(`https://78.155.197.84/players/player/?tg_id=${user?.id}`)
             .then(response => response.json())
@@ -79,16 +90,7 @@ const Registration = () => {
                 }
             })
             .catch(error => console.error(error))
-    }, [user?.id])
-
-    useEffect(() => {
-        fetch(`https://openlibrary.org/search.json?q=rowling&_spellcheck_count=0&limit=10&fields=key,cover_i,title,subtitle,author_name,name&mode=everything`)
-            .then(response => response.json())
-            .then(json => {
-                setTitle(json?.docs[0].title)
-            })
-            .catch(error => console.error(error))
-    }, [])
+    }, [user?.id, handleGetPlayers])
 
     const handleChangeName = (e) => {
         setName(e.target.value)
@@ -105,56 +107,67 @@ const Registration = () => {
     const handleClickButton = () => {
         setIsButtonPress(true)
         handleRegUser()
+        handleGetPlayers()
     }
 
-    return isButtonPress
-        ? userId > 60
-            ? <div id={Styles.container}>
-                <h2 id={Styles.title}>К сожалению, всем места на турнире уже заняты. Вы добавлены в лист ожидания Ural GT 2025</h2>
-                <h3 id={Styles.title}>Если места освободятся, то мы сразу с вами свяжемся</h3>
-            </div>
-            : <div id={Styles.container}>
-                <h2 id={Styles.title}>Вы успешно зарегистрированы на Ural GT 2025</h2>
-                <h3 id={Styles.title}>Ждём вас 1 марта в Екатеринбурге</h3>
-            </div>
-        : userAlreadyReg
-            ? <div id={Styles.container}>
-                <h2 id={Styles.title}>Вы уже зарегистрированы на Ural GT 2025</h2>
-                <h3 id={Styles.title}>Ждём вас 1 марта в Екатеринбурге</h3>
-            </div>
-            : <div>
-                <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
-                <h2 id={Styles.title}>{title}</h2>
-                <FloatingLabelInput
-                    style={inputStyle}
-                    onChange={handleChangeName}
-                    label='Ваше имя'
-                    value={name}
-                />
-                <FloatingLabelInput
-                    style={inputStyle}
-                    onChange={handleChangeSurname}
-                    label='Ваша фамилия'
-                    value={surname}
-                />
-                <Autocomplete
-                    placeholder='Город'
-                    onInputChange={handleChangeCity}
-                    options={cities.sort()}
-                    sx={inputStyle}
-                    value={city}
-                    autoComplete={true}
-                    autoSelect={true}
-                    freeSolo={true}
-                />
-                <div id={Styles.buttonContainer}>
-                    <button
-                        id={isDisableButton ? Styles.disableButton : Styles.button}
-                        onClick={handleClickButton}
-                        disabled={isDisableButton}
-                    >Зарегистрироваться</button>
+    const renderPlayer = (player) => <div>
+        <p>{player.id}) {player.name} {player.surname}</p>
+    </div>
+
+    return <>
+        {isButtonPress
+            ? userId > 60
+                ? <div id={Styles.container}>
+                    <h2 id={Styles.title}>К сожалению, всем места на турнире уже заняты. Вы добавлены в лист ожидания Ural GT 2025</h2>
+                    <h3 id={Styles.title}>Если места освободятся, то мы сразу с вами свяжемся</h3>
                 </div>
-            </div>
+                : <div id={Styles.container}>
+                    <h2 id={Styles.title}>Вы успешно зарегистрированы на Ural GT 2025</h2>
+                    <h3 id={Styles.title}>Ждём вас 1 марта в Екатеринбурге</h3>
+                </div>
+            : userAlreadyReg
+                ? <div id={Styles.container}>
+                    <h2 id={Styles.title}>Вы уже зарегистрированы на Ural GT 2025</h2>
+                    <h3 id={Styles.title}>Ждём вас 1 марта в Екатеринбурге</h3>
+                </div>
+                : <div>
+                    <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
+                    <FloatingLabelInput
+                        style={inputStyle}
+                        onChange={handleChangeName}
+                        label='Ваше имя'
+                        value={name}
+                    />
+                    <FloatingLabelInput
+                        style={inputStyle}
+                        onChange={handleChangeSurname}
+                        label='Ваша фамилия'
+                        value={surname}
+                    />
+                    <Autocomplete
+                        placeholder='Город'
+                        onInputChange={handleChangeCity}
+                        options={cities.sort()}
+                        sx={inputStyle}
+                        value={city}
+                        autoComplete={true}
+                        autoSelect={true}
+                        freeSolo={true}
+                    />
+                    <div id={Styles.buttonContainer}>
+                        <button
+                            id={isDisableButton ? Styles.disableButton : Styles.button}
+                            onClick={handleClickButton}
+                            disabled={isDisableButton}
+                        >Зарегистрироваться</button>
+                    </div>
+                </div>
+        }
+        <div>
+            <h3 id={Styles.title}>Зареганные игроки</h3>
+            {players.map(renderPlayer)}
+        </div>
+    </>
 }
 
 export default Registration
