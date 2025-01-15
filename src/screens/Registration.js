@@ -49,15 +49,13 @@ const Registration = () => {
     const [city, setCity] = useState('')
     const [userAlreadyReg, setUserAlreadyReg] = useState(false)
     const [userId, setUserId] = useState(null)
-    // const [data, setData] = useState(null)
-    // const [_response, setResponse] = useState(null)
+    const [title, setTitle] = useState('')
 
     const isDisableButton = !name || !surname || !city
 
     const handleRegUser = useCallback(async () => {
         await fetch('https://78.155.197.84/players/reg', {
             method: 'POST',
-            // body: JSON.stringify({tgId: 37, name, surname, city}),
             body: JSON.stringify({tgId: user?.id, name, surname, city}),
             headers: {
                 'Content-Type': 'application/json',
@@ -70,7 +68,6 @@ const Registration = () => {
             })
             .catch(error => console.error(error))
       }, [name, surname, city, user?.id])
-    //   }, [name, surname, city])
 
     useEffect(() => {
         fetch(`https://78.155.197.84/players/player/?tg_id=${3253453}`)
@@ -84,16 +81,14 @@ const Registration = () => {
             .catch(error => console.error(error))
     }, [user?.id])
 
-    // useEffect(() => {
-    //     fetch('https://78.155.197.84/players/')
-    //         .then(response => {
-    //             console.log(response)
-    //             setResponse(response)
-    //             return response.json()
-    //         })
-    //         // .then(json => setData(json[24]))
-    //         .catch(error => console.error(error))
-    // }, [user?.id])
+    useEffect(() => {
+        fetch(`https://openlibrary.org/search.json?q=rowling&_spellcheck_count=0&limit=10&fields=key,cover_i,title,subtitle,author_name,name&mode=everything`)
+            .then(response => response.json())
+            .then(json => {
+                setTitle(json?.docs[0].title)
+            })
+            .catch(error => console.error(error))
+    }, [])
 
     const handleChangeName = (e) => {
         setName(e.target.value)
@@ -111,7 +106,7 @@ const Registration = () => {
         setIsButtonPress(true)
         handleRegUser()
     }
-    // console.log('_response', _response?.status)
+
     return isButtonPress
         ? userId > 60
             ? <div id={Styles.container}>
@@ -129,9 +124,7 @@ const Registration = () => {
             </div>
             : <div>
                 <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
-                {/* <h2 id={Styles.title}>Имя {data?.name}</h2> */}
-                <h2 id={Styles.title}>Id {user?.id}</h2>
-                {/* <h2 id={Styles.title}>Response {_response?.status} {_response?.url}</h2> */}
+                <h2 id={Styles.title}>{title}</h2>
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeName}
