@@ -2,16 +2,18 @@
   "name": "ural-gt-bot",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://78.155.197.84",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/joy": "^5.0.0-beta.51",
     "cra-template": "1.2.0",
+    "html-react-parser": "^5.1.18",
+    "lodash": "^4.17.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "react-toastify": "^10.0.6"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,0 +1,10 @@
+#button {
+    background: rgb(245, 201, 80);
+    border-width: 0px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    text-align: start;
+    padding: 16px 12px;
+    font-size: 20px;
+    font-family: 'Minion Pro Bold';
+}

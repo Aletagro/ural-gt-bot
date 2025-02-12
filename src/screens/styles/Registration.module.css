@@ -7,7 +7,7 @@
 #buttonContainer {
     display: flex;
 }
-#button {
+#regButton {
     background: rgb(46, 46, 49);
     color: white;
     border-width: 0px;
@@ -21,7 +21,7 @@
     width: 100%;
     text-align: center;
 }
-#disableButton {
+#disableRegButton {
     background: rgb(201, 200, 199);
     color: white;
     border-width: 0px;
@@ -34,4 +34,33 @@
     font-family: 'Minion Pro Bold';
     width: 100%;
     text-align: center;
+}
+#button {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(236, 236, 236);
+    color: black;
+    padding: 8px;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+    text-align: start;
+    cursor: pointer;
+    align-items: center;
+    border-radius: 8px;
+    width: 100%;
+    border: 1px solid rgb(211, 211, 211);
+}
+#roster {
+    white-space: pre-wrap;
+}
+#rosterButton {
+    margin-top: 16px;
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
 }
