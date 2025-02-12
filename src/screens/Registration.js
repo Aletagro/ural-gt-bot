@@ -1,9 +1,10 @@
 import React, {useState, useEffect, useCallback, useReducer} from 'react'
-import {useNavigate} from 'react-router-dom'
 import Autocomplete from '@mui/joy/Autocomplete'
 import {player} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
+import HeaderImage from '../components/HeaderImage'
+import UGT from '../images/UGT.png'
 
 import Styles from './styles/Registration.module.css'
 
@@ -42,7 +43,6 @@ const cities = [
 ]
 
 const Registration = () => {
-    const navigate = useNavigate()
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const user = tg.initDataUnsafe?.user
@@ -68,7 +68,8 @@ const Registration = () => {
       }, [name, surname, city, user?.id])
 
     useEffect(() => {
-        fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
+        fetch(`https://aoscom.online/players/player/?tg_id=1`)
+        // fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
             .then(response => response.json())
             .then(data => {
                 if (data.tgId) {
@@ -101,21 +102,18 @@ const Registration = () => {
         handleRegUser()
     }
 
-    const handleNavigateToRoster = () => {
-        navigate('/roster')
-    }
-
     return <>
+        <HeaderImage src={UGT} alt='Core Documents' />
         {isButtonPress || userAlreadyReg
             ? <div id='column' className='Chapter'>
                 {player.roster
-                    ? <button id={Styles.button} onClick={handleNavigateToRoster}>Ваш ростер</button>
+                    ? <Row title='Ваш ростер' navigateTo='roster' />
                     : null
                 }
                 <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
                 <Row title='Правила' navigateTo='mainRules' />
                 <Row title='Калькулятор Урона' navigateTo='calculator' />
-                <Row title='Регламент Ural GT 2025' navigateTo='reglament' />
+                <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />
             </div>
             : <div>
                 <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
