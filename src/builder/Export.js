@@ -56,7 +56,7 @@ const Export = () => {
                 player.allegiance = JSON.parse(data.roster_stat)?.allegiance
             })
             .catch(error => console.error(error))
-    }, [])
+    }, [user?.id])
 
     const getUniques = () => {
         let uniqueUnits = ''
