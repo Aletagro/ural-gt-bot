@@ -68,8 +68,7 @@ const Registration = () => {
       }, [name, surname, city, user?.id])
 
     useEffect(() => {
-        fetch(`https://aoscom.online/players/player/?tg_id=1`)
-        // fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
+        fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
             .then(response => response.json())
             .then(data => {
                 if (data.tgId) {

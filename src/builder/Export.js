@@ -48,7 +48,7 @@ const Export = () => {
     }
 
     const getPlayerInfo = useCallback(async () => {
-        fetch(`https://aoscom.online/players/player/?tg_id=1`)
+        fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
             .then(response => response.json())
             .then(data => {
                 player.roster = data.roster
