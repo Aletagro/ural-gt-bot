@@ -1,0 +1,30 @@
+#text {
+    white-space: pre-wrap;
+}
+#button {
+    margin-top: 16px;
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+}
+#nextButton {
+    margin-top: 12px;
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 12px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+    flex: 1;
+}
+#buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    gap: 16px;
+}

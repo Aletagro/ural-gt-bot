@@ -69,3 +69,11 @@ export const navigationState = {
 export const player = {
     roster: ''
 }
+
+export const rosters = {
+    data: []
+}
+
+export const rostersStuck = {
+    count: 0
+}

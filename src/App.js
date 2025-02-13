@@ -3,6 +3,9 @@ import {Route, Routes} from 'react-router-dom'
 import Registration from './screens/Registration'
 import Roster from './screens/Roster'
 import TournamentRules from './screens/TournamentRules'
+import Players from './screens/Players'
+import PlayerInfo from './screens/PlayerInfo'
+import Rosters from './screens/Rosters'
 import MainRules from './screens/MainRules'
 import Catalog from './screens/Catalog'
 import Army from './screens/Army'
@@ -52,6 +55,9 @@ function App() {
       <Route index element={<Registration />} />
       <Route path={'roster'} element={<Roster />} />
       <Route path={'tournamentRules'} element={<TournamentRules />} />
+      <Route path={'players'} element={<Players />} />
+      <Route path={'playerInfo'} element={<PlayerInfo />} />
+      <Route path={'rosters'} element={<Rosters />} />
       <Route path={'mainRules'} element={<MainRules />} />
       <Route path={'catalog'} element={<Catalog />} />
       <Route path={'army'} element={<Army />} />

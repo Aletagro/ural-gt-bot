@@ -51,16 +51,3 @@
     width: 100%;
     border: 1px solid rgb(211, 211, 211);
 }
-#roster {
-    white-space: pre-wrap;
-}
-#rosterButton {
-    margin-top: 16px;
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 16px 12px;
-    font-size: 16px;
-    font-family: 'Minion Pro Bold';
-}

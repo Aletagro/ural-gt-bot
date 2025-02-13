@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate, useLocation} from 'react-router-dom';
-import {roster, search, navigationState} from '../utilities/appState'
+import {roster, search, navigationState, rostersStuck} from '../utilities/appState'
 import Search from '../icons/search.svg'
 import ArrowBack from '../icons/arrowBack.svg'
 import Export from '../icons/export.svg'
@@ -38,8 +38,16 @@ const Header = () => {
     }
 
     const handleGoBack = () => {
-        navigate(-1)
-        clearAppState()
+        if (pathname === '/roster' && rostersStuck.count) {
+            while (rostersStuck.count) {
+                navigate(-1)
+                rostersStuck.count = rostersStuck.count - 1
+            }
+            navigate(-1)
+        } else {
+            navigate(-1)
+            clearAppState()
+        }
     }
 
     const handleNavigateToSearch = () => {navigate('search')}
@@ -49,6 +57,7 @@ const Header = () => {
     const handleNavigateToHome = () => {
         navigate('/')
         clearAppState()
+        rostersStuck.count = 0
     }
 
     const renderRightButton = () => {

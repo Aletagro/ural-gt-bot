@@ -1,0 +1,32 @@
+#row {
+    display: flex;
+    padding: 16px 0px;
+}
+#сolumn {
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+#smallColumn {
+    display: flex;
+    min-width: 8%;
+    justify-content: center;
+    align-items: center;
+}
+#extraSmallColumn {
+    display: flex;
+    min-width: 6%;
+    justify-content: center;
+    align-items: center;
+}
+#player {
+    font-size: 14px;
+    padding-bottom: 8px;
+}
+#playerContainer {
+    width: 100%;
+    padding: 0;
+    border: none;
+    font: inherit;
+    background: inherit;
+}
