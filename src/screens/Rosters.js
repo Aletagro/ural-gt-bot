@@ -1,6 +1,6 @@
 import React, {useEffect, useReducer} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {rosters} from '../utilities/appState'
+import {players} from '../utilities/appState'
 
 import map from 'lodash/map'
 
@@ -15,7 +15,7 @@ const Rosters = () => {
         fetch('https://aoscom.online/rosters/')
             .then(response => response.json())
             .then(data => {
-                rosters.data = data
+                players.rosters = data
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -25,8 +25,8 @@ const Rosters = () => {
         navigate('/roster', {state: {title: `${player.surname} ${player.name}`, playerIndex: index}})
     }
 
-    const renderRow = (place, player, army, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
-        <p id={Styles.smallColumn}>{place}</p>
+    const renderRow = (number, player, army, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+        <p id={Styles.smallColumn}>{number}</p>
         <p id={Styles.сolumn}>{player}</p>
         <p id={Styles.сolumn}>{army}</p>
     </div>
@@ -41,7 +41,7 @@ const Rosters = () => {
     return <div id='column' className='Chapter'>
         <div>
             {renderRow('№', 'Игрок', 'Армия', true)}
-            {map(rosters.data, renderRoster)}
+            {map(players.rosters, renderRoster)}
         </div>
     </div>
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
-import {player, rosters, rostersStuck} from '../utilities/appState'
+import {player, players, rostersStuck} from '../utilities/appState'
 
 import get from 'lodash/get'
 
@@ -11,7 +11,7 @@ const Roster = () => {
     const {playerIndex} = useLocation().state
     let playerInfo = player
     if (playerIndex !== undefined) {
-        playerInfo = get(rosters, `data[${playerIndex}]`)
+        playerInfo = get(players, `rosters[${playerIndex}]`)
     }
     const _roster = playerIndex ? JSON.parse(playerInfo.roster) : JSON.parse(player.roster)
     const rosterInfo = playerIndex !== undefined
@@ -22,16 +22,20 @@ const Roster = () => {
         navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: rosterInfo.allegianceId}})
     }
 
-    const handleClickPrevRoster = () => {
+    const goToOtherRoster = (index) => {
         rostersStuck.count = rostersStuck.count + 1
-        const index = playerIndex === 0 ? rosters.data.length - 1 :  playerIndex - 1
-        navigate('/roster', {state: {title: `${playerInfo.surname} ${playerInfo.name}`, playerIndex: index}})
+        const newPlayer = get(players, `rosters[${index}]`)
+        navigate('/roster', {state: {title: `${newPlayer.surname} ${newPlayer.name}`, playerIndex: index}})
+    }
+
+    const handleClickPrevRoster = () => {
+        const index = playerIndex === 0 ? players.rosters.length - 1 :  playerIndex - 1
+        goToOtherRoster(index)
     }
 
     const handleClickNextRoster = () => {
-        rostersStuck.count = rostersStuck.count + 1
-        const index = playerIndex === rosters.data.length - 1 ? 0 : playerIndex + 1
-        navigate('/roster', {state: {title: `${playerInfo.surname} ${playerInfo.name}`, playerIndex: index}})
+        const index = playerIndex === players.rosters.length - 1 ? 0 : playerIndex + 1
+        goToOtherRoster(index)
     }
 
     return <div id='column' className='Chapter'>

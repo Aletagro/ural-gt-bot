@@ -1,6 +1,6 @@
 import React from 'react';
 import {useNavigate, useLocation} from 'react-router-dom';
-import {roster, search, navigationState, rostersStuck} from '../utilities/appState'
+import {roster, search, navigationState, rostersStuck, rounds} from '../utilities/appState'
 import Search from '../icons/search.svg'
 import ArrowBack from '../icons/arrowBack.svg'
 import Export from '../icons/export.svg'
@@ -44,6 +44,12 @@ const Header = () => {
                 rostersStuck.count = rostersStuck.count - 1
             }
             navigate(-1)
+        } else if (pathname === '/rounds' && rounds.stuckCount) {
+            while (rounds.stuckCount) {
+                navigate(-1)
+                rounds.stuckCount = rounds.stuckCount - 1
+            }
+            navigate(-1)
         } else {
             navigate(-1)
             clearAppState()
@@ -58,6 +64,7 @@ const Header = () => {
         navigate('/')
         clearAppState()
         rostersStuck.count = 0
+        rounds.stuckCount = 0
     }
 
     const renderRightButton = () => {

@@ -1,5 +1,6 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useReducer} from 'react'
 import {useNavigate} from 'react-router-dom'
+import {players} from '../utilities/appState'
 
 import map from 'lodash/map'
 
@@ -7,13 +8,15 @@ import Styles from './styles/Players.module.css'
 
 const Players = () => {
     const navigate = useNavigate()
-    const [players, setPlayers] = useState(null)
+    // eslint-disable-next-line
+    const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
     useEffect(() => {
         fetch('https://aoscom.online/players/')
             .then(response => response.json())
             .then(data => {
-                setPlayers(data)
+                players.data = data
+                forceUpdate()
             })
             .catch(error => console.error(error))
     }, [])
@@ -34,7 +37,7 @@ const Players = () => {
 
     const renderPlayer = (player, index) => {
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
-        return <button id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
+        return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
             {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, player.win, player.draw, player.to_sum, player.opp_pow, index % 2)}
         </button>
     }
@@ -42,7 +45,7 @@ const Players = () => {
     return <div id='column' className='Chapter'>
         <div>
             {renderRow('№', 'Игрок', 'Армия', 'W', 'D', 'TO', 'CO', true)}
-            {map(players, renderPlayer)}
+            {map(players.data, renderPlayer)}
         </div>
     </div>
 }

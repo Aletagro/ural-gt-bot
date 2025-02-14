@@ -111,6 +111,7 @@ const Registration = () => {
                 }
                 <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
                 <Row title='Ростера' navigateTo='rosters' />
+                <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} />
                 <Row title='Турнирная Таблица' navigateTo='players' />
                 <Row title='Правила' navigateTo='mainRules' />
                 <Row title='Калькулятор Урона' navigateTo='calculator' />

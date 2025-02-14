@@ -1,0 +1,47 @@
+#row {
+    display: flex;
+    padding: 16px 0px;
+}
+#сolumn {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    font: inherit;
+    background: inherit;
+}
+#smallColumn {
+    display: flex;
+    min-width: 10%;
+    justify-content: center;
+    align-items: center;
+}
+#nextButton {
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 12px 12px;
+    font-size: 14px;
+    font-family: 'Minion Pro Bold';
+    flex: 1;
+}
+#disableNextButton {
+    background: rgb(201, 200, 199);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 12px 12px;
+    font-size: 14px;
+    font-family: 'Minion Pro Bold';
+    flex: 1;
+}
+#buttonContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    margin-top: 8px;
+    gap: 16px;
+}
