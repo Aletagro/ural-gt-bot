@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback, useReducer} from 'react'
 import Autocomplete from '@mui/joy/Autocomplete'
+import Constants from '../Constants'
 import {player} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
@@ -99,7 +100,7 @@ const Registration = () => {
 
     return <>
         <HeaderImage src={UGT} alt='Core Documents' />
-        {isButtonPress || userAlreadyReg
+        {isButtonPress || userAlreadyReg || user?.id === Constants.myTgId || !user
             ? <div id='column' className='Chapter'>
                 {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
                 {player.roster
@@ -117,7 +118,6 @@ const Registration = () => {
             </div>
             : <div>
                 <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
-                <p>{user?.id || 0}</p>
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeName}

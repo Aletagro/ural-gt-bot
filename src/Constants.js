@@ -466,7 +466,9 @@ const Constants = {
                 {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false}
             ]
         }
-    ]
+    ],
+
+    myTgId: 530569849
 }
 
 export default Constants
