@@ -1,27 +1,21 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {useLocation, useNavigate} from 'react-router-dom'
-import {roster, builderFilters} from '../utilities/appState'
+import {roster} from '../utilities/appState'
 import {unitsSortesByType, sortByName} from '../utilities/utils'
 import UnitRow from './UnitRow'
-import Checkbox from '../components/Checkbox'
 import Accordion from '../components/Accordion'
 
 import uniqBy from 'lodash/uniqBy'
 import includes from 'lodash/includes'
-
-import Styles from './styles/AddUnit.module.css'
 
 const dataBase = require('../dataBase.json')
 
 const AddUnit = () => {
     window.scrollTo(0, 0)
     const navigate = useNavigate()
-    const [hidePotentialLegends, setHidePotentialLegends] = useState(builderFilters.hidePotentialLegends)
-    const [showLegends, setShowLegends] = useState(builderFilters.showLegends)
     const {allegianceId, heroId, regimentId, isAuxiliary, isRegimentsOfRenown} = useLocation().state
     const warscrollIds = dataBase.data.warscroll_faction_keyword.filter((item) => item.factionKeywordId === allegianceId).map(item => item.warscrollId)
     let units = []
-    let hasPotentialLegends = false
 
     const hasKeyword = (unitKeywords, requiredKeywordsArray , excludedKeywords) => {
         let isHas = false
@@ -38,33 +32,15 @@ const AddUnit = () => {
         return isHas
     }
 
-    const setHasPonentialLegends = (units) => {
-        return units.find(unit => {
-            if (unit?.notes) {
-                return unit.notes.includes('Legends on')
-            }
-            return false
-        })
-    }
-
-    const filterPonentialLegends = (units) => {
-        return units.filter(unit => {
-            if (unit?.notes) {
-                return !unit.notes.includes('Legends on')
-            }
-            return true
-        })
-    }
-
     if (isRegimentsOfRenown) {
         const regimentsOfRenownKeywords = dataBase.data.ability_group_regiment_of_renown_permitted_faction_keyword.filter(keyword => keyword.factionKeywordId === allegianceId)
         units = regimentsOfRenownKeywords.map(keyword => dataBase.data.ability_group.find(group => group.id === keyword.abilityGroupId))
     } else if (isAuxiliary) {
-        units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && (showLegends ?  true : !unit.isLegends) && unit.points)
+        units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && unit.points)
         units = unitsSortesByType(units)
     } else if (heroId) {
         // определяем всех юнитов фракции
-        const allUnits = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && (showLegends ?  true : !unit.isLegends) && unit.points)
+        const allUnits = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && unit.points)
         // определяем кейворды всех юнитов фракции
         const allUnitsKeywordsIds = allUnits.map(unit => dataBase.data.warscroll_keyword.filter(keyword => keyword.warscrollId === unit.id))
         // определяем опция реджимента героя
@@ -138,17 +114,9 @@ const AddUnit = () => {
         }
         const uniqUnits = uniqBy(units, 'id')
         units = uniqUnits
-        hasPotentialLegends = setHasPonentialLegends(units)
-        if (hasPotentialLegends && hidePotentialLegends) {
-            units = filterPonentialLegends(units)
-        }
         units = unitsSortesByType(units)
     } else {
-        units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && (showLegends ?  true : !unit.isLegends) && unit.referenceKeywords.includes('Hero') && !unit.requiredPrimaryHeroWarscrollId)
-        hasPotentialLegends = setHasPonentialLegends(units)
-        if (hasPotentialLegends && hidePotentialLegends) {
-            units = filterPonentialLegends(units)
-        }
+        units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && unit.referenceKeywords.includes('Hero') && !unit.requiredPrimaryHeroWarscrollId)
         sortByName(units)
     }
 
@@ -165,7 +133,7 @@ const AddUnit = () => {
             if (!heroId) {
                 newRegiment.heroId = unit.id
                 // Проверка есть ли у героя привязанные к нему юниты
-                const requiredHeroUnits = dataBase.data.warscroll.filter(scroll => scroll.requiredPrimaryHeroWarscrollId === unit.id && !scroll.isSpearhead && (showLegends ?  true : !scroll.isLegends))
+                const requiredHeroUnits = dataBase.data.warscroll.filter(scroll => scroll.requiredPrimaryHeroWarscrollId === unit.id && !scroll.isSpearhead)
                 if (requiredHeroUnits?.length > 0) {
                     newRegiment.units = [...newRegiment.units, ...requiredHeroUnits]
                 }
@@ -173,16 +141,6 @@ const AddUnit = () => {
             roster.regiments[regimentId] = newRegiment
         }
         roster.points = roster.points + (unit.points || unit.regimentOfRenownPointsCost || 0)
-    }
-
-    const handleChangeHidePotentialLegends = () => {
-        setHidePotentialLegends(!hidePotentialLegends)
-        builderFilters.hidePotentialLegends = !hidePotentialLegends
-    }
-
-    const handleChangeShowLegends = () => {
-        setShowLegends(!showLegends)
-        builderFilters.showLegends = !showLegends
     }
 
     const renderRow = (unit) => <UnitRow key={unit?.id} unit={unit} onClick={handleClick} isAddUnit isRegimentsOfRenown={isRegimentsOfRenown}/>
@@ -194,17 +152,6 @@ const AddUnit = () => {
     />
 
     return <div id='column' className='Chapter'>
-        {hasPotentialLegends
-            ? <div id={Styles.potentialLegendsContainer} onClick={handleChangeHidePotentialLegends}>
-                <p id={Styles.potentialLegends}>Hide Potential Legends</p>
-                <Checkbox onClick={handleChangeHidePotentialLegends} checked={hidePotentialLegends} />
-            </div>
-            : null
-        }
-        <div id={Styles.potentialLegendsContainer} onClick={handleChangeShowLegends}>
-            <p id={Styles.potentialLegends}>Show Legends</p>
-            <Checkbox onClick={handleChangeShowLegends} checked={showLegends} />
-        </div>
         {heroId || isAuxiliary
             ? units.map(renderUnitsType)
             : units.map(renderRow)
