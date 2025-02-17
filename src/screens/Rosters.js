@@ -22,7 +22,7 @@ const Rosters = () => {
     }, [])
 
     const handleClickPlayer = (player, index) => () => {
-        navigate('/roster', {state: {title: `${player.surname} ${player.name}`, playerIndex: index}})
+        navigate('/roster', {state: {title: `${player.surname} ${player.name}`, playerId: player.id, playerIndex: index}})
     }
 
     const renderRow = (number, player, army, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>

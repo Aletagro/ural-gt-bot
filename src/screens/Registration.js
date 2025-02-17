@@ -20,26 +20,22 @@ const inputStyle = {
 }
 
 const cities = [
-    'Москва',
     'Екатеринбург',
-    'Новосибирск',
-    'Санкт-Петербург',
-    'Нижний Тагил',
     'Казань',
+    'Миасс',
+    'Москва',
     'Нижний Новгород',
-    'Краснодар',
+    'Нижний Тагил',
+    'Новосибирск',
+    'Омск',
+    'Санкт-Петербург',
     'Соликамск',
     'Сургут',
-    'Тула',
+    'Томск',
     'Тюмень',
     'Ханты-Мансийск',
-    'Чебоксары',
-    'Минск',
-    'Миасс',
-    'Омск',
-    'Улан-Удэ',
-    'Томск',
-    'Барнаул'
+    'Челябинск',
+    'Ярославль'
 ]
 
 const Registration = () => {
@@ -105,20 +101,23 @@ const Registration = () => {
         <HeaderImage src={UGT} alt='Core Documents' />
         {isButtonPress || userAlreadyReg
             ? <div id='column' className='Chapter'>
+                {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
                 {player.roster
                     ? <Row title='Ваш ростер' navigateTo='roster' />
                     : null
                 }
                 <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
-                <Row title='Ростера' navigateTo='rosters' />
-                <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} />
-                <Row title='Турнирная Таблица' navigateTo='players' />
+                {/* <Row title='Ростера' navigateTo='rosters' /> */}
+                {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} /> */}
+                <Row title='Список Участников' navigateTo='players' />
+                {/* <Row title='Турнирная Таблица' navigateTo='players' /> */}
                 <Row title='Правила' navigateTo='mainRules' />
                 <Row title='Калькулятор Урона' navigateTo='calculator' />
                 <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />
             </div>
             : <div>
                 <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
+                <p>{user?.id || 0}</p>
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeName}
@@ -146,7 +145,9 @@ const Registration = () => {
                         id={isDisableButton ? Styles.disableRegButton : Styles.regButton}
                         onClick={handleClickButton}
                         disabled={isDisableButton}
-                    >Зарегистрироваться</button>
+                    >
+                        Зарегистрироваться
+                    </button>
                 </div>
             </div>
         }

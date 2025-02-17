@@ -1,0 +1,46 @@
+#inputContainer {
+  display: flex;
+  gap: 12px;
+}
+#playerContainer {
+  flex: 1;
+  width: 100px;
+}
+#rosterButton {
+  background: #ECECEC;
+  border-width: 0px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  text-align: start;
+  padding: 16px 12px;
+  font-size: 16px;
+  font-family: 'Minion Pro Bold';
+  width: 100%;
+  text-align: center;
+}
+#button {
+  background: rgb(46, 46, 49);
+  color: white;
+  border-width: 0px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  text-align: start;
+  padding: 16px 12px;
+  font-size: 16px;
+  font-family: 'Minion Pro Bold';
+  width: 100%;
+  text-align: center;
+}
+#disableButton {
+  background: rgb(201, 200, 199);
+  color: white;
+  border-width: 0px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  text-align: start;
+  padding: 16px 12px;
+  font-size: 16px;
+  font-family: 'Minion Pro Bold';
+  width: 100%;
+  text-align: center;
+}

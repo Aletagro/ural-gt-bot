@@ -7,6 +7,7 @@ import Players from './screens/Players'
 import PlayerInfo from './screens/PlayerInfo'
 import Rosters from './screens/Rosters'
 import Rounds from './screens/Rounds'
+import Play from './screens/Play'
 import MainRules from './screens/MainRules'
 import Catalog from './screens/Catalog'
 import Army from './screens/Army'
@@ -60,6 +61,7 @@ function App() {
       <Route path={'playerInfo'} element={<PlayerInfo />} />
       <Route path={'rosters'} element={<Rosters />} />
       <Route path={'rounds'} element={<Rounds />} />
+      <Route path={'play'} element={<Play />} />
       <Route path={'mainRules'} element={<MainRules />} />
       <Route path={'catalog'} element={<Catalog />} />
       <Route path={'army'} element={<Army />} />

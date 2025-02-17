@@ -411,7 +411,62 @@ const Constants = {
         '& button:not([aria-selected="true"]):hover': {
             background: '#2E2D32',
         }
-    }
+    },
+
+    tournamentBattleplans: [
+        {
+            "id": "53d86219-6dae-4b17-97ab-e2fa8279c949",
+            "title": "Feral Foray",
+            "scoreParams": [
+                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
+                {title: 'One', id: 'one', value: 2, completed: false},
+                {title: 'Two and More', id: 'twoAndMore', value: 2, completed: false},
+                {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false}
+            ]
+        },
+        {
+            "id": "aac58435-a144-4260-a633-c17558c2014f",
+            "title": "The Vice",
+            "scoreParams": [
+                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
+                {title: 'One', id: 'one', value: 2, completed: false},
+                {title: 'Two and More', id: 'twoAndMore', value: 2, completed: false, round: '3-'},
+                {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false},
+                {title: 'No Enemy Units Near', id: 'noEnemyUnitsNear', value: 2, completed: false, round: '4+'}
+            ]
+        },
+        {
+            "id": "97c0441a-4155-47b3-92bb-ed612265dcae",
+            "title": "Focal Points",
+            "scoreParams": [
+                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
+                {title: 'One', id: 'one', value: 1, completed: false},
+                {title: 'Two and More', id: 'twoAndMore', value: 1, completed: false},
+                {title: 'More Than Opp', id: 'moreThan', value: 1, completed: false},
+                {title: '2 or more home/flank objectives', id: 'home/flank', value: 3, completed: false}
+            ]
+        },
+        {
+            "id": "375743bf-f4c8-4eff-ba26-4fc304ce8d4f",
+            "title": "The Jaws of Gallet",
+            "scoreParams": [
+                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
+                {title: 'One', id: 'one', value: 2, completed: false},
+                {title: 'Two and More', id: 'twoAndMore', value: 2, completed: false},
+                {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false}
+            ]
+        },
+        {
+            "id": "feb5d29e-a134-4842-ad59-9b06ff5846de",
+            "title": "Limited Resources",
+            "scoreParams": [
+                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
+                {title: 'One', id: 'one', value: 2, completed: false},
+                {title: 'Two and More', id: 'twoAndMore', value: 2, completed: false},
+                {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false}
+            ]
+        }
+    ]
 }
 
 export default Constants

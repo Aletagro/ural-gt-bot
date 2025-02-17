@@ -3,19 +3,20 @@ import {useNavigate, useLocation} from 'react-router-dom'
 import {player, players, rostersStuck} from '../utilities/appState'
 
 import get from 'lodash/get'
+import find from 'lodash/find'
 
 import Styles from './styles/Roster.module.css'
 
 const Roster = () => {
     const navigate = useNavigate()
-    const {playerIndex} = useLocation().state
+    const {playerId, playerIndex} = useLocation().state
     let playerInfo = player
-    if (playerIndex !== undefined) {
-        playerInfo = get(players, `rosters[${playerIndex}]`)
+    if (playerId !== undefined) {
+        playerInfo = find(players.data, ['id', playerId])
     }
     const _roster = playerIndex ? JSON.parse(playerInfo.roster) : JSON.parse(player.roster)
     const rosterInfo = playerIndex !== undefined
-        ? JSON.parse(playerInfo.roster_stat)
+        ? JSON.parse(playerInfo?.roster_stat)
         : player
 
     const handleClickAllegiance = () => {
