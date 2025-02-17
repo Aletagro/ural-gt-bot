@@ -45,12 +45,14 @@ const Play = () => {
     }, [user?.id])
 
     useEffect(() => {
-        fetch('https://aoscom.online/rosters/')
-            .then(response => response.json())
-            .then(data => {
-                players.rosters = data
-                forceUpdate()
-            })
+        if (!players.rosters.length) {
+            fetch('https://aoscom.online/rosters/')
+                .then(response => response.json())
+                .then(data => {
+                    players.rosters = data
+                    forceUpdate()
+                })
+        }
     }, [])
 
     const handleChangeFirstPlayerResult = (e) => {

@@ -14,9 +14,12 @@ const Roster = () => {
     if (playerId !== undefined) {
         playerInfo = find(players.data, ['id', playerId])
     }
-    const _roster = playerIndex ? JSON.parse(playerInfo.roster) : JSON.parse(player.roster)
+
+    const _roster = playerIndex !== undefined
+        ? playerInfo.roster ? JSON.parse(playerInfo.roster) : ''
+        : player.roster ? JSON.parse(player.roster) : ''
     const rosterInfo = playerIndex !== undefined
-        ? JSON.parse(playerInfo?.roster_stat)
+        ? playerInfo?.roster_stat ? JSON.parse(playerInfo?.roster_stat) : {}
         : player
 
     const handleClickAllegiance = () => {

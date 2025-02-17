@@ -22,14 +22,15 @@ const Rounds = () => {
         //         forceUpdate()
         //     })
         //     .catch(error => console.error(error))
-
-        fetch('https://aoscom.online/players/')
-            .then(response => response.json())
-            .then(data => {
-                players.data = data
-                forceUpdate()
-            })
-            .catch(error => console.error(error))
+        if (!players.data.length) {
+            fetch('https://aoscom.online/players/')
+                .then(response => response.json())
+                .then(data => {
+                    players.data = data
+                    forceUpdate()
+                })
+                .catch(error => console.error(error))
+        }
     }, [])
 
     const handleClickPlayer = (playerId) => () => {

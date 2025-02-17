@@ -12,13 +12,15 @@ const Rosters = () => {
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
     useEffect(() => {
-        fetch('https://aoscom.online/rosters/')
-            .then(response => response.json())
-            .then(data => {
-                players.rosters = data
-                forceUpdate()
-            })
-            .catch(error => console.error(error))
+        if (!players.rosters.length) {
+            fetch('https://aoscom.online/rosters/')
+                .then(response => response.json())
+                .then(data => {
+                    players.rosters = data
+                    forceUpdate()
+                })
+                .catch(error => console.error(error))
+        }
     }, [])
 
     const handleClickPlayer = (player, index) => () => {

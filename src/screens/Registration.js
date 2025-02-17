@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback, useReducer} from 'react'
 import Autocomplete from '@mui/joy/Autocomplete'
 import Constants from '../Constants'
-import {player} from '../utilities/appState'
+import {player, players} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
@@ -47,7 +47,6 @@ const Registration = () => {
     const [name, setName] = useState(user?.first_name || '')
     const [surname, setSurname] = useState(user?.last_name || '')
     const [city, setCity] = useState('')
-    const [userAlreadyReg, setUserAlreadyReg] = useState(true)
 
     const isDisableButton = !name || !surname || !city
 
@@ -65,21 +64,36 @@ const Registration = () => {
       }, [name, surname, city, user?.id])
 
     useEffect(() => {
-        fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.tgId) {
-                    setUserAlreadyReg(true)
-                    player.roster = data.roster
-                    player.allegianceId = JSON.parse(data.roster_stat)?.allegianceId
-                    player.allegiance = JSON.parse(data.roster_stat)?.allegiance
-                    forceUpdate()
-                } else {
-                    setUserAlreadyReg(false)
-                }
-            })
-            .catch(error => console.error(error))
+        if (!player.isRequested) {
+            player.isRequested = true
+            fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.tgId) {
+                        player.reg = true
+                        player.roster = data.roster
+                        player.allegianceId = JSON.parse(data.roster_stat)?.allegianceId
+                        player.allegiance = JSON.parse(data.roster_stat)?.allegiance
+                        forceUpdate()
+                    } else {
+                        player.reg = false
+                        forceUpdate()
+                    }
+                })
+                .catch(error => console.error(error))
+        }
     }, [user?.id])
+
+    useEffect(() => {
+        if (!players.data.length) {
+            fetch('https://aoscom.online/players/')
+                .then(response => response.json())
+                .then(data => {
+                    players.data = data
+                })
+                .catch(error => console.error(error))
+        }
+    }, [])
 
     const handleChangeName = (e) => {
         setName(e.target.value)
@@ -100,7 +114,7 @@ const Registration = () => {
 
     return <>
         <HeaderImage src={UGT} alt='Core Documents' isUral />
-        {isButtonPress || userAlreadyReg || user?.id === Constants.myTgId
+        {isButtonPress || player.reg || user?.id === Constants.myTgId
             ? <div id='column' className='Chapter'>
                 {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
                 {player.roster

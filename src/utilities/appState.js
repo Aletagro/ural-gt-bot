@@ -67,7 +67,9 @@ export const navigationState = {
 }
 
 export const player = {
-    roster: ''
+    roster: '',
+    reg: true,
+    isRequested: false
 }
 
 export const players = {
