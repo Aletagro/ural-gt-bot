@@ -99,7 +99,7 @@ const Registration = () => {
     }
 
     return <>
-        <HeaderImage src={UGT} alt='Core Documents' />
+        <HeaderImage src={UGT} alt='Core Documents' isUral />
         {isButtonPress || userAlreadyReg || user?.id === Constants.myTgId || !user
             ? <div id='column' className='Chapter'>
                 {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
