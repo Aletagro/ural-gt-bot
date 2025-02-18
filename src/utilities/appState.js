@@ -97,5 +97,5 @@ export const rounds = {
 }
 
 export const fetching = {
-    main: true
+    main: false
 }
