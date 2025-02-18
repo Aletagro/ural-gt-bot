@@ -68,7 +68,7 @@ export const navigationState = {
 
 export const player = {
     roster: '',
-    reg: true,
+    reg: false,
     isRequested: false
 }
 
@@ -94,4 +94,8 @@ export const rounds = {
         {table: 2, playerOne: 'Рукосуев Никита', playerOneId: 3, playerTwo: 'Удалов Владимир', playerTwoId: 4, result: '12 - 8'},
         {table: 2, playerOne: 'Рукосуев Никита', playerOneId: 3, playerTwo: 'Удалов Владимир', playerTwoId: 4, result: '20 - 0'}
     ]
+}
+
+export const fetching = {
+    main: true
 }

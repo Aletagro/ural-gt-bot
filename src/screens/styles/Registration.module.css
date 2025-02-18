@@ -51,3 +51,8 @@
     width: 100%;
     border: 1px solid rgb(211, 211, 211);
 }
+#loaderContainer {
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
+}

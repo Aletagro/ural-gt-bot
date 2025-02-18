@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useCallback, useReducer} from 'react'
 import Autocomplete from '@mui/joy/Autocomplete'
+import CircularProgress from '@mui/joy/CircularProgress'
 import Constants from '../Constants'
-import {player, players} from '../utilities/appState'
+import {player, players, fetching} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
@@ -74,11 +75,11 @@ const Registration = () => {
                         player.roster = data.roster
                         player.allegianceId = JSON.parse(data.roster_stat)?.allegianceId
                         player.allegiance = JSON.parse(data.roster_stat)?.allegiance
-                        forceUpdate()
                     } else {
                         player.reg = false
-                        forceUpdate()
                     }
+                    fetching.main = false
+                    forceUpdate()
                 })
                 .catch(error => console.error(error))
         }
@@ -114,56 +115,60 @@ const Registration = () => {
 
     return <>
         <HeaderImage src={UGT} alt='Core Documents' isUral />
-        {isButtonPress || player.reg || user?.id === Constants.myTgId
-            ? <div id='column' className='Chapter'>
-                {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
-                {player.roster
-                    ? <Row title='Ваш ростер' navigateTo='roster' />
-                    : null
-                }
-                <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
-                {/* <Row title='Ростера' navigateTo='rosters' /> */}
-                {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} /> */}
-                <Row title='Список Участников' navigateTo='players' />
-                {/* <Row title='Турнирная Таблица' navigateTo='players' /> */}
-                <Row title='Правила' navigateTo='mainRules' />
-                <Row title='Калькулятор Урона' navigateTo='calculator' />
-                <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />
+        {fetching.main
+            ? <div id={Styles.loaderContainer}>
+                <CircularProgress variant="soft"/>
             </div>
-            : <div>
-                <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
-                <FloatingLabelInput
-                    style={inputStyle}
-                    onChange={handleChangeName}
-                    label='Ваше имя'
-                    value={name}
-                />
-                <FloatingLabelInput
-                    style={inputStyle}
-                    onChange={handleChangeSurname}
-                    label='Ваша фамилия'
-                    value={surname}
-                />
-                <Autocomplete
-                    placeholder='Город'
-                    onInputChange={handleChangeCity}
-                    options={cities.sort()}
-                    sx={inputStyle}
-                    value={city}
-                    autoComplete={true}
-                    autoSelect={true}
-                    freeSolo={true}
-                />
-                <div id={Styles.buttonContainer}>
-                    <button
-                        id={isDisableButton ? Styles.disableRegButton : Styles.regButton}
-                        onClick={handleClickButton}
-                        disabled={isDisableButton}
-                    >
-                        Зарегистрироваться
-                    </button>
+            : isButtonPress || player.reg || user?.id === Constants.myTgId
+                ? <div id='column' className='Chapter'>
+                    {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
+                    {player.roster
+                        ? <Row title='Ваш ростер' navigateTo='roster' />
+                        : null
+                    }
+                    <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
+                    {/* <Row title='Ростера' navigateTo='rosters' /> */}
+                    {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} /> */}
+                    <Row title='Список Участников' navigateTo='players' />
+                    {/* <Row title='Турнирная Таблица' navigateTo='players' /> */}
+                    <Row title='Правила' navigateTo='mainRules' />
+                    <Row title='Калькулятор Урона' navigateTo='calculator' />
+                    <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />
                 </div>
-            </div>
+                : <div>
+                    <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
+                    <FloatingLabelInput
+                        style={inputStyle}
+                        onChange={handleChangeName}
+                        label='Ваше имя'
+                        value={name}
+                    />
+                    <FloatingLabelInput
+                        style={inputStyle}
+                        onChange={handleChangeSurname}
+                        label='Ваша фамилия'
+                        value={surname}
+                    />
+                    <Autocomplete
+                        placeholder='Город'
+                        onInputChange={handleChangeCity}
+                        options={cities.sort()}
+                        sx={inputStyle}
+                        value={city}
+                        autoComplete={true}
+                        autoSelect={true}
+                        freeSolo={true}
+                    />
+                    <div id={Styles.buttonContainer}>
+                        <button
+                            id={isDisableButton ? Styles.disableRegButton : Styles.regButton}
+                            onClick={handleClickButton}
+                            disabled={isDisableButton}
+                        >
+                            Зарегистрироваться
+                        </button>
+                    </div>
+                </div>
         }
     </>
 }
