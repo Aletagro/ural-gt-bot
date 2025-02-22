@@ -1,8 +1,21 @@
 import React from 'react'
+import {useNavigate} from 'react-router-dom'
+import Constants from '../Constants'
+
+import find from 'lodash/find'
 
 import Styles from './styles/TournamentRules.module.css'
 
 const TournamentRules = () => {
+    const navigate = useNavigate()
+
+    const handleClickBattleplan = (battleplan) => () => {
+        navigate('/battleplan', {state: {title:battleplan.title, battleplan}})
+    }
+
+    const renderBattleplan = (battleplan) =>
+        <button id={Styles.battleplan} onClick={handleClickBattleplan(battleplan)}>{battleplan.title}</button>
+
     return <div id='column' className='Chapter'>
         <p id={Styles.text}>Формат турнира — 2000 очков, Battlepack из General Handbook 2024: Pitched Battles 2024-25. Турнир проходит в пять раундов по швейцарской системе.</p>
         <p id={Styles.text}>Играем с учетом официальных FAQ, опубликованных до 22 февраля включительно. Также используется FAQ организации судей российских турниров</p>
@@ -23,17 +36,17 @@ const TournamentRules = () => {
         <tr>
             <td>10:00 - 13:00</td>
             <td>1 тур</td>
-            <td>Feral Foray</td>
+            <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'Feral Foray']))}</td>
         </tr>
         <tr>
             <td>14:00 - 17:00</td>
             <td>2 тур</td>
-            <td>The Vice</td>
+            <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'The Vice']))}</td>
         </tr>
         <tr>
             <td>17:30 - 20:30</td>
             <td>3 тур</td>
-            <td>Focal Points</td>
+            <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'Focal Points']))}</td>
         </tr>
         </table>
         <h2>2 марта</h2>
@@ -46,12 +59,12 @@ const TournamentRules = () => {
             <tr>
                 <td>10:00 - 13:00</td>
                 <td>4 тур</td>
-                <td>The Jaws of Gallet</td>
+                <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'The Jaws of Gallet']))}</td>
             </tr>
             <tr>
                 <td>14:00 - 17:00</td>
                 <td>5 тур</td>
-                <td>Limited Resources</td>
+                <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'Limited Resources']))}</td>
             </tr>
             <tr>
                 <td>17:30 - 18:00</td>
@@ -75,7 +88,7 @@ const TournamentRules = () => {
         </ul>
         <p id={Styles.text}><b>Турнирные взносы.</b> Взнос за участие в турнире составляет 3000 рублей</p>
         <p id={Styles.text}>Кроме основного взноса, вы можете сделать полностью добровольные пожертвование, мы никак не сможем вас в этом остановить. И будем крайне признательны вам за это. От нас вам будет чистая и искренняя уральская любовь</p>
-        <p id={Styles.text}><b>Временной регламент</b> Каждый раунд длиться 3 часа</p>
+        <p id={Styles.text}><b>Временной регламент</b> Каждый раунд длится 3 часа</p>
         <b id={Styles.text}>Номинации турнира</b>
         <p id={Styles.text}>Победителем турнира станет игрок с максимальным количеством побед. В случае равенства по этому критерию выше окажется игрок с большим количеством ничьих. Если побед и ничьих поровну, то выше окажется игрок с максимальной суммой ТО. В случае равного количества TO игроки будут распределены по силе их оппонентов</p>
         <b id={Styles.text}>Заключение</b>

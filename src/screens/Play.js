@@ -65,7 +65,6 @@ const Play = () => {
 
     const handleClickPlayer = (playerIndex) => () => {
         const player = info.players[playerIndex]
-        console.log('handleClickPlayer', player)
         navigate('/roster', {state: {title: player.name, playerId: player.id}})
     }
 

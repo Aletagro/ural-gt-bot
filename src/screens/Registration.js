@@ -119,7 +119,7 @@ const Registration = () => {
             ? <div id={Styles.loaderContainer}>
                 <CircularProgress variant="soft"/>
             </div>
-            : isButtonPress || player.reg || user?.id === Constants.myTgId
+            : !isButtonPress || player.reg || user?.id === Constants.myTgId
                 ? <div id='column' className='Chapter'>
                     {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
                     {player.roster
