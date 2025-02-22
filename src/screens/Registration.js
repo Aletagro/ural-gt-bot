@@ -75,6 +75,7 @@ const Registration = () => {
                         player.roster = data.roster
                         player.allegianceId = JSON.parse(data.roster_stat)?.allegianceId
                         player.allegiance = JSON.parse(data.roster_stat)?.allegiance
+                        player.info = data
                     } else {
                         player.reg = false
                     }
@@ -119,7 +120,7 @@ const Registration = () => {
             ? <div id={Styles.loaderContainer}>
                 <CircularProgress variant="soft"/>
             </div>
-            : !isButtonPress || player.reg || user?.id === Constants.myTgId
+            : isButtonPress || player.reg || user?.id === Constants.myTgId
                 ? <div id='column' className='Chapter'>
                     {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
                     {player.roster
@@ -131,6 +132,8 @@ const Registration = () => {
                     {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} /> */}
                     <Row title='Список Участников' navigateTo='players' />
                     {/* <Row title='Турнирная Таблица' navigateTo='players' /> */}
+                    {/* <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
+                    <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} /> */}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
                     <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />
