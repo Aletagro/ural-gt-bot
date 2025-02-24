@@ -58,7 +58,7 @@ const Header = () => {
 
     const handleNavigateToSearch = () => {navigate('search')}
 
-    const handleNavigateToExport = () => {navigate('export', {state: {title: 'Подача ростера'}})}
+    const handleNavigateToExport = () => {navigate('export', {state: {title: 'Ростер'}})}
 
     const handleNavigateToHome = () => {
         navigate('/')
