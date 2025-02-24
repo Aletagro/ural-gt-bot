@@ -40,13 +40,18 @@ const PlayerInfo = () => {
     
     return <div id='column' className='Chapter'>
         <p id={Styles.title}><b>Город:</b> {player.city}</p>
-        <p id={Styles.title}><b>Гранд Альянс:</b> {rosterInfo.grandAlliance}</p>
-        <p id={Styles.title}><b>Армия:</b> {rosterInfo.allegiance}</p>
-        <b id={Styles.title}>Игры</b>
-        <div id={Styles.tableContainer}>
-            {renderPlayRow('№', 'Оппонент', 'Результат', 'ТО', true)}
-            {map([1, 2, 3, 4, 5], renderPlay)}
-        </div>
+        <p id={Styles.title}><b>Гранд Альянс:</b> {rosterInfo?.grandAlliance}</p>
+        <p id={Styles.title}><b>Армия:</b> {rosterInfo?.allegiance}</p>
+        {player.game_1_opp
+            ? <>
+                <b id={Styles.title}>Игры</b>
+                    <div id={Styles.tableContainer}>
+                    {renderPlayRow('№', 'Оппонент', 'Результат', 'ТО', true)}
+                    {map([1, 2, 3, 4, 5], renderPlay)}
+                </div>
+            </>
+            : null
+        }
         <b id={Styles.title}>Ростер</b>
         <p id={Styles.roster}>{JSON.parse(player.roster)}</p>
         <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>

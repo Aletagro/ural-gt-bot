@@ -29,7 +29,7 @@ const Roster = () => {
     const goToOtherRoster = (index) => {
         rostersStuck.count = rostersStuck.count + 1
         const newPlayer = get(players, `rosters[${index}]`)
-        navigate('/roster', {state: {title: `${newPlayer.surname} ${newPlayer.name}`, playerIndex: index}})
+        navigate('/roster', {state: {title: `${newPlayer.surname} ${newPlayer.name}`, playerId: newPlayer.id, playerIndex: index}})
     }
 
     const handleClickPrevRoster = () => {

@@ -60,10 +60,11 @@ const InnerInput = (props) => {
   </>
 }
 
-const FloatingLabelInput = ({style, onChange, onBlur, placeholder, label, value}) => {
+const FloatingLabelInput = ({style, onChange, onBlur, onFocus, placeholder, label, value}) => {
   return <Input
     onChange={onChange}
     onBlur={onBlur}
+    onFocus={onFocus}
     slots={{input: InnerInput}}
     slotProps={{input: {placeholder: placeholder || '', label}}}
     sx={style}

@@ -1,0 +1,22 @@
+#text {
+    padding-bottom: 12px;
+}
+#button {
+    background: rgb(46, 46, 49);
+    color: white;
+    margin-bottom: 16px;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+}
+#sendButton {
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+}

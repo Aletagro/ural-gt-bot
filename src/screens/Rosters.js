@@ -1,6 +1,7 @@
 import React, {useEffect, useReducer} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {players} from '../utilities/appState'
+import {sortByName} from '../utilities/utils'
 
 import map from 'lodash/map'
 
@@ -10,6 +11,8 @@ const Rosters = () => {
     const navigate = useNavigate()
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
+
+    console.log(map(sortByName(players.data, 'city'), (player) => player.city))
 
     useEffect(() => {
         if (!players.rosters.length) {
