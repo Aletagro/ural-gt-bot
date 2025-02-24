@@ -81,7 +81,7 @@ const Search = () => {
 
     return <>
         <div id={Styles.container}>
-            <input id={Styles.input} onChange={handleChange} autoFocus placeholder='Start Typing' type='search' name='search' size={40} />
+            <input id={Styles.input} onChange={handleChange} autoFocus placeholder='Start Typing' type='search' name='search' />
         </div>
         <div id='column' className='Chapter'>
             {size(search.Warscrolls) ? renderAccordion('Warscrolls', renderWarscroll) : null}

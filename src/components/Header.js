@@ -34,6 +34,9 @@ const Header = () => {
             search.Warscrolls = []
             search.Rules = []
             search.Allegiances = []
+        } else if (pathname === '/rosters') {
+            search.rostersValue = ''
+            search.rosters = []
         }
     }
 

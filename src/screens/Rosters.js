@@ -1,18 +1,37 @@
-import React, {useEffect, useReducer} from 'react'
+import React, {useEffect, useState, useReducer} from 'react'
+import useDebounce from '../utilities/useDebounce'
 import {useNavigate} from 'react-router-dom'
-import {players} from '../utilities/appState'
+import {players, search} from '../utilities/appState'
 import {sortByName} from '../utilities/utils'
 
 import map from 'lodash/map'
+import filter from 'lodash/filter'
+import includes from 'lodash/includes'
+import lowerCase from 'lodash/lowerCase'
 
-import Styles from './styles/Players.module.css'
+import Styles from './styles/Rosters.module.css'
 
 const Rosters = () => {
     const navigate = useNavigate()
+    const [searchValue, setSearchValue] = useState(search.rostersValue)
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
-    console.log(map(sortByName(players.data, 'city'), (player) => player.city))
+    useDebounce(() => {
+        console.log('useDebounce', searchValue, search.rosters)
+        if (searchValue) {
+            const _rosters = filter(players.rosters, (player) => {
+                const allegiance = JSON.parse(player.roster_stat)?.allegiance
+                return includes(lowerCase(`${player.surname} ${player.name}`), lowerCase(searchValue)) || includes(lowerCase(allegiance), lowerCase(searchValue))
+            })
+            search.rosters = sortByName(_rosters)
+
+        } else {
+            search.rosters = players.rosters
+        }
+        forceUpdate()
+      }, [searchValue], 300
+    )
 
     useEffect(() => {
         if (!players.rosters.length) {
@@ -30,6 +49,11 @@ const Rosters = () => {
         navigate('/roster', {state: {title: `${player.surname} ${player.name}`, playerId: player.id, playerIndex: index}})
     }
 
+    const handleSearch = (e) => {
+        search.rostersValue = e.target.value
+        setSearchValue(e.target.value)
+    }
+
     const renderRow = (number, player, army, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{number}</p>
         <p id={Styles.сolumn}>{player}</p>
@@ -43,12 +67,17 @@ const Rosters = () => {
         </button>
     }
     
-    return <div id='column' className='Chapter'>
-        <div>
-            {renderRow('№', 'Игрок', 'Армия', true)}
-            {map(players.rosters, renderRoster)}
+    return <>
+        <div id={Styles.searchContainer}>
+            <input id={Styles.input} onChange={handleSearch} placeholder='Поиск' autoFocus type='search' name='search' />
         </div>
-    </div>
+        <div id='column' className='Chapter'>
+            <div>
+                {renderRow('№', 'Игрок', 'Армия', true)}
+                {map(search.rosters, renderRoster)}
+            </div>
+        </div>
+    </>
 }
 
 export default Rosters

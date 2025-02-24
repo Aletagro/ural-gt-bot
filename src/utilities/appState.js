@@ -36,7 +36,9 @@ export const search = {
         Warscrolls: true,
         Rules: true,
         Allegiances: true
-    }
+    },
+    rostersValue: '',
+    rosters: []
 }
 
 export const builderFilters = {
