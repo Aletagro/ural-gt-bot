@@ -1,7 +1,7 @@
 import React, {useEffect, useReducer} from 'react'
 // import Autocomplete from '@mui/joy/Autocomplete'
 import CircularProgress from '@mui/joy/CircularProgress'
-// import Constants from '../Constants'
+import Constants from '../Constants'
 import {player, players, fetching} from '../utilities/appState'
 // import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
@@ -122,6 +122,7 @@ const Registration = () => {
                 <CircularProgress variant="soft"/>
             </div>
             : <div id='column' className='Chapter'>
+                {user?.id === Constants.myTgId ? <Row title='Админка' navigateTo='admin' /> : null}
                 {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
                 {player.roster
                     ? <Row title='Ваш ростер' navigateTo='roster' />
@@ -132,8 +133,8 @@ const Registration = () => {
                 {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} /> */}
                 <Row title='Список Участников' navigateTo='players' />
                 {/* <Row title='Турнирная Таблица' navigateTo='players' /> */}
-                {/* <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
-                <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} /> */}
+                {user?.id === Constants.myTgId ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} /> : null}
+                {/* <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} /> */}
                 <Row title='Правила' navigateTo='mainRules' />
                 <Row title='Калькулятор Урона' navigateTo='calculator' />
                 <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />

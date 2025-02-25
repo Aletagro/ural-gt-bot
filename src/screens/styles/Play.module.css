@@ -44,3 +44,10 @@
   width: 100%;
   text-align: center;
 }
+#result {
+  padding-top: 48px;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 36px;
+  text-align: center;
+}

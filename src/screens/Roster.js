@@ -9,16 +9,16 @@ import Styles from './styles/Roster.module.css'
 
 const Roster = () => {
     const navigate = useNavigate()
-    const {playerId, playerIndex} = useLocation().state
+    const {playerId, playerIndex, isInfo} = useLocation().state
     let playerInfo = player
     if (playerId !== undefined) {
         playerInfo = find(players.data, ['id', playerId])
     }
 
-    const _roster = playerIndex !== undefined
+    const _roster = playerIndex !== undefined || isInfo
         ? playerInfo.roster ? JSON.parse(playerInfo.roster) : ''
         : player.roster ? JSON.parse(player.roster) : ''
-    const rosterInfo = playerIndex !== undefined
+    const rosterInfo = playerIndex !== undefined || isInfo
         ? playerInfo?.roster_stat ? JSON.parse(playerInfo?.roster_stat) : {}
         : player
 

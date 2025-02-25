@@ -1,9 +1,10 @@
-import React, {useState, useEffect, useReducer} from 'react'
+import React, {useState, useEffect, useReducer, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {rounds, players} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Constants from '../Constants'
 
+import find from 'lodash/find'
 
 import Styles from './styles/Play.module.css'
 
@@ -26,20 +27,39 @@ const Play = () => {
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const [firstPlayer, setFirstPlayer] = useState()
     const [secondPlayer, setSecondPlayer] = useState()
+    const [isFinished, setIsFinished] = useState(false)
     const [info, setInfo] = useState()
     const battleplan = Constants.tournamentBattleplans[rounds.active]
 
     useEffect(() => {
-        fetch(`https://aoscom.online/round/?play=${user?.id}`)
+        fetch('https://aoscom.online/tournament-meta/')
             .then(response => response.json())
             .then(data => {
-                const _data = {
-                    players: [
-                        {name: 'Рукосуев', id: 3},
-                        {name: 'Удалов', id: 4}
-                    ] 
-                }
-                setInfo(_data)
+                fetch(`https://aoscom.online/round/?play=${user?.id}&round=${data.round}`)
+                .then(response => response.json())
+                .then(data => {
+                    const _data = {
+                        id: 17,
+                        table: 1,
+                        first_player_id: 1,
+                        first_player_vp: 0,
+                        second_player_id: 2,
+                        second_player_vp: 0,
+                        results_submitted: false
+                    }
+                    if (_data.results_submitted) {
+                        setIsFinished(true)
+                    } else {
+                        const firstPlayer = find(players.data, ['id', _data.first_player_id])
+                        const secondPlayer = find(players.data, ['id', _data.second_player_id])
+                        setInfo({
+                            ..._data,
+                            firstPlayer,
+                            secondPlayer
+                        })
+                    }
+                })
+                .catch(error => console.error(error))
             })
             .catch(error => console.error(error))
     }, [user?.id])
@@ -63,26 +83,42 @@ const Play = () => {
         setSecondPlayer(e.target.value)
     }
 
-    const handleClickPlayer = (playerIndex) => () => {
-        const player = info.players[playerIndex]
-        navigate('/roster', {state: {title: player.name, playerId: player.id}})
+    const handleClickFirstPlayerRoster = () => {
+        navigate('/roster', {state: {title: `${info.firstPlayer.surname} ${info.firstPlayer.name}`, playerId: info.firstPlayer.id, isInfo: true}})
+    }
+
+    const handleClickSecondPlayerRoster = () => {
+        navigate('/roster', {state: {title: `${info.secondPlayer.surname} ${info.secondPlayer.name}`, playerId: info.secondPlayer.id, isInfo: true}})
     }
 
     const handleClickBattleplan = () => {
         navigate('/battleplan', {state: {title:battleplan.title, battleplan}})
     }
 
-    const handleSendResult = () => {
-        // await fetch('https://aoscom.online/players/reg', {
-        //     method: 'POST',
-        //     body: JSON.stringify({tgId: user?.id, }),
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //         'Accept': "application/json, text/javascript, /; q=0.01"
-        //     }
-        // })
-        //     .then(response => response.json())
-        //     .catch(error => console.error(error))
+    const handleSendResult = useCallback(async () => {
+        await fetch('https://aoscom.online/rounds/play', {
+            method: 'PUT',
+            body: JSON.stringify({
+                id: info?.id,
+                first_player_vp: firstPlayer,
+                second_player_vp: secondPlayer
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                setIsFinished(true)
+            })
+            .catch(error => console.error(error))
+    }, [info?.id, firstPlayer, secondPlayer])
+
+    if (isFinished) {
+        return <div id='column' className='Chapter'>
+            <b id={Styles.result}>Результат вашей игры принят</b>
+        </div>
     }
 
     return <div id='column' className='Chapter'>
@@ -91,13 +127,12 @@ const Play = () => {
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeFirstPlayerResult}
-                    label={info?.players[0].name}
+                    label={info?.firstPlayer.surname}
                     value={firstPlayer}
                 />
                 <button
                     id={Styles.rosterButton}
-                    onClick={handleClickPlayer(0)}
-                    disabled={firstPlayer || secondPlayer}
+                    onClick={handleClickFirstPlayerRoster}
                 >
                     Ростер
                 </button>
@@ -106,13 +141,12 @@ const Play = () => {
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeSecondPlayerResult}
-                    label={info?.players[1].name}
+                    label={info?.secondPlayer.surname}
                     value={secondPlayer}
                 />
                 <button
                     id={Styles.rosterButton}
-                    onClick={handleClickPlayer(1)}
-                    disabled={firstPlayer || secondPlayer}
+                    onClick={handleClickSecondPlayerRoster}
                 >
                     Ростер
                 </button>
@@ -127,7 +161,7 @@ const Play = () => {
         <button
             id={firstPlayer && secondPlayer ? Styles.button : Styles.disableButton}
             onClick={handleSendResult}
-            disabled={firstPlayer || secondPlayer}
+            // disabled={firstPlayer || secondPlayer}
         >
             Отправить Результаты
         </button>

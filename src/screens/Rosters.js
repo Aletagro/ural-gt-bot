@@ -18,11 +18,12 @@ const Rosters = () => {
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
     useDebounce(() => {
-        console.log('useDebounce', searchValue, search.rosters)
         if (searchValue) {
             const _rosters = filter(players.rosters, (player) => {
-                const allegiance = JSON.parse(player.roster_stat)?.allegiance
-                return includes(lowerCase(`${player.surname} ${player.name}`), lowerCase(searchValue)) || includes(lowerCase(allegiance), lowerCase(searchValue))
+                const rosterInfo = JSON.parse(player.roster_stat)
+                return includes(lowerCase(`${player.surname} ${player.name}`), lowerCase(searchValue)) ||
+                    includes(lowerCase(rosterInfo?.allegiance), lowerCase(searchValue)) ||
+                    includes(lowerCase(rosterInfo.grandAlliance), lowerCase(searchValue))
             })
             search.rosters = sortByName(_rosters)
 

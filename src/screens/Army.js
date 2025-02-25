@@ -24,7 +24,7 @@ const Army = () => {
     }
     let items = [{title: 'Warscrolls', screen: 'units'}]
     let rosterOptions
-    if (isArmyOfRenown || _allegiance.armyOfRenown) {
+    if (isArmyOfRenown || _allegiance?.armyOfRenown) {
         const publications = filter(dataBase.data.publication,
             item => item.factionKeywordId === _allegiance.parentFactionKeywordId && includes(item.name, 'Army of Renown')
         )
@@ -43,7 +43,7 @@ const Army = () => {
     }
 
     // otherEnhancements
-    const otherEnhancement = find(dataBase.data.ability_group, (item) => item.factionId === _allegiance.id && item.abilityGroupType === 'otherEnhancements')
+    const otherEnhancement = find(dataBase.data.ability_group, (item) => item.factionId === _allegiance?.id && item.abilityGroupType === 'otherEnhancements')
     if (otherEnhancement) {
         const enhancements = filter(dataBase.data.ability, (item) => item.abilityGroupId === otherEnhancement.id)
         if (enhancements.length > 0) {
@@ -60,13 +60,13 @@ const Army = () => {
 
     let armyOfRenown
     // Достаем для джовсов armyOfRenown
-    if (_allegiance.id === '298391fb-3d74-4a26-b9cc-5f3ad5fe4852') {
+    if (_allegiance?.id === '298391fb-3d74-4a26-b9cc-5f3ad5fe4852') {
         armyOfRenown = filter(dataBase.data.faction_keyword, (faction) => faction.id === 'f0198b42-f55e-4261-8443-083bb17ec9c8' || faction.id === '62cacaf1-c044-4338-9443-9ef762b1fe1f' || faction.id === '19121b3d-667c-4048-be52-90760f656b66')
     // Достаем для крулов armyOfRenown
-    } else if (_allegiance.id === '21ed7371-d9e3-4a05-8b2c-db46cee7d29d') {
+    } else if (_allegiance?.id === '21ed7371-d9e3-4a05-8b2c-db46cee7d29d') {
         armyOfRenown = filter(dataBase.data.faction_keyword, (faction) => faction.id === 'bccf5ba7-6c62-4e17-872a-3838888d2c8e' || faction.id === '19121b3d-667c-4048-be52-90760f656b66')
     } else {
-        armyOfRenown = filter(dataBase.data.faction_keyword, (faction) => faction.parentFactionKeywordId === _allegiance.id)
+        armyOfRenown = filter(dataBase.data.faction_keyword, (faction) => faction.parentFactionKeywordId === _allegiance?.id)
     }
 
     const handleClickBuilder = () => {
@@ -86,7 +86,7 @@ const Army = () => {
     const renderBuilderRow = () => <Row
         title='Builder'
         navigateTo='builder'
-        state={{allegianceId: _allegiance.id}}
+        state={{allegianceId: _allegiance?.id}}
         onClick={handleClickBuilder}
     />
 
@@ -100,7 +100,7 @@ const Army = () => {
     const renderRosterOptions = (option) => <p id={Styles.rosterOptionText} key={option.id}>&#8226; {replaceAsterisks(option.text)}</p>
 
     return <>
-        <HeaderImage src={_allegiance.rosterHeaderImage} alt={_allegiance.name} isWide />
+        <HeaderImage src={_allegiance?.rosterHeaderImage} alt={_allegiance?.name} isWide />
         <div id='column' className='Chapter'>
             {items.map(renderRow)}
             {renderBuilderRow()}
@@ -111,7 +111,7 @@ const Army = () => {
                 </div>
                 : null
             }
-            {isArmyOfRenown || _allegiance.armyOfRenown
+            {isArmyOfRenown || _allegiance?.armyOfRenown
                 ? <>
                     <h4 id={Styles.rosterOption}>Roster Options</h4>
                     {map(rosterOptions, renderRosterOptions)}

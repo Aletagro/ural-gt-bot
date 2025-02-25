@@ -38,7 +38,9 @@ export const search = {
         Allegiances: true
     },
     rostersValue: '',
-    rosters: []
+    rosters: [],
+    playersValue: '',
+    players: []
 }
 
 export const builderFilters = {

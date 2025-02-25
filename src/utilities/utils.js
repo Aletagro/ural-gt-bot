@@ -312,7 +312,7 @@ export const setTacticColor = (tactic) => {
 
 export const getInfo = (screen, allegiance) => {
     let abilitiesGroup = dataBase.data[screen.groupName].filter((item) => 
-        item.factionId === allegiance.id &&
+        item.factionId === allegiance?.id &&
         item.abilityGroupType === screen.abilityGroupType &&
         (screen.includesTexts
             ? Boolean(screen.includesTexts.find(text => item.name.includes(text)))

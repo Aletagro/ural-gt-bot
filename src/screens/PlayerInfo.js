@@ -22,9 +22,9 @@ const PlayerInfo = () => {
     }
 
     const renderPlayRow = (number, player, result, to, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
-        <p id={Styles.smallColumn}>{number}</p>
+        <p id={Styles.extraSmallColumn}>{number}</p>
         <p id={Styles.сolumn}>{player}</p>
-        <p id={Styles.сolumn}>{result}</p>
+        <p id={Styles.smallColumn}>{result}</p>
         <p id={Styles.smallColumn}>{to}</p>
     </div>
 

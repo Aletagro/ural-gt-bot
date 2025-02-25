@@ -9,6 +9,7 @@ import Rosters from './screens/Rosters'
 import Rounds from './screens/Rounds'
 import Play from './screens/Play'
 import Vote from './screens/Vote'
+import Admin from './screens/Admin'
 import MainRules from './screens/MainRules'
 import Catalog from './screens/Catalog'
 import Army from './screens/Army'
@@ -50,6 +51,9 @@ function App() {
     if (!tg.isExpanded) {
       tg.expand()
     }
+    if (!tg.isClosingConfirmationEnabled) {
+      tg.enableClosingConfirmation()
+    }
   }, [])
 
   return <div>
@@ -64,6 +68,7 @@ function App() {
       <Route path={'rounds'} element={<Rounds />} />
       <Route path={'play'} element={<Play />} />
       <Route path={'vote'} element={<Vote />} />
+      <Route path={'admin'} element={<Admin />} />
       <Route path={'mainRules'} element={<MainRules />} />
       <Route path={'catalog'} element={<Catalog />} />
       <Route path={'army'} element={<Army />} />
