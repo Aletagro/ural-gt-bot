@@ -35,7 +35,7 @@ const Vote = () => {
     const getOpponent = (value) => {
         const oppIndex = get(player, `info.game_${value}_opp`)
         const opp = find(players.data, ['id', oppIndex])
-        return {name: `${opp.surname} ${opp.name}`, id: oppIndex}
+        return {name: `${opp?.surname} ${opp?.name}`, id: oppIndex}
     }
 
     if (!isPaint) {

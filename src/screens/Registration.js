@@ -133,8 +133,8 @@ const Registration = () => {
                 {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} /> */}
                 <Row title='Список Участников' navigateTo='players' />
                 {/* <Row title='Турнирная Таблица' navigateTo='players' /> */}
-                {user?.id === Constants.myTgId ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} /> : null}
-                {/* <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} /> */}
+                {/* <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} /> */}
+                {user?.id !== Constants.myTgId ? <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} /> : null}
                 <Row title='Правила' navigateTo='mainRules' />
                 <Row title='Калькулятор Урона' navigateTo='calculator' />
                 <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />
