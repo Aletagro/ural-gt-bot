@@ -2,7 +2,7 @@ import React, {useEffect, useReducer} from 'react'
 // import Autocomplete from '@mui/joy/Autocomplete'
 import CircularProgress from '@mui/joy/CircularProgress'
 import Constants from '../Constants'
-import {player, players, fetching} from '../utilities/appState'
+import {player, players, fetching, meta} from '../utilities/appState'
 // import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
@@ -98,6 +98,17 @@ const Registration = () => {
         }
     }, [])
 
+    useEffect(() => {
+        fetch('https://aoscom.online/tournament-meta/')
+            .then(response => response.json())
+            .then(data => {
+                meta.round = Number(data.round)
+                meta.isRoundActive = Number(data.isRoundActive)
+                forceUpdate()
+            })
+            .catch(error => console.error(error))
+    }, [])
+
     // const handleChangeName = (e) => {
     //     setName(e.target.value)
     // }
@@ -115,6 +126,12 @@ const Registration = () => {
     //     handleRegUser()
     // }
 
+    const handleJudgeCall = () => {
+        fetch(`https://aoscom.online/messages/judges_call?tg_id=${user?.id}`)
+            .then(response => response.json())
+            .catch(error => console.error(error))
+    }
+
     return <>
         <HeaderImage src={UGT} alt='Core Documents' isUral />
         {fetching.main
@@ -122,22 +139,30 @@ const Registration = () => {
                 <CircularProgress variant="soft"/>
             </div>
             : <div id='column' className='Chapter'>
-                {user?.id === Constants.myTgId ? <Row title='Админка' navigateTo='admin' /> : null}
-                {/* <Row title='Ваша Игра' navigateTo='Play' /> */}
-                {player.roster
+                {user?.id !== Constants.myTgId ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
+                <Row title='Ваша Игра' navigateTo='Play' />
+                {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
+                {player.reg
                     ? <Row title='Ваш ростер' navigateTo='roster' />
                     : null
                 }
                 {/* <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' /> */}
                 <Row title='Ростера' navigateTo='rosters' />
-                {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025'}} /> */}
-                <Row title='Список Участников' navigateTo='players' />
-                {/* <Row title='Турнирная Таблица' navigateTo='players' /> */}
-                {/* <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} /> */}
-                {user?.id === Constants.myTgId ? <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} /> : null}
+                {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025', round: meta.round}} /> */}
+                <Row title='Турнирная Таблица' navigateTo='players' />
+                {player.reg && meta.round === 5 && !player.sport_voted
+                    ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
+                    : null
+                }
+                {player.reg && ((meta.round === 4 && !meta.isRoundActive) || meta.round === 5) && !player.paint_voted
+                    ? <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} />
+                    :null
+                }
                 <Row title='Правила' navigateTo='mainRules' />
                 <Row title='Калькулятор Урона' navigateTo='calculator' />
                 <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />
+                <Row title='Подсказка во время игры' navigateTo='help' />
+                {meta.isRoundActive ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
             </div>
                 // : <div>
                 //     <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>

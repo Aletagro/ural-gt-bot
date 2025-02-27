@@ -25,7 +25,7 @@ const PlayerInfo = () => {
         <p id={Styles.extraSmallColumn}>{number}</p>
         <p id={Styles.сolumn}>{player}</p>
         <p id={Styles.smallColumn}>{result}</p>
-        <p id={Styles.smallColumn}>{to}</p>
+        <p id={Styles.smallColumn}>{to || 0}</p>
     </div>
 
     const renderPlay = (playIndex, index) => {

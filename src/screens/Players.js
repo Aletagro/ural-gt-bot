@@ -54,27 +54,20 @@ const Players = () => {
         setSearchValue(e.target.value)
     }
 
-    const renderRow = (place, player, city, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+    const renderRow = (place, player, army, w, d, tp, co, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{place}</p>
         <p id={Styles.сolumn}>{player}</p>
-        <p id={Styles.сolumn}>{city}</p>
+        <p id={Styles.сolumn}>{army}</p>
+        <p id={Styles.extraSmallColumn}>{w || 0}</p>
+        <p id={Styles.extraSmallColumn}>{d || 0}</p>
+        <p id={Styles.smallColumn}>{tp || 0}</p>
+        <p id={Styles.smallColumn}>{co || 0}</p>
     </div>
 
-    // const renderRow = (place, player, army, w, d, tp, co, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
-    //     <p id={Styles.smallColumn}>{place}</p>
-    //     <p id={Styles.сolumn}>{player}</p>
-    //     <p id={Styles.сolumn}>{army}</p>
-    //     <p id={Styles.extraSmallColumn}>{w || 0}</p>
-    //     <p id={Styles.extraSmallColumn}>{d || 0}</p>
-    //     <p id={Styles.smallColumn}>{tp || 0}</p>
-    //     <p id={Styles.smallColumn}>{co || 0}</p>
-    // </div>
-
     const renderPlayer = (player, index) => {
-        // const allegiance = JSON.parse(player.roster_stat)?.allegiance
+        const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
-            {renderRow(index + 1, `${player.surname} ${player.name}`, player.city, index % 2)}
-            {/* {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, player.win, player.draw, player.tp_sum, player.opp_p, index % 2)} */}
+            {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, player.win, player.draw, player.tp_sum, player.opp_p, index % 2)}
         </button>
     }
     
@@ -84,8 +77,7 @@ const Players = () => {
         </div>
         <div id='column' className='Chapter'>
             <div>
-                {renderRow('№', 'Игрок', 'Город', true)}
-                {/* {renderRow('№', 'Игрок', 'Армия', 'W', 'D', 'TO', 'CO', true)} */}
+                {renderRow('№', 'Игрок', 'Армия', 'W', 'D', 'TO', 'CO', true)}
                 {map(search.players, renderPlayer)}
             </div>
         </div>

@@ -1,27 +1,34 @@
 import React, {useEffect, useReducer} from 'react'
-import {useNavigate} from 'react-router-dom'
-import {rounds, players} from '../utilities/appState'
+import {useNavigate, useLocation} from 'react-router-dom'
+import {rounds, players, meta} from '../utilities/appState'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
+import get from 'lodash/get'
 
 import Styles from './styles/Rounds.module.css'
 
 const Rounds = () => {
     const navigate = useNavigate()
+    const state = useLocation()?.state
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const disablePrevButton = rounds.selected === 1
-    const disableNextButton = rounds.selected === rounds.active
+    const disableNextButton = rounds.selected === meta.round
+    if (state?.round) {
+        rounds.selected = state.round
+    }
 
     useEffect(() => {
-        // fetch(`https://aoscom.online/rounds/?round=${rounds.selected}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         rounds[rounds.selected] = data
-        //         forceUpdate()
-        //     })
-        //     .catch(error => console.error(error))
+        if (!rounds[rounds.selected]) {
+            fetch(`https://aoscom.online/rounds/?cur_round=${rounds.selected}`)
+                .then(response => response.json())
+                .then(data => {
+                    rounds[rounds.selected] = data
+                    forceUpdate()
+                })
+                .catch(error => console.error(error))
+        }
         if (!players.data.length) {
             fetch('https://aoscom.online/players/')
                 .then(response => response.json())
@@ -33,11 +40,8 @@ const Rounds = () => {
         }
     }, [])
 
-    const handleClickPlayer = (playerId) => () => {
-        const player = find(players.data, ['id', playerId])
-        if (player) {
-            navigate('/playerInfo', {state: {player, title: `${player.surname} ${player.name}`}})
-        }
+    const handleClickPlayer = (player) => () => {
+        navigate('/playerInfo', {state: {player, title: `${player?.surname} ${player?.name}`}})
     }
 
     const handleClickPrevRound = () => {
@@ -53,18 +57,22 @@ const Rounds = () => {
     }
 
     const renderPlay = (play, index) => {
+        const playerOne = find(players.data, ['id', play[0]])
+        const playerTwo = find(players.data, ['id', play[1]])
         return <div key={index} id={Styles.row} style={{'background': `${index % 2 ? '#ECECEC' : ''}`}}>
-            <p id={Styles.smallColumn}>{play.table}</p>
-            <button id={Styles.сolumn} onClick={handleClickPlayer(play.playerOneId)}>
-                <p>{play.playerOne}</p>
+            <p id={Styles.smallColumn}>{index}</p>
+            <button id={Styles.сolumn} onClick={handleClickPlayer(playerOne)}>
+                <p>{`${playerOne.surname} ${playerOne.name}`}</p>
             </button>
-            <p id={Styles.smallColumn}>{play.result || '0 - 0'}</p>
-            <button id={Styles.сolumn} onClick={handleClickPlayer(play.playerTwoId)}>
-                <p>{play.playerTwo}</p>
+            <p id={Styles.smallColumn}>
+                {get(playerOne, `game_${rounds.selected}_tp`) || 0} - {get(playerTwo, `game_${rounds.selected}_tp`) || 0}
+            </p>
+            <button id={Styles.сolumn} onClick={handleClickPlayer(playerTwo)}>
+                <p>{`${playerTwo.surname} ${playerTwo.name}`}</p>
             </button>
         </div>
     }
-    
+
     return <div id='column' className='Chapter'>
         <div id={Styles.buttonContainer}>
             <button disabled={disablePrevButton} onClick={handleClickPrevRound} id={disablePrevButton ? Styles.disableNextButton : Styles.nextButton}>

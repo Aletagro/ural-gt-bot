@@ -53,13 +53,8 @@ const Vote = () => {
     }
 
     const handleClickVote = useCallback(async () => {
-        await fetch('https://aoscom.online/vote/', {
-            method: 'POST',
-            body: JSON.stringify({tg_id: user?.id, type, choice: `${result}`}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
+        await fetch(`https://aoscom.online/vote/?tg_id=${user?.id}&v_type=${type}&plrs=${result}`, {
+            method: 'PUT'
         })
             .then(response => response.json())
             .catch(error => console.error(error))
