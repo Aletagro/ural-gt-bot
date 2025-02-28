@@ -147,7 +147,7 @@ const Registration = () => {
                 }
                 {/* <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' /> */}
                 <Row title='Ростера' navigateTo='rosters' />
-                {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025', round: meta.round}} /> */}
+                <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025', round: meta.round}} />
                 <Row title='Турнирная Таблица' navigateTo='players' />
                 {player.reg && meta.round === 5 && !player.sport_voted
                     ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
