@@ -139,8 +139,7 @@ const Registration = () => {
                 <CircularProgress variant="soft"/>
             </div>
             : <div id='column' className='Chapter'>
-                {user?.id !== Constants.myTgId ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
-                <Row title='Ваша Игра' navigateTo='Play' />
+                {user?.id === Constants.myTgId ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                 {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
                 {player.reg
                     ? <Row title='Ваш ростер' navigateTo='roster' />
