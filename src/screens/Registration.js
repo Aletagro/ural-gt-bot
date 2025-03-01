@@ -1,5 +1,7 @@
 import React, {useEffect, useReducer} from 'react'
 // import Autocomplete from '@mui/joy/Autocomplete'
+import {ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import CircularProgress from '@mui/joy/CircularProgress'
 import Constants from '../Constants'
 import {player, players, fetching, meta} from '../utilities/appState'
@@ -130,6 +132,7 @@ const Registration = () => {
         fetch(`https://aoscom.online/messages/judges_call?tg_id=${user?.id}`)
             .then(response => response.json())
             .catch(error => console.error(error))
+        toast.success('Судья спешит на помощь!', Constants.toastParams)
     }
 
     return <>
@@ -162,6 +165,7 @@ const Registration = () => {
                 <Row title='Регламент Ural GT 2025' navigateTo='tournamentRules' />
                 <Row title='Подсказка во время игры' navigateTo='help' />
                 {meta.isRoundActive ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
+                <ToastContainer />
             </div>
                 // : <div>
                 //     <h2 id={Styles.title}>Регистрация на Ural GT 2025</h2>
