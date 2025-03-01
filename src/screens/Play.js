@@ -5,6 +5,8 @@ import FloatingLabelInput from '../components/FloatingLabelInput'
 import Constants from '../Constants'
 
 import find from 'lodash/find'
+import min from 'lodash/min'
+import max from 'lodash/max'
 
 import Styles from './styles/Play.module.css'
 
@@ -35,17 +37,13 @@ const Play = () => {
         fetch(`https://aoscom.online/rounds/play/?tg_id=${user?.id}&cur_round=${meta.round}`)
             .then(response => response.json())
             .then(data => {
-                if (data.results_submitted) {
-                    setIsFinished(true)
-                } else {
-                    const firstPlayer = find(players.data, ['id', data.first_player_id])
-                    const secondPlayer = find(players.data, ['id', data.second_player_id])
-                    setInfo({
-                        ...data,
-                        firstPlayer,
-                        secondPlayer
-                    })
-                }
+                const firstPlayer = find(players.data, ['id',  min([Number(data.first_player_id), Number(data.second_player_id)])])
+                const secondPlayer = find(players.data, ['id', max([Number(data.first_player_id), Number(data.second_player_id)])])
+                setInfo({
+                    ...data,
+                    firstPlayer,
+                    secondPlayer
+                })
             })
             .catch(error => console.error(error))
     }, [user?.id])
