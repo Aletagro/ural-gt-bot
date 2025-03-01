@@ -26,10 +26,16 @@ const Players = () => {
                     includes(lowerCase(rosterInfo.grandAlliance), lowerCase(searchValue)) ||
                     includes(lowerCase(player.city), lowerCase(searchValue))
             })
-            search.players = sortByName(_rosters)
+            search.players = sortByName(_rosters, 'win', true)
+            search.players = sortByName(search.players, 'draw', true)
+            search.players = sortByName(search.players, 'tp_sum', true)
+            search.players = sortByName(search.players, 'opp_p', true)
 
         } else {
-            search.players = players.data
+            search.players = sortByName(players.data, 'win', true)
+            search.players = sortByName(search.players, 'draw', true)
+            search.players = sortByName(search.players, 'tp_sum', true)
+            search.players = sortByName(search.players, 'opp_p', true)
         }
         forceUpdate()
       }, [searchValue], 300
