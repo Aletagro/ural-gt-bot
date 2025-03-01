@@ -2,7 +2,6 @@ import React, {useState, useEffect, useReducer} from 'react'
 import {useNavigate} from 'react-router-dom'
 import useDebounce from '../utilities/useDebounce'
 import {players, search} from '../utilities/appState'
-import {sortByName} from '../utilities/utils'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
@@ -17,6 +16,23 @@ const Players = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
+    const sortPlayers = (array) => array.sort((a, b) => {
+        // Сначала сравниваем по полю win
+        if (a.win !== b.win) {
+            return b.win - a.win // Сортируем по убыванию
+        }
+        // Если win равны, сравниваем по полю draw
+        if (a.draw !== b.draw) {
+            return b.draw - a.draw // Сортируем по убыванию
+        }
+        // Если draw равны, сравниваем по полю tp_sum
+        if (a.tp_sum !== b.tp_sum) {
+            return b.tp_sum - a.tp_sum // Сортируем по убыванию
+        }
+        // Если tp_sum равны, сравниваем по полю opp_p
+        return b.opp_p - a.opp_p // Сортируем по убыванию
+    })
+
     useDebounce(() => {
         if (searchValue) {
             const _rosters = filter(players.data, (player) => {
@@ -26,35 +42,9 @@ const Players = () => {
                     includes(lowerCase(rosterInfo.grandAlliance), lowerCase(searchValue)) ||
                     includes(lowerCase(player.city), lowerCase(searchValue))
             })
-            search.players = sortByName(_rosters, 'win', true)
-            // search.players = sortByName(search.players, 'draw', true)
-            // search.players = sortByName(search.players, 'tp_sum', true)
-            // search.players = sortByName(search.players, 'opp_p', true)
-            // search.players = _rosters.sort((a, b) => {
-            //     if (a.win === b.win) {
-            //       if (a.draw === b.draw) {
-            //         if (a.tp_sum === b.tp_sum) return b.opp_p - a.opp_p;
-            //         return b.tp_sum - a.tp_sum;
-            //       }
-            //       return b.draws - a.draws;
-            //     }
-            //     return b.gamesWin - a.gamesWin;
-            //   })
+            search.players = sortPlayers(_rosters)
         } else {
-            // search.players = players.data.sort((a, b) => {
-            //     if (a.win === b.win) {
-            //       if (a.draw === b.draw) {
-            //         if (a.tp_sum === b.tp_sum) return b.opp_p - a.opp_p;
-            //         return b.tp_sum - a.tp_sum;
-            //       }
-            //       return b.draws - a.draws;
-            //     }
-            //     return b.gamesWin - a.gamesWin;
-            //   })
-            search.players = sortByName(players.data, 'win', true)
-            // search.players = sortByName(search.players, 'draw', true)
-            // search.players = sortByName(search.players, 'tp_sum', true)
-            // search.players = sortByName(search.players, 'opp_p', true)
+            search.players = sortPlayers(players.data)
         }
         forceUpdate()
       }, [searchValue], 300
