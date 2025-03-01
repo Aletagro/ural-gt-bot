@@ -27,15 +27,34 @@ const Players = () => {
                     includes(lowerCase(player.city), lowerCase(searchValue))
             })
             search.players = sortByName(_rosters, 'win', true)
-            search.players = sortByName(search.players, 'draw', true)
-            search.players = sortByName(search.players, 'tp_sum', true)
-            search.players = sortByName(search.players, 'opp_p', true)
-
+            // search.players = sortByName(search.players, 'draw', true)
+            // search.players = sortByName(search.players, 'tp_sum', true)
+            // search.players = sortByName(search.players, 'opp_p', true)
+            // search.players = _rosters.sort((a, b) => {
+            //     if (a.win === b.win) {
+            //       if (a.draw === b.draw) {
+            //         if (a.tp_sum === b.tp_sum) return b.opp_p - a.opp_p;
+            //         return b.tp_sum - a.tp_sum;
+            //       }
+            //       return b.draws - a.draws;
+            //     }
+            //     return b.gamesWin - a.gamesWin;
+            //   })
         } else {
+            // search.players = players.data.sort((a, b) => {
+            //     if (a.win === b.win) {
+            //       if (a.draw === b.draw) {
+            //         if (a.tp_sum === b.tp_sum) return b.opp_p - a.opp_p;
+            //         return b.tp_sum - a.tp_sum;
+            //       }
+            //       return b.draws - a.draws;
+            //     }
+            //     return b.gamesWin - a.gamesWin;
+            //   })
             search.players = sortByName(players.data, 'win', true)
-            search.players = sortByName(search.players, 'draw', true)
-            search.players = sortByName(search.players, 'tp_sum', true)
-            search.players = sortByName(search.players, 'opp_p', true)
+            // search.players = sortByName(search.players, 'draw', true)
+            // search.players = sortByName(search.players, 'tp_sum', true)
+            // search.players = sortByName(search.players, 'opp_p', true)
         }
         forceUpdate()
       }, [searchValue], 300
