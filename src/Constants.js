@@ -244,6 +244,7 @@ const Constants = {
         Destruction: '0cc9bec3-40fe-4ed4-af4e-3e2e9e099c31',
         Chaos: 'a25e9b34-58df-468f-8f57-d7f7cbdfaec1'
     },
+    tacticsIdsArray: ['b14bc337-1f07-47ab-853c-e7484b6b6661', 'b2e81319-fd3c-4ee4-aae6-f3547efee8b6', '9a1ff3fc-662d-4e98-ae89-8fe0b08136f8', '0cc9bec3-40fe-4ed4-af4e-3e2e9e099c31', 'a25e9b34-58df-468f-8f57-d7f7cbdfaec1'],
     newPlayer: {
         name: '',
         alliance: {

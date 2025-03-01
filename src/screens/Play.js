@@ -98,6 +98,10 @@ const Play = () => {
             .catch(error => console.error(error))
     }
 
+    const handleClickTactics = () => {
+        navigate('/tactics')
+    }
+
     if (isFinished) {
         return <div id='column' className='Chapter'>
             <b id={Styles.result}>Результат вашей игры принят</b>
@@ -105,6 +109,7 @@ const Play = () => {
     }
 
     return <div id='column' className='Chapter'>
+        <b id={Styles.table} >Стол {info?.table}</b>
         <div id={Styles.inputContainer}>
             <div id={Styles.playerContainer}>
                 <FloatingLabelInput
@@ -144,6 +149,7 @@ const Play = () => {
             </button>
             : null
         }
+        <button id={Styles.rosterButton} onClick={handleClickTactics}>Тактики</button>
         <button
             id={firstPlayer && secondPlayer ? Styles.button : Styles.disableButton}
             onClick={handleSendResult}

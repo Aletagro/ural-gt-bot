@@ -11,6 +11,7 @@ import Play from './screens/Play'
 import Vote from './screens/Vote'
 import Admin from './screens/Admin'
 import Help from './screens/Help'
+import Tactics from './screens/Tactics'
 import MainRules from './screens/MainRules'
 import Catalog from './screens/Catalog'
 import Army from './screens/Army'
@@ -71,6 +72,7 @@ function App() {
       <Route path={'vote'} element={<Vote />} />
       <Route path={'admin'} element={<Admin />} />
       <Route path={'help'} element={<Help />} />
+      <Route path={'tactics'} element={<Tactics />} />
       <Route path={'mainRules'} element={<MainRules />} />
       <Route path={'catalog'} element={<Catalog />} />
       <Route path={'army'} element={<Army />} />

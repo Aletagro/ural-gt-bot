@@ -31,9 +31,11 @@ const PlayerInfo = () => {
     const renderPlay = (playIndex, index) => {
         const oppId = get(player, `game_${playIndex}_opp`)
         const opponent = find(players.data, ['id', oppId])
+        const tp = get(player, `game_${playIndex}_tp`)
+        const gameResult = tp > 10 ? 'Win' : tp === 10 ? 'Draw' : tp ? 'Lose' : ''
         return opponent
             ? <button key={index} id={Styles.playContainer} onClick={handleClickPlayer(opponent)}>
-                {renderPlayRow(playIndex, `${opponent.surname} ${opponent.name}`, get(player, `game_${playIndex}_status`), get(player, `game_${playIndex}_vp`), index % 2)}
+                {renderPlayRow(playIndex, `${opponent.surname} ${opponent.name}`, gameResult, tp, index % 2)}
             </button>
             : null
     }

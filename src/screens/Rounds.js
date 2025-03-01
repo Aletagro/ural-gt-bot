@@ -38,7 +38,8 @@ const Rounds = () => {
                 })
                 .catch(error => console.error(error))
         }
-    }, [])
+    // eslint-disable-next-line
+    }, [rounds?.selected])
 
     const handleClickPlayer = (player) => () => {
         navigate('/playerInfo', {state: {player, title: `${player?.surname} ${player?.name}`}})
