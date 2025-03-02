@@ -29,7 +29,7 @@ const Vote = () => {
     const [result, setResult] = useState(isPaint ? [0, 0, 0] : [])
     const disabledSendButton = isPaint
         ? result.includes(0)
-        : size(result) !== 2
+        : size(result) !== 1
     let opponents = []
     
     const getOpponent = (value) => {
@@ -66,7 +66,7 @@ const Vote = () => {
             const index = findIndex(newResult, (res) => res === id)
             newResult.splice(index, 1)
         } else {
-            if (size(newResult) === 2) {
+            if (size(newResult) === 1) {
                 newResult.shift()
             }
             newResult.push(id)
@@ -88,7 +88,7 @@ const Vote = () => {
     return <div id='column' className='Chapter'>
         {isPaint
             ? <p id={Styles.text}>Введите номера игроков, чья армия вам понравилась больше всего</p>
-            : <p id={Styles.text}>Выберите номера игроков, с которыми у вас были самые приятные игры</p>
+            : <p id={Styles.text}>Выберите игрока, с которыми у вас была самая приятная игра</p>
         }
         {isPaint
             ? map(result, renderInput)
