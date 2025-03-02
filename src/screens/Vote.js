@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from 'react'
-import {useLocation} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import {player, players} from '../utilities/appState'
 
@@ -24,6 +24,7 @@ const inputStyle = {
 
 const Vote = () => {
     const user = tg.initDataUnsafe?.user
+    const navigate = useNavigate()
     const {type} = useLocation().state
     const isPaint = type === 'paint'
     const [result, setResult] = useState(isPaint ? [0, 0, 0] : [])
@@ -58,7 +59,8 @@ const Vote = () => {
         })
             .then(response => response.json())
             .catch(error => console.error(error))
-    }, [result, type, user?.id])
+        navigate('/')
+    }, [result, type, user?.id, navigate])
 
     const handleClickOpp = (id) => () => {
         const newResult = [...result]
