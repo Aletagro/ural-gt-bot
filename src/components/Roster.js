@@ -16,10 +16,9 @@ import Styles from './styles/Roster.module.css'
 
 const dataBase = require('../dataBase.json')
 
-const Roster = ({_roster, info}) => {
+const Roster = ({roster, info}) => {
     const navigate = useNavigate()
     const [modalData, setModalData] = useState({visible: false, title: '', text: ''})
-    const roster = JSON.parse(_roster)
 
     const handleClickAllegiance = () => {
         const armyInfo = getInfo(Constants.armyEnhancements[0], {id: roster.allegianceId, name: roster.allegiance})

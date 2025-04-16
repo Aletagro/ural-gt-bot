@@ -4,8 +4,7 @@ import Styles from './styles/Roster.module.css'
 
 const additionalOptions = ['Ensorcelled Banners', 'First Circle Titles']
 
-const RosterEasy = ({_roster, info}) => {
-    const roster = JSON.parse(_roster)
+const RosterEasy = ({roster, info}) => {
 
     const renderWeapon = ([key, value]) => value
         ? <p>&#8226; {value} x {key}</p>

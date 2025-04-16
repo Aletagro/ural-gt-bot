@@ -65,8 +65,8 @@ const RosterScreen = () => {
             <Checkbox onClick={handleChangeViewType} checked={rosterViewType.easy} />
         </div>
         {rosterViewType.easy
-            ? <RosterEasy _roster={_roster} info={rosterInfo} />
-            : <Roster _roster={_roster} info={rosterInfo} />
+            ? <RosterEasy roster={_roster} info={rosterInfo} />
+            : <Roster roster={_roster} info={rosterInfo} />
         }
         <button id={Styles.button} onClick={handleClickAllegiance}>Правила Армии</button>
     </div>

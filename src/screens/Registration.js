@@ -57,13 +57,14 @@ const Registration = () => {
     useEffect(() => {
         if (!player.isRequested) {
             player.isRequested = true
-            // fetch(`https://aoscom.online/players/player/?tg_id=${200821933}`)
+            // fetch(`https://aoscom.online/players/player/?tg_id=${530569849}`)
             fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.tgId) {
                         player.reg = true
                         player.roster = data.roster
+                        player.roster_stat = data.roster_stat
                         player.allegianceId = JSON.parse(data.roster_stat)?.allegianceId
                         player.allegiance = JSON.parse(data.roster_stat)?.allegiance
                         player.info = data
@@ -135,13 +136,13 @@ const Registration = () => {
                     {user?.id === Constants.myTgId ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
                     {player.reg && player.roster
-                        ? <Row title='Ваш ростер' navigateTo='roster' />
+                        ? <Row title='Ваш ростер' navigateTo='roster' state={{isInfo: true}} />
                         : null
                     }
                     <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
-                    {/* <Row title='Ростера' navigateTo='rosters' />
-                    <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025', round: meta.round}} /> */}
-                    <Row title='Турнирная Таблица' navigateTo='players' />
+                    {/* <Row title='Ростера' navigateTo='rosters' /> */}
+                    {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025', round: meta.round}} /> */}
+                    {/* <Row title='Турнирная Таблица' navigateTo='players' /> */}
                     {player.reg && meta.round === 5 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
                         : null

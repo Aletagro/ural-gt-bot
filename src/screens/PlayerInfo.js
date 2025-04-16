@@ -1,6 +1,9 @@
-import React from 'react'
+import React, {useReducer} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
-import {players} from '../utilities/appState'
+import Roster from '../components/Roster'
+import RosterEasy from '../components/RosterEasy'
+import Checkbox from '../components/Checkbox'
+import {players, rosterViewType} from '../utilities/appState'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -10,6 +13,8 @@ import Styles from './styles/PlayerInfo.module.css'
 
 const PlayerInfo = () => {
     const navigate = useNavigate()
+    // eslint-disable-next-line
+    const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const {player} = useLocation().state
     const rosterInfo = JSON.parse(player.roster_stat)
     
@@ -19,6 +24,11 @@ const PlayerInfo = () => {
 
     const handleClickPlayer = (player) => () => {
         navigate('/playerInfo', {state: {player, title: `${player.surname} ${player.name}`}})
+    }
+
+    const handleChangeViewType = () => {
+        rosterViewType.easy = !rosterViewType.easy
+        forceUpdate()
     }
 
     const renderPlayRow = (number, player, result, to, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
@@ -55,7 +65,14 @@ const PlayerInfo = () => {
             : null
         }
         <b id={Styles.title}>Ростер</b>
-        <p id={Styles.roster}>{JSON.parse(player.roster)}</p>
+        <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
+            <p id={Styles.checkboxText}>Easy View</p>
+            <Checkbox onClick={handleChangeViewType} checked={rosterViewType.easy} />
+        </div>
+        {rosterViewType.easy
+            ? <RosterEasy roster={JSON.parse(player.roster)} info={rosterInfo} />
+            : <Roster roster={JSON.parse(player.roster)} info={rosterInfo} />
+        }
         <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
     </div>
 }
