@@ -28,7 +28,7 @@ const RosterScreen = () => {
         : player
 
     const handleClickAllegiance = () => {
-        navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: rosterInfo.allegianceId}})
+        navigate('/army', {state: {title: _roster.allegiance, allegianceId: _roster.allegianceId}})
     }
 
     const goToOtherRoster = (index) => {

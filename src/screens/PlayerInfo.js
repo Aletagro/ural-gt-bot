@@ -17,9 +17,10 @@ const PlayerInfo = () => {
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const {player} = useLocation().state
     const rosterInfo = JSON.parse(player.roster_stat)
+    const roster = JSON.parse(player.roster)
     
     const handleClickAllegiance = () => {
-        navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: rosterInfo.allegianceId}})
+        navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: roster.allegianceId}})
     }
 
     const handleClickPlayer = (player) => () => {
@@ -70,8 +71,8 @@ const PlayerInfo = () => {
             <Checkbox onClick={handleChangeViewType} checked={rosterViewType.easy} />
         </div>
         {rosterViewType.easy
-            ? <RosterEasy roster={JSON.parse(player.roster)} info={rosterInfo} />
-            : <Roster roster={JSON.parse(player.roster)} info={rosterInfo} />
+            ? <RosterEasy roster={roster} info={rosterInfo} />
+            : <Roster roster={roster} info={rosterInfo} />
         }
         <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
     </div>
