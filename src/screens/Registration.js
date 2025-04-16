@@ -114,6 +114,7 @@ const Registration = () => {
     const handleClickButton = () => {
         handleRegUser()
         player.reg = true
+        forceUpdate()
     }
 
     const handleJudgeCall = () => {
