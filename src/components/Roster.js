@@ -19,8 +19,7 @@ const dataBase = require('../dataBase.json')
 const Roster = ({_roster, info}) => {
     const navigate = useNavigate()
     const [modalData, setModalData] = useState({visible: false, title: '', text: ''})
-    const roster = JSON.parse(_roster2)
-    // const roster = JSON.parse(_roster)
+    const roster = JSON.parse(_roster)
 
     const handleClickAllegiance = () => {
         const armyInfo = getInfo(Constants.armyEnhancements[0], {id: roster.allegianceId, name: roster.allegiance})
@@ -210,5 +209,3 @@ const Roster = ({_roster, info}) => {
 }
 
 export default Roster
-
-const _roster2 = JSON.stringify({"allegiance":"Gloomspite Gitz","allegianceId":"eef8e883-a05c-40f2-8257-912586275561","auxiliaryUnits":[],"battleFormation":"Squigalanche","factionTerrain":"Bad Moon Loonshrine","generalRegimentIndex":0,"grandAlliance":"Destruction","manifestationLore":"Forbidden Power","manifestationsList":[{"id":"f9370bfa-7ad0-4521-83f3-ca5af73af3a9","name":"Soulscream Bridge"},{"id":"f8066171-9673-4988-889d-019f30f444d3","name":"Lauchon the Soulseeker"},{"id":"2ed329fb-1cff-4020-ba7e-04e38ba1e903","name":"Horrorghast"},{"id":"f91df01a-3e37-4f9c-b83b-32e7436af094","name":"The Shards of Valagharr"}],"points":100,"pointsLimit":2000,"prayersLore":"","regimentOfRenown":null,"regiments":[{"heroId":"46863aa6-986e-4d1f-bdcb-5b77dbeb7666","points":100,"units":[{"id":"46863aa6-986e-4d1f-bdcb-5b77dbeb7666","name":"Fungoid Cave-Shaman","points":100,"modelCount":1}]}],"regimentsOfRenownUnits":[],"spellsLore":"Lore of the Clammy Dank"})

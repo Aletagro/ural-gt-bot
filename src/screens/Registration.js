@@ -134,7 +134,7 @@ const Registration = () => {
                 ? <div id='column' className='Chapter'>
                     {user?.id === Constants.myTgId ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
-                    {player.reg
+                    {player.reg && player.roster
                         ? <Row title='Ваш ростер' navigateTo='roster' />
                         : null
                     }
