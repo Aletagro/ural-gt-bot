@@ -147,7 +147,6 @@ const Admin = () => {
             </div>
         </div>
     }
-    console.log(pairings)
 
     return <div id='column' className='Chapter'>
         <p id={Styles.text}>Мета</p>

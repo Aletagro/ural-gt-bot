@@ -98,3 +98,7 @@ export const meta = {
     round: 0,
     isRoundActive: 0
 }
+
+export const rosterViewType = {
+    easy: false
+}

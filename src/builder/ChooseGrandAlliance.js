@@ -20,7 +20,7 @@ const ChooseGrandAlliance = () => {
     />
 
     return  <div id='column' className='Chapter'>
-        <h4 id={Styles.title}>Выберите Гранд Альянс</h4>
+        <h4 id={Styles.title}>Choose your Grand Alliance</h4>
         {Constants.grandAlliances.map(renderRow)}
     </div>
 }

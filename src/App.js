@@ -1,7 +1,7 @@
 import {useEffect} from 'react'
 import {Route, Routes} from 'react-router-dom'
 import Registration from './screens/Registration'
-import Roster from './screens/Roster'
+import RosterScreen from './screens/RosterScreen'
 import TournamentRules from './screens/TournamentRules'
 import Players from './screens/Players'
 import PlayerInfo from './screens/PlayerInfo'
@@ -62,7 +62,7 @@ function App() {
     <Header />
     <Routes>
       <Route index element={<Registration />} />
-      <Route path={'roster'} element={<Roster />} />
+      <Route path={'roster'} element={<RosterScreen />} />
       <Route path={'tournamentRules'} element={<TournamentRules />} />
       <Route path={'players'} element={<Players />} />
       <Route path={'playerInfo'} element={<PlayerInfo />} />

@@ -29,15 +29,15 @@ const emptyRegiment = {
 }
 
 const Builder = () => {
-    const {allegiance, allegianceId} = useLocation().state
+    const {allegiance, alliganceId} = useLocation().state
     const [open, setOpen] = useState(false)
-    const _allegianceId = allegianceId || allegiance?.id
+    const _alliganceId = alliganceId || allegiance?.id
     const navigate = useNavigate()
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
-    const warscrollIds = dataBase.data.warscroll_faction_keyword.filter((item) => item.factionKeywordId === _allegianceId).map(item => item.warscrollId)
+    const warscrollIds = dataBase.data.warscroll_faction_keyword.filter((item) => item.factionKeywordId === _alliganceId).map(item => item.warscrollId)
     const factionTerrains = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && !unit.isLegends && unit?.referenceKeywords?.includes('Terrain'))
-    const lores = dataBase.data.lore.filter(lore => lore.factionId === _allegianceId)
+    const lores = dataBase.data.lore.filter(lore => lore.factionId === _alliganceId)
     const spellsLores = []
     const preyersLores = []
     const manifestationsLores = dataBase.data.lore.filter(lore => lore.factionId === null)
@@ -50,6 +50,12 @@ const Builder = () => {
             manifestationsLores.unshift(lore)
         }
     })
+    const artefactsGroup = dataBase.data.ability_group.find(group => group.factionId === _alliganceId && group.abilityGroupType === 'artefactsOfPower')
+    const artefacts = dataBase.data.ability.filter(ability => ability.abilityGroupId === artefactsGroup?.id)
+    const heroicTraitsGroup = dataBase.data.ability_group.find(group => group.factionId === _alliganceId && group.abilityGroupType === 'heroicTraits')
+    const heroicTraits = dataBase.data.ability.filter(ability => ability.abilityGroupId === heroicTraitsGroup?.id)
+    const battleFormations = dataBase.data.battle_formation.filter(formation => formation.factionId === _alliganceId)
+
     if (spellsLores.length === 1 && !roster.spellsLore) {
         roster.spellsLore = spellsLores[0].name
     }
@@ -62,28 +68,18 @@ const Builder = () => {
     if (factionTerrains.length === 1 && !roster.factionTerrain) {
         roster.factionTerrain = factionTerrains[0].name
     }
-    if (roster.regimentOfRenown) {
-        const regimentsOfRenownWarscrollsIds = dataBase.data.ability_group_regiment_of_renown_linked_warscroll.filter(warscroll => warscroll.abilityGroupId === roster.regimentOfRenown.id)
-        roster.regimentsOfRenownUnits = regimentsOfRenownWarscrollsIds.map(item => dataBase.data.warscroll.find(warscroll => warscroll.id === item.warscrollId))
-    }
-    const artefactsGroup = dataBase.data.ability_group.find(group => group.factionId === _allegianceId && group.abilityGroupType === 'artefactsOfPower')
-    const artefacts = dataBase.data.ability.filter(ability => ability.abilityGroupId === artefactsGroup?.id)
-    const heroicTraitsGroup = dataBase.data.ability_group.find(group => group.factionId === _allegianceId && group.abilityGroupType === 'heroicTraits')
-    const heroicTraits = dataBase.data.ability.filter(ability => ability.abilityGroupId === heroicTraitsGroup?.id)
-    const battleFormations = dataBase.data.battle_formation.filter(formation => formation.factionId === _allegianceId)
     if (!battleFormations.length) {
         roster.withoutBattleFormation = true
     }
     let requiredGeneralId = allegiance?.rosterFactionKeywordRequiredGeneralWarscrollId
     if (!allegiance) {
-        requiredGeneralId = dataBase.data.faction_keyword.find(faction => faction.id === _allegianceId)?.rosterFactionKeywordRequiredGeneralWarscrollId
+        requiredGeneralId = dataBase.data.faction_keyword.find(faction => faction.id === _alliganceId)?.rosterFactionKeywordRequiredGeneralWarscrollId
     }
     let requiredGeneral = undefined
     if (requiredGeneralId) {
         requiredGeneral = dataBase.data.warscroll.find(unit => unit.id === requiredGeneralId)
         roster.requiredGeneral = requiredGeneral
     }
-    roster.allegianceId = _allegianceId
 
     const handleAddRegiment = useCallback(() => {
         roster.regiments = [...roster.regiments, emptyRegiment]
@@ -114,7 +110,7 @@ const Builder = () => {
     const handleAddAuxiliaryUnit = () => {
         navigate('/addUnit', {state: {
             isAuxiliary: true,
-            allegianceId: _allegianceId,
+            alliganceId: _alliganceId,
             title: 'Add Auxiliary Unit'
         }})
     }
@@ -122,7 +118,7 @@ const Builder = () => {
     const handleAddRegimentsOfRenown = () => {
         navigate('/addUnit', {state: {
             isRegimentsOfRenown: true,
-            allegianceId: _allegianceId,
+            alliganceId: _alliganceId,
             title: 'Add Regiments Of Renown'
         }})
     }
@@ -156,7 +152,7 @@ const Builder = () => {
     }
 
     const handleClickAllegiance = () => {
-        const info = getInfo(Constants.armyEnhancements[0], {id: _allegianceId, name: roster.allegiance})
+        const info = getInfo(Constants.armyEnhancements[0], {id: _alliganceId, name: roster.allegiance})
         navigate('/armyInfo', {state: {title: Constants.armyEnhancements[0].title, info, allegiance: {name: roster.allegiance}}})
     }
 
@@ -172,7 +168,7 @@ const Builder = () => {
     const renderRegiment = (regiment, index) => <Regiment
         key={index}
         regiment={regiment}
-        allegianceId={_allegianceId}
+        alliganceId={_alliganceId}
         index={index}
         forceUpdate={forceUpdate}
         artefacts={artefacts}
@@ -188,25 +184,40 @@ const Builder = () => {
         artefacts={artefacts}
         heroicTraits={heroicTraits}
         onReinforced={handleReinforcedAuxiliary}
+        alliganceId={_alliganceId}
+        withoutMargin
         isAuxiliary
-        allegianceId={_allegianceId}
     />
 
     const renderRegimentOfRenown = () => <UnitRow
         unit={roster.regimentOfRenown}
         onClick={handleClickRegimentOfRenown}
         onDelete={handleDeleteRegimentOfRenown}
+        alliganceId={_alliganceId}
+        withoutMargin
         withoutCopy
-        allegianceId={_allegianceId}
     />
 
-    const renderRegimentOfRenownUnit = (unit) => <Row
-        key={unit.id}
-        title={unit.name}
-        image={unit?.rowImage}
-        navigateTo='warscroll'
-        state={{unit}}
-    />
+    // RoR с дп может брать артефакты и трейты
+    const renderRegimentOfRenownUnit = (unit, index) => roster.regimentOfRenown.id === '11cc4585-4cf5-43eb-af29-e2cbcdb6f5dd'
+        ? <UnitRow
+            key={unit.id}
+            unit={unit}
+            onClick={handleClickAuxiliaryUnit}
+            unitIndex={index}
+            artefacts={artefacts}
+            heroicTraits={heroicTraits}
+            isRoRUnitWithKeyword
+            withoutMargin
+            withoutCopy
+        />
+        : <Row
+            key={`${unit.id}-${index}`}
+            title={`${unit.modelCount} ${unit.name}`}
+            image={unit?.rowImage}
+            navigateTo='warscroll'
+            state={{unit}}
+        />
 
     const renderManifestation = (manifestation) => <Row
         key={manifestation.id}
@@ -236,7 +247,7 @@ const Builder = () => {
             }
         </div>
         
-    const renderPointsLimitButton = (limit) => <button id={Styles.pointsLimitButton} onClick={handleClickPointsLimitButton(limit)}>{limit} Points</button>
+    const renderPointsLimitButton = (limit) => <button key={limit} id={Styles.pointsLimitButton} onClick={handleClickPointsLimitButton(limit)}>{limit} Points</button>
 
     const renderModalContent = () => <>
         <b id={Styles.pointsLimitTitle}>Points Limit</b>

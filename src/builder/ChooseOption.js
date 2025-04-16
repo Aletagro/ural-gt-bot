@@ -8,13 +8,16 @@ import Styles from './styles/ChooseOption.module.css'
 const dataBase = require('../dataBase.json')
 
 const ChooseOption = () => {
-    const {optionGroup, unitIndex, regimentIndex, isAuxiliary} = useLocation().state
+    const {optionGroup, unitIndex, regimentIndex, isAuxiliary, isRoRUnitWithKeyword} = useLocation().state
     const navigate = useNavigate()
     const options = dataBase.data.option.filter(option => option.optionGroupId === optionGroup.id)
 
 
     const handleClickOption = (option) => () => {
-        if (isAuxiliary) {
+        if (isRoRUnitWithKeyword) {
+            const newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [optionGroup.optionGroupType]: capitalizeFirstLetter(option)}
+            roster.regimentsOfRenownUnits[unitIndex] = newUnit
+        } else if (isAuxiliary) {
             const newUnit = {...roster.auxiliaryUnits[unitIndex], [optionGroup.optionGroupType]: capitalizeFirstLetter(option)}
             roster.auxiliaryUnits[unitIndex] = newUnit
         } else {
@@ -25,7 +28,10 @@ const ChooseOption = () => {
     }
 
     const handleDeleteOption = () => {
-        if (isAuxiliary) {
+        if (isRoRUnitWithKeyword) {
+            const newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [optionGroup.optionGroupType]: ''}
+            roster.regimentsOfRenownUnits[unitIndex] = newUnit
+        } else if (isAuxiliary) {
             const newUnit = {...roster.auxiliaryUnits[unitIndex], [optionGroup.optionGroupType]: ''}
             roster.auxiliaryUnits[unitIndex] = newUnit
         } else {

@@ -24,6 +24,7 @@ const ChooseFaction = () => {
 
     const handleClick = ({allegiance}) => {
         roster.allegiance = allegiance.name
+        roster.allegianceId = allegiance.id
         navigationState.isBuilder = true
     }
     
@@ -40,7 +41,7 @@ const ChooseFaction = () => {
     return <>
         <HeaderImage src={grandAlliance.image} alt={grandAlliance.name} isWide />
         <div id='column' className='Chapter'>
-            <h4 id={Styles.title}>Выберите Армию</h4>
+            <h4 id={Styles.title}>Choose your Faction</h4>
             {allegiances && allegiances.map(renderRow)}
             {armiesOfRenown.length > 0
                 ? <>

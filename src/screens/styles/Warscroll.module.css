@@ -56,12 +56,25 @@
   padding-bottom: 12px;
 }
 #weaponAbilities {
+  background: white;
   color: #525252;
   font-size: 14px;
   border: 1px solid #8B8B8B;
   border-radius: 24px;
   padding: 4px 8px;
   margin-right: 4px;
+}
+#regimentOptionContainer {
+  margin-top: 8px;
+}
+#regimentOption {
+  background-color: #E8E8E8;
+  font-size: 16px;
+  border: 1px solid #8B8B8B;
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-right: 4px;
+  margin-bottom: 8px;
 }
 #keyword {
   margin-right: 4px;

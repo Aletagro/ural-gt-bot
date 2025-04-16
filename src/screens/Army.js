@@ -86,7 +86,7 @@ const Army = () => {
     const renderBuilderRow = () => <Row
         title='Builder'
         navigateTo='builder'
-        state={{allegianceId: _allegiance?.id}}
+        state={{alliganceId: _allegiance?.id}}
         onClick={handleClickBuilder}
     />
 

@@ -21,9 +21,9 @@ const ArmyInfo = () => {
         abilityIdName={armyEnhancement?.abilityIdName}
     />
 
-    const renderBlock = (block) => <div key={block.id}>
-        <p id={Styles.title}>{block.name}</p>
-        {map(block.abilities, renderAbility)}
+    const renderBlock = (block) => <div key={block?.id}>
+        <p id={Styles.title}>{block?.name}</p>
+        {map(block?.abilities, renderAbility)}
     </div>
 
     return <>

@@ -1,16 +1,18 @@
-import React from 'react';
+import React, {useState} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import Constants from '../Constants'
 import {calc} from '../utilities/appState'
-import {getValue, replaceAsterisks} from '../utilities/utils'
+import {getValue, replaceAsterisks, getRegimentOption} from '../utilities/utils'
 import Ability from '../components/Ability'
 import HeaderImage from '../components/HeaderImage'
+import Modal from '../components/Modal'
 import Calculator from '../icons/calculator.svg'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
 import includes from 'lodash/includes'
+import upperFirst from 'lodash/upperFirst'
 
 import Styles from './styles/Warscroll.module.css'
 
@@ -18,6 +20,7 @@ const dataBase = require('../dataBase.json')
 
 const Warscroll = () => {
     window.scrollTo(0, 0)
+    const [modalData, setModalData] = useState({visible: false, title: '', text: ''})
     const navigate = useNavigate()
     const unit = useLocation().state.unit
     const weapons = filter(dataBase.data.warscroll_weapon, weapon => weapon.warscrollId === unit.id)
@@ -46,10 +49,18 @@ const Warscroll = () => {
 
     const getWeaponAbilityForCalculator = (abilities, name) => Boolean(abilities.find(ability => ability.name === name))
 
+    const handleCloseModal = () => {
+        setModalData({visible: false, title: '', text: ''})
+    }
+
+    const handleOpenModal = (title, text) => () => {
+        setModalData({visible: true, title, text})
+    }
+
     const handleNavigateToCalculator = () => {
         const weaponsAbilities = map(weapons, weapon => getWeaponAbilities(weapon.id))
         const weaponsForCalculator = map(weapons, (weapon, index) => ({
-            name: weapon.name,
+            name: `${weapon.name} - ${upperFirst(weapon.type)}`,
             attacks: getValue(weapon.attacks),
             damage: getValue(weapon.damage),
             toHit: Number(weapon.hit[0]),
@@ -66,11 +77,24 @@ const Warscroll = () => {
         navigate('/calculator', {state: {weapons: weaponsForCalculator, title: 'Damage Calculator'}})
     }
 
+    const handleClickRegimentOption = (option) => () => {
+        const {screen, title, data} = getRegimentOption(option, unit)
+        if (screen) {
+            navigate(`/${screen}`, {state: {title, ...data}})
+        }
+    }
+
     const renderCellTitle = (cell, index) => <p key={index} id={Styles.cellTitle}>{cell}</p>
 
     const renderCellValue = (cell, index) => <p key={index} id={Styles.cellValue}>{cell}</p>
 
-    const renderWeaponAbility = (ability) => <p key={ability.name} id={Styles.weaponAbilities}>{ability.name}</p>
+    const renderWeaponAbility = (ability) => <button
+        onClick={handleOpenModal(ability.name, replaceAsterisks(ability.rules))}
+        key={ability.name}
+        id={Styles.weaponAbilities}
+    >
+        {ability.name}
+    </button>
 
     const renderRangeWeapon = (weapon) => {
         const weaponAbilities = getWeaponAbilities(weapon.id)
@@ -114,7 +138,13 @@ const Warscroll = () => {
 
     const renderAbility = (ability) => <Ability key={ability.id} ability={ability} />
 
-    const renderRegimentOption = (option) => <p id={Styles.unitDetailsText} key={option.id}>&#8226; {replaceAsterisks(option.optionText)}</p>
+    const renderRegimentOption = (option) => <p
+        onClick={handleClickRegimentOption(option)}
+        id={Styles.regimentOption}
+        key={option.id}
+    >
+        {replaceAsterisks(option.optionText)}
+    </p>
 
     const renderCharacteristic = (characteristic) => <div key={characteristic.value} id={Styles.characteristicSubContainer} style={{width: '20%'}}>
         <div id={Styles.characteristicValueContainer}>
@@ -168,7 +198,9 @@ const Warscroll = () => {
                     {regimentOptions.length > 0
                         ? <>
                             <b>Regiment Options</b>
-                            {map(regimentOptions, renderRegimentOption)}
+                            <div id={Styles.regimentOptionContainer}>
+                                {map(regimentOptions, renderRegimentOption)}
+                            </div>
                         </>
                         : null
                     }
@@ -183,6 +215,7 @@ const Warscroll = () => {
                 : null
             }
         </div>
+        <Modal {...modalData} onClose={handleCloseModal} />
     </>
 }
 

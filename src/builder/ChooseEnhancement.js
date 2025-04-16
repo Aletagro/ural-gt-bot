@@ -9,7 +9,9 @@ import Styles from './styles/ChooseEnhancement.module.css'
 const dataBase = require('../dataBase.json')
 
 const ChooseEnhancement = () => {
-    const {data, type, unitIndex, regimentIndex, title, isInfo, isRosterInfo, isAuxiliary, isAdditionalOption} = useLocation().state
+    const {
+        data, type, unitIndex, regimentIndex, title, isInfo, isRosterInfo, isAuxiliary, isAdditionalOption, isRoRUnitWithKeyword
+    } = useLocation().state
     const navigate = useNavigate()
     let _data = data
     let info = {}
@@ -44,7 +46,10 @@ const ChooseEnhancement = () => {
     }
 
     const handleClickEnhancement = (enhancement) => {
-        if (isAuxiliary) {
+        if (isRoRUnitWithKeyword) {
+            const newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [type]: enhancement.name}
+            roster.regimentsOfRenownUnits[unitIndex] = newUnit
+        } else if (isAuxiliary) {
             const newUnit = {...roster.auxiliaryUnits[unitIndex], [type]: enhancement.name}
             roster.auxiliaryUnits[unitIndex] = newUnit
         } else {
@@ -68,6 +73,9 @@ const ChooseEnhancement = () => {
             if (type === 'manifestationLore') {
                 roster.manifestationsList = []
             }
+        } else if (isRoRUnitWithKeyword) {
+            const newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [type]: ''}
+            roster.regimentsOfRenownUnits[unitIndex] = newUnit
         } else if (isAuxiliary) {
             const newUnit = {...roster.auxiliaryUnits[unitIndex], [type]: ''}
             roster.auxiliaryUnits[unitIndex] = newUnit

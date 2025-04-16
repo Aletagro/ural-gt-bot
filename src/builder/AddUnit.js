@@ -1,11 +1,14 @@
-import React from 'react';
+import React from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import {roster} from '../utilities/appState'
 import {unitsSortesByType, sortByName} from '../utilities/utils'
 import UnitRow from './UnitRow'
 import Accordion from '../components/Accordion'
 
+import find from 'lodash/find'
+import filter from 'lodash/filter'
 import uniqBy from 'lodash/uniqBy'
+import forEach from 'lodash/forEach'
 import includes from 'lodash/includes'
 
 const dataBase = require('../dataBase.json')
@@ -13,8 +16,8 @@ const dataBase = require('../dataBase.json')
 const AddUnit = () => {
     window.scrollTo(0, 0)
     const navigate = useNavigate()
-    const {allegianceId, heroId, regimentId, isAuxiliary, isRegimentsOfRenown} = useLocation().state
-    const warscrollIds = dataBase.data.warscroll_faction_keyword.filter((item) => item.factionKeywordId === allegianceId).map(item => item.warscrollId)
+    const {alliganceId, heroId, regimentId, isAuxiliary, isRegimentsOfRenown} = useLocation().state
+    const warscrollIds = dataBase.data.warscroll_faction_keyword.filter((item) => item.factionKeywordId === alliganceId).map(item => item.warscrollId)
     let units = []
 
     const hasKeyword = (unitKeywords, requiredKeywordsArray , excludedKeywords) => {
@@ -24,7 +27,9 @@ const AddUnit = () => {
             const filtredKeywords = unitKeywords.filter(Keyword => requiredKeywords.find(requiredKeyword => requiredKeyword.id === Keyword.keywordId))
             if (requiredKeywords?.length === filtredKeywords?.length) {
                 // Проверка, что нет исключающих кейвордов
-                if (!unitKeywords.find(unitKeyword => unitKeyword.keywordId === excludedKeywords[index]?.id)) {
+                if (!unitKeywords.find(unitKeyword => {
+                    return find(excludedKeywords[index], ['id', unitKeyword.keywordId])
+                })) {
                     isHas = true
                 }
             }
@@ -33,7 +38,7 @@ const AddUnit = () => {
     }
 
     if (isRegimentsOfRenown) {
-        const regimentsOfRenownKeywords = dataBase.data.ability_group_regiment_of_renown_permitted_faction_keyword.filter(keyword => keyword.factionKeywordId === allegianceId)
+        const regimentsOfRenownKeywords = dataBase.data.ability_group_regiment_of_renown_permitted_faction_keyword.filter(keyword => keyword.factionKeywordId === alliganceId)
         units = regimentsOfRenownKeywords.map(keyword => dataBase.data.ability_group.find(group => group.id === keyword.abilityGroupId))
     } else if (isAuxiliary) {
         units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && unit.points)
@@ -44,7 +49,7 @@ const AddUnit = () => {
         // определяем кейворды всех юнитов фракции
         const allUnitsKeywordsIds = allUnits.map(unit => dataBase.data.warscroll_keyword.filter(keyword => keyword.warscrollId === unit.id))
         // определяем опция реджимента героя
-        const regimentOptions = dataBase.data.warscroll_regiment_option.filter(({warscrollId, requiredRosterFactionKeywordId}) => warscrollId === heroId && (requiredRosterFactionKeywordId ? requiredRosterFactionKeywordId === allegianceId : true))
+        const regimentOptions = dataBase.data.warscroll_regiment_option.filter(({warscrollId, requiredRosterFactionKeywordId}) => warscrollId === heroId && (requiredRosterFactionKeywordId ? requiredRosterFactionKeywordId === alliganceId : true))
         const regimentOptionsAny = regimentOptions.filter(option => option.childQuantity === 'any' && !option.requiredWarscrollId && (option.requiredFactionKeywordId !== '298391fb-3d74-4a26-b9cc-5f3ad5fe4852' || option.requiredFactionKeywordId !== '21ed7371-d9e3-4a05-8b2c-db46cee7d29d'))
         const regimentOptionsAnyWithRequiredWarscroll = regimentOptions.filter(option => option.childQuantity === 'any' && option.requiredWarscrollId)
         const regimentOptionsOne = regimentOptions.filter(option => option.childQuantity === 'one' || option.childQuantity === 'zeroToOne')
@@ -56,8 +61,8 @@ const AddUnit = () => {
             const optionRequiredKeywords = regimentOptionsAny.map(({id}) => dataBase.data.warscroll_regiment_option_required_keyword.filter(({warscrollRegimentOptionId}) => warscrollRegimentOptionId === id))
             const requiredKeywords = optionRequiredKeywords.map(keywords => keywords.map(keyword => dataBase.data.keyword.find(({id}) => id === keyword?.keywordId)))
             // находим кейворды исключающих опций
-            const optionExcludedKeywords = regimentOptionsAny.map(({id}) => dataBase.data.warscroll_regiment_option_excluded_keyword.find(({warscrollRegimentOptionId}) => warscrollRegimentOptionId === id))
-            const excludedKeywords = optionExcludedKeywords.map(keyword => dataBase.data.keyword.find(({id}) => id === keyword?.keywordId))
+            const optionExcludedKeywords = regimentOptionsAny.map(({id}) => dataBase.data.warscroll_regiment_option_excluded_keyword.filter(({warscrollRegimentOptionId}) => warscrollRegimentOptionId === id))
+            const excludedKeywords = optionExcludedKeywords.map(keywords => keywords.map(keyword => dataBase.data.keyword.find(({id}) => id === keyword?.keywordId)))
             // ищем нужных нам юнитов
             const legalUnits = allUnitsKeywordsIds.filter(unitKeywordsIds => hasKeyword(unitKeywordsIds, requiredKeywords, excludedKeywords))
             const legalUnitsIds = legalUnits.map(unit => unit[0].warscrollId)
@@ -124,6 +129,15 @@ const AddUnit = () => {
         navigate(-1)
         if (isRegimentsOfRenown) {
             roster.regimentOfRenown = unit
+            const regimentsOfRenownWarscrollsIds = filter(dataBase.data.ability_group_regiment_of_renown_linked_warscroll, ['abilityGroupId', unit.id])
+            const regimentsOfRenownUnits = []
+            forEach(regimentsOfRenownWarscrollsIds, item => {
+                const warscroll = find(dataBase.data.warscroll, ['id', item.warscrollId])
+                for (let i = item.instanceCount; i > 0; i--) {
+                    regimentsOfRenownUnits.push(warscroll)
+                }
+            })
+            roster.regimentsOfRenownUnits = regimentsOfRenownUnits
         } else if (isAuxiliary) {
             roster.auxiliaryUnits.push(unit)
         } else {

@@ -3,6 +3,7 @@ import Constants from '../Constants'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
+import size from 'lodash/size'
 import filter from 'lodash/filter'
 import indexOf from 'lodash/indexOf'
 import forEach from 'lodash/forEach'
@@ -352,4 +353,94 @@ export const getCalcWeapon = (weapon) => {
         return {...weapon}
     }
     return {critOn: {modificator: 1, title: '6+'}}
+}
+
+const hasKeyword = (unitKeywords, requiredKeywords , excludedKeywords) => {
+    let isHas = false
+    // Проверка, что все кейворды обязательные имеются
+    const filtredKeywords = unitKeywords.filter(Keyword => requiredKeywords.find(requiredKeyword => requiredKeyword.id === Keyword.keywordId))
+    if (requiredKeywords?.length === filtredKeywords?.length) {
+        // Проверка, что нет исключающих кейвордов
+        if (!unitKeywords.find(unitKeyword => {
+            return find(excludedKeywords, ['id', unitKeyword.keywordId])
+        })) {
+            isHas = true
+        }
+    }
+    return isHas
+}
+
+export const getRegimentOption = (option, unit) => {
+    const publicationId = find(dataBase.data.warscroll_publication, ['warscrollId', unit.id])?.publicationId
+    let alliganceId = find(dataBase.data.publication, ['id', publicationId])?.factionKeywordId
+    if (includes(unit.referenceKeywords, 'Ironjawz')) {
+        alliganceId = '298391fb-3d74-4a26-b9cc-5f3ad5fe4852'
+    } else if (includes(unit.referenceKeywords, 'Kruleboyz')) {
+        alliganceId = '21ed7371-d9e3-4a05-8b2c-db46cee7d29d'
+    }
+    const warscrollIds = dataBase.data.warscroll_faction_keyword.filter((item) => item.factionKeywordId === alliganceId).map(item => item.warscrollId)
+    // определяем всех юнитов фракции
+    const allUnits = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && !unit.isLegends && unit.points !== null)
+    // определяем кейворды всех юнитов фракции
+    const allUnitsKeywordsIds = allUnits.map(unit => dataBase.data.warscroll_keyword.filter(keyword => keyword.warscrollId === unit.id))
+    let units = []
+    if (option.childQuantity === 'any') {
+        if (option.requiredWarscrollId) {
+                const requiredUnit = allUnits.find(warscroll => warscroll.id === option.requiredWarscrollId)
+                if (requiredUnit) {
+                    return {
+                        screen: 'warscroll',
+                        title: requiredUnit.name,
+                        data: {unit: requiredUnit}
+                    }
+                }
+        } else {
+            // находим кейворды обязательных опций
+            const optionRequiredKeywords = dataBase.data.warscroll_regiment_option_required_keyword.filter(({warscrollRegimentOptionId}) => warscrollRegimentOptionId === option.id)
+            const requiredKeywords = optionRequiredKeywords.map(keyword => dataBase.data.keyword.find(({id}) => id === keyword?.keywordId))
+            // // находим кейворды исключающих опций
+            const optionExcludedKeywords = dataBase.data.warscroll_regiment_option_excluded_keyword.filter(({warscrollRegimentOptionId}) => warscrollRegimentOptionId === option.id)
+            const excludedKeywords = optionExcludedKeywords.map(keyword => dataBase.data.keyword.find(({id}) => id === keyword?.keywordId))
+            // // ищем нужных нам юнитов
+            const legalUnits = allUnitsKeywordsIds.filter(unitKeywordsIds => hasKeyword(unitKeywordsIds, requiredKeywords, excludedKeywords))
+            const legalUnitsIds = legalUnits.map(unit => unit[0].warscrollId)
+            units = legalUnitsIds.map(legalUnitsId => allUnits.find(unit => unit.id === legalUnitsId))
+        }
+    }  else if (option.childQuantity === 'zeroToOne' || option.childQuantity === 'one') {
+        if (option.requiredWarscrollId) {
+            const requiredUnit = allUnits.find(warscroll => warscroll.id === option.requiredWarscrollId)
+            if (requiredUnit) {
+                return {
+                    screen: 'warscroll',
+                    title: requiredUnit.name,
+                    data: {unit: requiredUnit}
+                }
+            }
+        } else {
+            // находим кейворды обязательных опций
+            const requiredKeywordId = dataBase.data.warscroll_regiment_option_required_keyword.find(keyword => keyword.warscrollRegimentOptionId === option.id)?.keywordId
+            const warscrollIds =  dataBase.data.warscroll_keyword.filter(warscrollKeyword => warscrollKeyword.keywordId === requiredKeywordId)
+            // находим кейворды исключающих опций
+            const excludedKeywordId = dataBase.data.warscroll_regiment_option_excluded_keyword.find(keyword => keyword.warscrollRegimentOptionId === option.id)?.keywordId
+            const excludedKeyword =  dataBase.data.keyword.find(keyword => keyword.id === excludedKeywordId)?.name
+            const warscrolls = warscrollIds.map(({warscrollId}) => {
+                const _warscroll = allUnits.find(warscroll => warscroll.id === warscrollId && !warscroll.referenceKeywords.includes(excludedKeyword))
+                if (_warscroll) {
+                    return {..._warscroll, onlyOne: option.id}
+                }
+                return null
+            }).filter(Boolean)
+            if (warscrolls.length) {
+                units = [...units, ...warscrolls]
+            }
+        }
+    }
+    if (size(units)) {
+        return {
+            screen: 'units',
+            title: 'Units',
+            data: {units}
+        }
+    }
+    return {}
 }
