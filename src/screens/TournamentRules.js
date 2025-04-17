@@ -18,9 +18,9 @@ const TournamentRules = () => {
 
     return <div id='column' className='Chapter'>
         <p id={Styles.text}>Формат турнира — 2000 очков, Battlepack из General Handbook 2024: Pitched Battles 2024-25. Турнир проходит в пять раундов по швейцарской системе.</p>
-        <p id={Styles.text}>Играем с учетом официальных FAQ, опубликованных до 11 апреля включительно. Также используется FAQ организации судей российских турниров</p>
-        <p id={Styles.text}>Подача ростера. Подайте ростер до 23:59 11 апреля. Ростер необходимо подать, через данное приложение</p>
-        <h2>13 апреля</h2>
+        <p id={Styles.text}>Играем с учетом официальных FAQ, опубликованных до 18 апреля включительно. Также используется FAQ организации судей российских турниров</p>
+        <p id={Styles.text}>Подача ростера. Подайте ростер до 23:59 18 апреля. Ростер необходимо подать, через данное приложение</p>
+        <h2>19 апреля</h2>
         <table>
         <tr>
             <th>Время</th>
@@ -33,22 +33,22 @@ const TournamentRules = () => {
             {/* <td></td> */}
         </tr>
         <tr>
-            <td>10:00 - 12:45</td>
+            <td>10:00 - 13:00</td>
             <td>1 тур</td>
             {/* <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'Feral Foray']))}</td> */}
         </tr>
         <tr>
-            <td>13:45 - 16:30</td>
+            <td>14:00 - 17:00</td>
             <td>2 тур</td>
             {/* <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'The Vice']))}</td> */}
         </tr>
         <tr>
-            <td>17:00 - 19:45</td>
+            <td>17:30 - 20:30</td>
             <td>3 тур</td>
             {/* <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'Focal Points']))}</td> */}
         </tr>
         </table>
-        <h2>14 апреля</h2>
+        <h2>20 апреля</h2>
         <table>
             <tr>
                 <th>Время</th>
@@ -56,17 +56,17 @@ const TournamentRules = () => {
                 {/* <th>Battleplan</th> */}
             </tr>
             <tr>
-                <td>10:00 - 12:45</td>
+                <td>10:00 - 13:00</td>
                 <td>4 тур</td>
                 {/* <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'The Jaws of Gallet']))}</td> */}
             </tr>
             <tr>
-                <td>13:45 - 16:30</td>
+                <td>14:00 - 17:00</td>
                 <td>5 тур</td>
                 {/* <td>{renderBattleplan(find(Constants.tournamentBattleplans, ['title', 'Limited Resources']))}</td> */}
             </tr>
             <tr>
-                <td>17:00 - 17:15</td>
+                <td>17:01 - 17:15</td>
                 <td>Награждение</td>
                 {/* <td></td> */}
             </tr>
@@ -85,7 +85,7 @@ const TournamentRules = () => {
             <li>победа с отрывом в 33-36 очков — счет 19-1;</li>
             <li>разгром с отрывом 37 и более очков — счет 20-0</li>
         </ul>
-        <p id={Styles.text}><b>Временной регламент</b> Каждый раунд длится 2 часа 45 минут</p>
+        <p id={Styles.text}><b>Временной регламент</b> Каждый раунд длится 3 часа</p>
         <b id={Styles.text}>Номинации турнира</b>
         <p id={Styles.text}>Победителем турнира станет игрок с максимальным количеством побед. В случае равенства по этому критерию выше окажется игрок с большим количеством ничьих. Если побед и ничьих поровну, то выше окажется игрок с максимальной суммой ТО. В случае равного количества TO игроки будут распределены по силе их оппонентов</p>
     </div>
