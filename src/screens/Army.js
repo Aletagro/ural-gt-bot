@@ -3,7 +3,7 @@ import {useLocation} from 'react-router-dom'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Constants from '../Constants'
-import {roster, navigationState} from '../utilities/appState'
+// import {roster, navigationState} from '../utilities/appState'
 import {replaceAsterisks, getInfo} from '../utilities/utils'
 
 import map from 'lodash/map'
@@ -69,11 +69,11 @@ const Army = () => {
         armyOfRenown = filter(dataBase.data.faction_keyword, (faction) => faction.parentFactionKeywordId === _allegiance?.id)
     }
 
-    const handleClickBuilder = () => {
-        roster.grandAlliance = grandAlliance
-        roster.allegiance = _allegiance.name
-        navigationState.isBuilder = true
-    }
+    // const handleClickBuilder = () => {
+    //     roster.grandAlliance = grandAlliance
+    //     roster.allegiance = _allegiance.name
+    //     navigationState.isBuilder = true
+    // }
 
     const renderRow = (item) => <Row
         key={item.title}
@@ -83,12 +83,12 @@ const Army = () => {
     />
 
 
-    const renderBuilderRow = () => <Row
-        title='Builder'
-        navigateTo='builder'
-        state={{alliganceId: _allegiance?.id}}
-        onClick={handleClickBuilder}
-    />
+    // const renderBuilderRow = () => <Row
+    //     title='Builder'
+    //     navigateTo='builder'
+    //     state={{alliganceId: _allegiance?.id}}
+    //     onClick={handleClickBuilder}
+    // />
 
     const renderArmyOfRenown = (item) => <Row
         key={item.title}
@@ -103,7 +103,7 @@ const Army = () => {
         <HeaderImage src={_allegiance?.rosterHeaderImage} alt={_allegiance?.name} isWide />
         <div id='column' className='Chapter'>
             {items.map(renderRow)}
-            {renderBuilderRow()}
+            {/* {renderBuilderRow()} */}
             {armyOfRenown.length > 0
                 ? <div>
                     <p id={Styles.armyOfRenown}>Army of Renown</p>

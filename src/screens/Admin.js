@@ -1,9 +1,12 @@
-import React, {useState, useCallback} from 'react'
+import React, {useState, useCallback, useReducer} from 'react'
 import FloatingLabelInput from '../components/FloatingLabelInput'
-import {players} from '../utilities/appState'
+import Checkbox from '../components/Checkbox'
+import {players, meta} from '../utilities/appState'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
+import size from 'lodash/size'
+import remove from 'lodash/remove'
 
 import Styles from './styles/Admin.module.css'
 
@@ -17,15 +20,17 @@ const inputStyle = {
 }
 
 const Admin = () => {
+    // eslint-disable-next-line
+    const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const [playerId, setPlayerId] = useState('')
     const [key, setKey] = useState('')
     const [value, setValue] = useState('')
     const [round, setRound] = useState('1')
     const [pairings, setPairings] = useState([])
-    const [firstP, setFirstP] = useState('')
-    const [secondP, setSecondP] = useState('')
-    const [newRound, setNewRound] = useState(0)
-    const [newStatus, setNewStatus] = useState(0)
+    const [playersForChange, setPlayersForChange] = useState([])
+    const [newRound, setNewRound] = useState()
+    const [newStatus, setNewStatus] = useState()
+    const isChangeButtonDisabled = size(playersForChange) !== 2
 
     const handleChangePlayerId = (e) => {
         setPlayerId(e.target.value)
@@ -41,14 +46,6 @@ const Admin = () => {
 
     const handleSetRound = (e) => {
         setRound(e.target.value)
-    }
-
-    const handleChangeFirstP = (e) => {
-        setFirstP(e.target.value)
-    }
-
-    const handleChangeSecondP = (e) => {
-        setSecondP(e.target.value)
     }
 
     const handleChangeNewRound = (e) => {
@@ -77,22 +74,22 @@ const Admin = () => {
     }, [round])
 
     const handleChangePlayers = () => {
-        if (firstP && secondP) {
-            const newPairings = {...pairings}
-            const first = firstP.split('-')
-            const second = secondP.split('-')
+        const newPairings = {...pairings}
+        const firstPlayer = playersForChange[0]
+        const secondPlayer = playersForChange[1]
+        
+        const oldFirstPlayerTable = newPairings[firstPlayer[0]]
+        const oldSecondPlayerTable = newPairings[secondPlayer[0]]
 
-            const firstId = newPairings[first[0]][first[1] - 1]
-            let firstNewPlay = [...newPairings[second[0]]]
-            firstNewPlay[second[1] - 1] = firstId
-            const secondId = newPairings[second[0]][second[1] - 1]
-            let secondNewPlay = [...newPairings[first[0]]]
-            secondNewPlay[first[1] - 1] = secondId
-            
-            newPairings[second[0]] = firstNewPlay.sort((a, b) => a - b)
-            newPairings[first[0]] = secondNewPlay.sort((a, b) => a - b)
-            setPairings(newPairings)
-        }
+        const newCheckedPlayersTable = [firstPlayer[1], secondPlayer[1]]
+        const firstRemainingPlayer = find(oldFirstPlayerTable, p => p !== firstPlayer[1])
+        const secondRemainingPlayer = find(oldSecondPlayerTable, p => p !== secondPlayer[1])
+        const newRemainingPlayersTable = [firstRemainingPlayer, secondRemainingPlayer]
+        
+        newPairings[firstPlayer[0]] = newCheckedPlayersTable.sort((a, b) => a - b)
+        newPairings[secondPlayer[0]] = newRemainingPlayersTable.sort((a, b) => a - b)
+        setPairings(newPairings)
+        setPlayersForChange([])
     }
 
     const handleStartRound = useCallback(async () => {
@@ -107,6 +104,17 @@ const Admin = () => {
             .then(response => response.json())
             .catch(error => console.error(error))
     }, [pairings, round])
+
+    const handleGetMeta = useCallback(async () => {
+        fetch('https://aoscom.online/tournament-meta/')
+            .then(response => response.json())
+            .then(data => {
+                meta.round = Number(data.round)
+                meta.isRoundActive = Number(data.isRoundActive)
+                forceUpdate()
+            })
+            .catch(error => console.error(error))
+    }, [])
       
     const handleChangeMeta = useCallback(async () => {
         await fetch('https://aoscom.online/tournament-meta/any_state', {
@@ -117,39 +125,58 @@ const Admin = () => {
                 'Accept': "application/json, text/javascript, /; q=0.01"
             }
         })
-            .then(response => response.json())
+            .then(() => {
+                handleGetMeta()
+            })
             .catch(error => console.error(error))
-    }, [newRound, newStatus])
+    }, [newRound, newStatus, handleGetMeta])
+
+    const handleCheckPlayer = (id, table) => (checked) => {
+        let newData = [...playersForChange]
+        if (checked) {
+            newData.push([table, id])
+        } else {
+            newData = remove(newData, p => {
+                return p[1] !== id
+            })
+        }
+        setPlayersForChange(newData)
+    }
+
+    const renderPlayer = (player, table, isFirst) => {
+        const playerArmy = JSON.parse(player?.roster_stat)?.allegiance
+        const isChecked = find(playersForChange, p => p[1] === player?.id)
+        return <div id={Styles.player}>
+            <b>{isFirst ? 'Первый' : 'Второй'} игрок</b>
+            <p>Имя: {player?.surname} {player?.name}</p>
+            <p>id: {player?.id}</p>
+            <p>Город: {player?.city}</p>
+            <p>Армия: {playerArmy}</p>
+            <Checkbox
+                onClick={handleCheckPlayer(player?.id, Number(table))}
+                checked={isChecked}
+                disabled={!isChecked && size(playersForChange) >= 2}
+            />
+        </div>
+    }
 
     const renderPairing = (pairing, index) => {
         const firstPlayer = find(players.data, ['id', pairing[0]])
         if (!firstPlayer) {
             return null
         }
-        const firstPlayerArmy = JSON.parse(firstPlayer?.roster_stat)?.allegiance
         const secondPlayer = find(players.data, ['id', pairing[1]])
-        const secondPlayerArmy = JSON.parse(secondPlayer?.roster_stat)?.allegiance
         return <div id={Styles.play} key={index}>
             <h3 id={Styles.text}>Стол {index}</h3>
-            <div id={Styles.player}>
-                <b>Первый игрок</b>
-                <p>Имя: {firstPlayer?.surname} {firstPlayer?.name}</p>
-                <p>id: {firstPlayer?.id}</p>
-                <p>Город: {firstPlayer?.city}</p>
-                <p>Армия: {firstPlayerArmy}</p>
-            </div>
-            <div id={Styles.player}>
-                <b>Второй игрок</b>
-                <p>Имя: {secondPlayer?.surname} {secondPlayer?.name}</p>
-                <p>id: {secondPlayer?.id}</p>
-                <p>Город: {secondPlayer?.city}</p>
-                <p>Армия: {secondPlayerArmy}</p>
-            </div>
+            {renderPlayer(firstPlayer, index, true)}
+            {renderPlayer(secondPlayer, index)}
         </div>
     }
 
     return <div id='column' className='Chapter'>
-        <p id={Styles.text}>Мета</p>
+        <b id={Styles.text}>Мета</b>
+        <p id={Styles.text}>Раунд - {meta.round || 0}</p>
+        <p id={Styles.text}>Статус Раунда - {meta.isRoundActive ? 'Активен' : 'Не Активен'}</p>
         <FloatingLabelInput
             style={inputStyle}
             onChange={handleChangeNewRound}
@@ -160,6 +187,7 @@ const Admin = () => {
             style={inputStyle}
             onChange={handleChangeNewStatus}
             label='Установить Статус'
+            placeholder='1 - активен, 0 - не активен'
             value={newStatus}
         />
         <button id={Styles.button} onClick={handleChangeMeta}>Изменить мету</button>
@@ -190,26 +218,18 @@ const Admin = () => {
             value={round}
         />
         <button id={Styles.button} onClick={handleCreateParings}>Создать паринги нового раунда</button>
-        <b id={Styles.text}>Изменение парингов</b>
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangeFirstP}
-            label='Первый игрок (Стол-Игрок)'
-            placeholder='3-1'
-            value={firstP}
-        />
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangeSecondP}
-            label='Второй игрок (Стол-Игрок)'
-            placeholder='7-2'
-            value={secondP}
-        />
-        <button id={Styles.button} onClick={handleChangePlayers}>Поменять игроков</button>
-        <b id={Styles.text}>Паринги</b>
-        <div>
-            {map(pairings, renderPairing)}
-        </div>
+        {pairings
+            ? <>
+                <b id={Styles.text}>Паринги</b>
+                <div>
+                    {map(pairings, renderPairing)}
+                </div>
+                <button id={isChangeButtonDisabled ? Styles.disableButton : Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
+                    Запарить выбранных игроков друг на друга
+                </button>
+            </>
+            : null
+        }
         <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button>
     </div>
 }

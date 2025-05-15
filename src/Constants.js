@@ -416,6 +416,18 @@ const Constants = {
 
     tournamentBattleplans: [
         {
+            "id": "86dbc020-5032-4f29-8753-e9d11e41c2e3",
+            "title": "Border War",
+            "scoreParams": [
+                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
+                {title: 'Friendly Objective', id: 'friendlyObjective', value: 1, completed: false},
+                {title: 'First Border Objective', id: 'firstBorderObjective', value: 2, completed: false},
+                {title: 'Second Border Objective', id: 'secondBorderObjective', value: 2, completed: false},
+                {title: 'Enemy Objective', id: 'enemyObjective', value: 5, completed: false}
+            ],
+            "maxForObjectives": 6
+        },
+        {
             "id": "53d86219-6dae-4b17-97ab-e2fa8279c949",
             "title": "Feral Foray",
             "scoreParams": [
@@ -450,16 +462,6 @@ const Constants = {
         {
             "id": "375743bf-f4c8-4eff-ba26-4fc304ce8d4f",
             "title": "The Jaws of Gallet",
-            "scoreParams": [
-                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
-                {title: 'One', id: 'one', value: 2, completed: false},
-                {title: 'Two and More', id: 'twoAndMore', value: 2, completed: false},
-                {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false}
-            ]
-        },
-        {
-            "id": "feb5d29e-a134-4842-ad59-9b06ff5846de",
-            "title": "Limited Resources",
             "scoreParams": [
                 {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
                 {title: 'One', id: 'one', value: 2, completed: false},

@@ -4,10 +4,12 @@ import Checkmark from '../icons/checkmark.svg'
 
 import Styles from './styles/Checkbox.module.css'
 
-const Checkbox = ({onClick, checked, isGold}) => {   
+const Checkbox = ({onClick, checked, disabled, isGold}) => {   
     
     const handleClick = () => {
-        onClick(!checked)
+        if (!disabled && onClick) {
+            onClick(!checked)
+        }
     }
 
     return <button id={Styles.checkbox} onClick={handleClick}>
@@ -15,7 +17,7 @@ const Checkbox = ({onClick, checked, isGold}) => {
             ? <div id={Styles.checkmarkIcon}>
                 <img src={isGold ? GoldCheckmark : Checkmark} alt="" />
             </div>
-            : <div id={Styles.uncheckedCheckbox} style={{'border-color': isGold ? '#FFFFFF' : ' rgb(46, 46, 49)'}}/>
+            : <div id={disabled ? Styles.disabledCheckbox : Styles.uncheckedCheckbox} style={{'border-color': isGold ? '#FFFFFF' : ' rgb(46, 46, 49)'}}/>
         }
     </button>
 }

@@ -11,6 +11,16 @@
     font-family: 'Minion Pro Bold';
     margin-bottom: 16px;
 }
+#disableButton {
+    background: rgb(201, 200, 199);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+    margin-bottom: 16px;
+}
 #play {
     display: inline-block;
     width: 200px;

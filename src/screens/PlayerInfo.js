@@ -65,16 +65,21 @@ const PlayerInfo = () => {
             </>
             : null
         }
-        <b id={Styles.title}>Ростер</b>
-        <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
-            <p id={Styles.checkboxText}>Easy View</p>
-            <Checkbox onClick={handleChangeViewType} checked={rosterViewType.easy} />
-        </div>
-        {rosterViewType.easy
-            ? <RosterEasy roster={roster} info={rosterInfo} />
-            : <Roster roster={roster} info={rosterInfo} />
+        {roster
+            ? <>
+                <b id={Styles.title}>Ростер</b>
+                <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
+                    <p id={Styles.checkboxText}>Easy View</p>
+                    <Checkbox onClick={handleChangeViewType} checked={rosterViewType.easy} />
+                </div>
+                {rosterViewType.easy
+                    ? <RosterEasy roster={roster} info={rosterInfo} />
+                    : <Roster roster={roster} info={rosterInfo} />
+                }
+                <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
+            </>
+            : null
         }
-        <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
     </div>
 }
 

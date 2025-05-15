@@ -142,6 +142,9 @@ const Roster = ({roster, info}) => {
             isInfo
         />
     }
+    if (!roster) {
+        return null
+    }
 
     return <div >
         <div id={Styles.block} onClick={handleClickAllegiance}>
