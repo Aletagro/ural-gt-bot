@@ -92,7 +92,7 @@ const Header = () => {
             ? null
             : <button id={Styles.leftButton} onClick={handleGoBack}><img src={ArrowBack} alt='' /></button>
         }
-        <p id={Styles.title}>{state?.title || 'Ural GT 2025'}</p>
+        <p id={Styles.title}>{state?.title || 'Strelka 2025'}</p>
         {renderRightButton()}
     </div>
 }

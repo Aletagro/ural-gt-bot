@@ -11,6 +11,8 @@ import HeaderImage from '../components/HeaderImage'
 // import UGT from '../images/UGT.png'
 import Strelka from '../images/Strelka.png'
 
+import includes from 'lodash/includes'
+
 import Styles from './styles/Registration.module.css'
 
 const tg = window.Telegram.WebApp
@@ -65,7 +67,7 @@ const Registration = () => {
     useEffect(() => {
         if (!player.isRequested) {
             player.isRequested = true
-            // fetch(`https://aoscom.online/players/player/?tg_id=${530569849}`)
+            // fetch(`https://aoscom.online/players/player/?tg_id=${208050275}`)
             fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
                 .then(response => response.json())
                 .then(data => {
@@ -141,7 +143,7 @@ const Registration = () => {
             </div>
             : player.reg
                 ? <div id='column' className='Chapter'>
-                    {user?.id === Constants.myTgId ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
+                    {user?.id === Constants.myTgId || includes(Constants.judgesIds, player?.info?.tgId) ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {/* <Row title='Кабинет Организатора' navigateTo='admin' /> */}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
                     {player.reg && player.roster
@@ -150,7 +152,7 @@ const Registration = () => {
                     }
                     {/* <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' /> */}
                     {/* <Row title='Ростера' navigateTo='rosters' />
-                    <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2025', round: meta.round}} /> */}
+                    <Row title='Раунды' navigateTo='rounds' state={{title: 'Strelka 2025', round: meta.round}} /> */}
                     <Row title='Турнирная Таблица' navigateTo='players' />
                     {player.reg && meta.round === 5 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
