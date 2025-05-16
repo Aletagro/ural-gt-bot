@@ -11,6 +11,7 @@ import HeaderImage from '../components/HeaderImage'
 // import UGT from '../images/UGT.png'
 import Strelka from '../images/Strelka.png'
 
+import size from 'lodash/size'
 import includes from 'lodash/includes'
 
 import Styles from './styles/Registration.module.css'
@@ -40,6 +41,8 @@ const cities = [
     'Тула',
     'Краснодар'
 ]
+
+const PLAYERS_LIMIT = 24
 
 const Registration = () => {
     // eslint-disable-next-line
@@ -135,6 +138,46 @@ const Registration = () => {
         toast.success('Судья спешит на помощь!', Constants.toastParams)
     }
 
+    const renderRegForm = () => <div>
+        <h2 id={Styles.title}>Регистрация на Стрелка 2025</h2>
+        <FloatingLabelInput
+            style={inputStyle}
+            onChange={handleChangeName}
+            label='Ваше имя'
+            value={name}
+        />
+        <FloatingLabelInput
+            style={inputStyle}
+            onChange={handleChangeSurname}
+            label='Ваша фамилия'
+            value={surname}
+        />
+        <Autocomplete
+            placeholder='Город'
+            onInputChange={handleChangeCity}
+            options={cities.sort()}
+            sx={inputStyle}
+            value={city}
+            autoComplete={true}
+            autoSelect={true}
+            freeSolo={true}
+        />
+        <div id={Styles.buttonContainer}>
+            <button
+                id={isDisableButton ? Styles.disableRegButton : Styles.regButton}
+                onClick={handleClickButton}
+                disabled={isDisableButton}
+            >
+                Зарегистрироваться
+            </button>
+        </div>
+    </div>
+
+    const renderPlayersLimitStub = () => <div>
+        <h2 id={Styles.title}>К сожалению, все места на турнире уже заняты</h2>
+        <h2 id={Styles.title}>Пожалуйста, напишите организаторам, чтобы они добавили вас в лист ожидания</h2>
+    </div>
+
     return <>
         <HeaderImage src={Strelka} alt='Core Documents' isUral />
         {fetching.main
@@ -151,8 +194,8 @@ const Registration = () => {
                         : null
                     }
                     {/* <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' /> */}
-                    {/* <Row title='Ростера' navigateTo='rosters' />
-                    <Row title='Раунды' navigateTo='rounds' state={{title: 'Strelka 2025', round: meta.round}} /> */}
+                    {/* <Row title='Ростера' navigateTo='rosters' /> */}
+                    {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Strelka 2025', round: meta.round}} /> */}
                     <Row title='Турнирная Таблица' navigateTo='players' />
                     {player.reg && meta.round === 5 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
@@ -169,40 +212,9 @@ const Registration = () => {
                     {meta.isRoundActive ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     <ToastContainer />
                 </div>
-                : <div>
-                    <h2 id={Styles.title}>Регистрация на Стрелка 2025</h2>
-                    <FloatingLabelInput
-                        style={inputStyle}
-                        onChange={handleChangeName}
-                        label='Ваше имя'
-                        value={name}
-                    />
-                    <FloatingLabelInput
-                        style={inputStyle}
-                        onChange={handleChangeSurname}
-                        label='Ваша фамилия'
-                        value={surname}
-                    />
-                    <Autocomplete
-                        placeholder='Город'
-                        onInputChange={handleChangeCity}
-                        options={cities.sort()}
-                        sx={inputStyle}
-                        value={city}
-                        autoComplete={true}
-                        autoSelect={true}
-                        freeSolo={true}
-                    />
-                    <div id={Styles.buttonContainer}>
-                        <button
-                            id={isDisableButton ? Styles.disableRegButton : Styles.regButton}
-                            onClick={handleClickButton}
-                            disabled={isDisableButton}
-                        >
-                            Зарегистрироваться
-                        </button>
-                    </div>
-                </div>
+                : size(players.data) >= PLAYERS_LIMIT
+                    ? renderPlayersLimitStub()
+                    : renderRegForm()
         }
     </>
 }
