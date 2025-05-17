@@ -53,6 +53,7 @@ const Registration = () => {
     const [city, setCity] = useState('')
 
     const isDisableButton = !name || !surname || !city
+    const isJudge = includes(Constants.judgesIds, player?.info?.tgId)
 
     const handleRegUser = useCallback(async () => {
         await fetch('https://aoscom.online/players/reg', {
@@ -184,9 +185,9 @@ const Registration = () => {
             ? <div id={Styles.loaderContainer}>
                 <CircularProgress variant="soft"/>
             </div>
-            : player.reg
+            : player.reg || isJudge
                 ? <div id='column' className='Chapter'>
-                    {user?.id === Constants.myTgId || includes(Constants.judgesIds, player?.info?.tgId) ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
+                    {user?.id === Constants.myTgId || isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {/* <Row title='Кабинет Организатора' navigateTo='admin' /> */}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
                     {player.reg && player.roster
