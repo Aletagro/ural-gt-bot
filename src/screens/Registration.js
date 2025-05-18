@@ -53,7 +53,7 @@ const Registration = () => {
     const [city, setCity] = useState('')
 
     const isDisableButton = !name || !surname || !city
-    const isJudge = includes(Constants.judgesIds, player?.info?.tgId)
+    const isJudge = includes(Constants.judgesIds, user?.id)
 
     const handleRegUser = useCallback(async () => {
         await fetch('https://aoscom.online/players/reg', {
