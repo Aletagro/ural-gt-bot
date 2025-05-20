@@ -444,3 +444,25 @@ export const getRegimentOption = (option, unit) => {
     }
     return {}
 }
+
+export const setTournamentStatus = (isRoundActive, round) => {
+    if (isRoundActive) {
+        return `Идёт ${round} раунд`
+    }
+    switch (round) {
+        case 0:
+            return 'Турнир еще не начался'
+        case 1:
+            return 'Обед'
+        case 2:
+            return 'Перерыв'
+        case 3:
+            return 'Первый день закончился'
+        case 4:
+            return 'Обед и идет Голосование за Покрас'
+        case 5:
+            return 'Турнир окончен'
+        default:
+            return 'Перерыв'
+    }
+}

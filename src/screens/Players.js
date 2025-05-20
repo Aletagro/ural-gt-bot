@@ -1,37 +1,31 @@
-import React, {useState, useEffect, useReducer} from 'react'
+import React, {useState, useEffect, useReducer, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import useDebounce from '../utilities/useDebounce'
-import {players, search} from '../utilities/appState'
+import {players, search, player} from '../utilities/appState'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
+import sortBy from 'lodash/sortBy'
+import reverse from 'lodash/reverse'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
 import Styles from './styles/Players.module.css'
 
+const lastColumnValues = {
+    'CO': 'opp_p',
+    'Paint': 'my_paint',
+    'Sport': 'my_sport',
+}
+
 const Players = () => {
     const navigate = useNavigate()
     const [searchValue, setSearchValue] = useState(search.playersValue)
+    const [lastColumn, setLastColumn] = useState('CO')
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
-    const sortPlayers = (array) => array.sort((a, b) => {
-        // Сначала сравниваем по полю win
-        if (a.win !== b.win) {
-            return b.win - a.win // Сортируем по убыванию
-        }
-        // Если win равны, сравниваем по полю draw
-        if (a.draw !== b.draw) {
-            return b.draw - a.draw // Сортируем по убыванию
-        }
-        // Если draw равны, сравниваем по полю tp_sum
-        if (a.tp_sum !== b.tp_sum) {
-            return b.tp_sum - a.tp_sum // Сортируем по убыванию
-        }
-        // Если tp_sum равны, сравниваем по полю opp_p
-        return b.opp_p - a.opp_p // Сортируем по убыванию
-    })
+    const sortPlayers = useCallback((array) => reverse(sortBy(array, ['win', 'draw', 'tp_sum', lastColumnValues[lastColumn]])), [lastColumn])
 
     useDebounce(() => {
         if (searchValue) {
@@ -60,6 +54,14 @@ const Players = () => {
             .catch(error => console.error(error))
     }, [])
 
+    useEffect(() => {
+        if (lastColumn === 'CO') {
+            search.players = sortPlayers(search.players)
+        } else {
+            search.players = sortBy(search.players, [lastColumnValues[lastColumn]])
+        }
+    }, [lastColumn, sortPlayers])
+
     const handleClickPlayer = (player) => () => {
         navigate('/playerInfo', {state: {player, title: `${player.surname} ${player.name}`}})
     }
@@ -69,30 +71,43 @@ const Players = () => {
         setSearchValue(e.target.value)
     }
 
-    const renderRow = (place, player, army, w, d, tp, co, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+    const handleChangeLastColumn = () => {
+        const newValue = lastColumn === 'CO'
+            ? 'Paint'
+            : lastColumn === 'Paint'
+                ? 'Sport'
+                : 'CO'
+        setLastColumn(newValue)
+    }
+
+    const renderRow = (place, player, army, w, d, tp, last, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{place}</p>
         <p id={Styles.сolumn}>{player}</p>
         <p id={Styles.сolumn}>{army}</p>
         <p id={Styles.extraSmallColumn}>{w || 0}</p>
         <p id={Styles.extraSmallColumn}>{d || 0}</p>
         <p id={Styles.smallColumn}>{tp || 0}</p>
-        <p id={Styles.smallColumn}>{co || 0}</p>
+        <p id={Styles.smallColumn}>{last || 0}</p>
     </div>
 
     const renderPlayer = (player, index) => {
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
-            {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, player.win, player.draw, player.tp_sum, player.opp_p, index % 2)}
+            {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, player.win, player.draw, player.tp_sum, player[lastColumnValues[lastColumn]], index % 2)}
         </button>
     }
-    
+
     return <>
         <div id={Styles.searchContainer}>
             <input id={Styles.input} onChange={handleSearch} placeholder='Поиск' autoFocus type='search' name='search' />
         </div>
+        {player.isJudge
+            ? <p id={Styles.lastColumnContainer} onClick={handleChangeLastColumn}>Что отображать в последнем столбце: <b>{lastColumn}</b></p>
+            : null
+        }
         <div id='column' className='Chapter'>
             <div>
-                {renderRow('№', 'Игрок', 'Армия', 'W', 'D', 'TO', 'CO', true)}
+                {renderRow('№', 'Игрок', 'Армия', 'W', 'D', 'TO', lastColumn, true)}
                 {map(search.players, renderPlayer)}
             </div>
         </div>

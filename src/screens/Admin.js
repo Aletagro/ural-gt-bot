@@ -1,5 +1,8 @@
 import React, {useState, useCallback, useReducer} from 'react'
-import FloatingLabelInput from '../components/FloatingLabelInput'
+import {ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import Constants from '../Constants'
+import {setTournamentStatus} from '../utilities/utils'
 import Checkbox from '../components/Checkbox'
 import {players, meta} from '../utilities/appState'
 
@@ -7,71 +10,33 @@ import map from 'lodash/map'
 import find from 'lodash/find'
 import size from 'lodash/size'
 import remove from 'lodash/remove'
+import isEmpty from 'lodash/isEmpty'
 
 import Styles from './styles/Admin.module.css'
-
-const inputStyle = {
-    '--Input-minHeight': '48px',
-    'borderRadius': '4px',
-    'marginBottom': '16px',
-    'borderColor': '#B4B4B4',
-    'boxShadow': 'none',
-    'fontFamily': 'Minion Pro Regular'
-}
 
 const Admin = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
-    const [playerId, setPlayerId] = useState('')
-    const [key, setKey] = useState('')
-    const [value, setValue] = useState('')
-    const [round, setRound] = useState('1')
     const [pairings, setPairings] = useState([])
     const [playersForChange, setPlayersForChange] = useState([])
-    const [newRound, setNewRound] = useState()
-    const [newStatus, setNewStatus] = useState()
     const isChangeButtonDisabled = size(playersForChange) !== 2
 
-    const handleChangePlayerId = (e) => {
-        setPlayerId(e.target.value)
-    }
-
-    const handleChangeKey = (e) => {
-        setKey(e.target.value)
-    }
-
-    const handleChangeValue = (e) => {
-        setValue(e.target.value)
-    }
-
-    const handleSetRound = (e) => {
-        setRound(e.target.value)
-    }
-
-    const handleChangeNewRound = (e) => {
-        setNewRound(e.target.value)
-    }
-
-    const handleChangeNewStatus = (e) => {
-        setNewStatus(e.target.value)
-    }
-
-    const handleChangeParam = useCallback(async () => {
-        await fetch(`https://aoscom.online/players/something/?id=${playerId}&column=${key}&value=${value}`, {
-            method: 'PUT'
-        })
-            .then(response => response.json())
-            .catch(error => console.error(error))
-    }, [playerId, key, value])
+    // const handleChangeParam = useCallback(async () => {
+    //     await fetch(`https://aoscom.online/players/something/?id=${playerId}&column=${key}&value=${value}`, {
+    //         method: 'PUT'
+    //     })
+    //         .then(response => response.json())
+    //         .catch(error => console.error(error))
+    // }, [playerId, key, value])
 
     const handleCreateParings = useCallback(async () => {
-        await fetch(`https://aoscom.online/parings/?next_round=${round}`)
+        await fetch(`https://aoscom.online/parings/?next_round=${meta.round + 1}`)
             .then(response => response.json())
             .then(data => {
                 setPairings(data)
             })
             .catch(error => console.error(error))
-    }, [round])
+    }, [])
 
     const handleChangePlayers = () => {
         const newPairings = {...pairings}
@@ -90,20 +55,8 @@ const Admin = () => {
         newPairings[secondPlayer[0]] = newRemainingPlayersTable.sort((a, b) => a - b)
         setPairings(newPairings)
         setPlayersForChange([])
+        toast.success('Паринги изменены', Constants.toastParams)
     }
-
-    const handleStartRound = useCallback(async () => {
-        await fetch(`https://aoscom.online/parings/update_parings/?next_round=${round}`, {
-            method: 'PUT',
-            body: JSON.stringify(pairings),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .then(response => response.json())
-            .catch(error => console.error(error))
-    }, [pairings, round])
 
     const handleGetMeta = useCallback(async () => {
         fetch('https://aoscom.online/tournament-meta/')
@@ -115,11 +68,39 @@ const Admin = () => {
             })
             .catch(error => console.error(error))
     }, [])
-      
-    const handleChangeMeta = useCallback(async () => {
+
+    const handleFinishRoundMeta = useCallback(async () => {
         await fetch('https://aoscom.online/tournament-meta/any_state', {
             method: 'PUT',
-            body: JSON.stringify({round: newRound, isRoundActive: newStatus}),
+            body: JSON.stringify({round: meta.round, isRoundActive: false}),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                handleGetMeta()
+                toast.success('Раунд окончен', Constants.toastParams)
+            })
+            .catch(error => console.error(error))
+    }, [handleGetMeta])
+
+    const handleSetOppPower = useCallback(async () => {
+        fetch('https://aoscom.online/rounds/opp_power/', {
+            method: 'PUT'
+        })
+            .catch(error => console.error(error))
+    }, [])
+
+    const handleFinishRound = useCallback(async () => {
+        handleFinishRoundMeta()
+        handleSetOppPower()
+    }, [handleFinishRoundMeta, handleSetOppPower])
+
+    const handleStartRoundMeta = useCallback(async () => {
+        await fetch('https://aoscom.online/tournament-meta/any_state', {
+            method: 'PUT',
+            body: JSON.stringify({round: meta.round + 1, isRoundActive: true}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -129,7 +110,27 @@ const Admin = () => {
                 handleGetMeta()
             })
             .catch(error => console.error(error))
-    }, [newRound, newStatus, handleGetMeta])
+    }, [handleGetMeta])
+
+
+    const handleStartRound = useCallback(async () => {
+        await fetch(`https://aoscom.online/parings/update_parings/?next_round=${meta.round}`, {
+            method: 'PUT',
+            body: JSON.stringify(pairings),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                handleStartRoundMeta()
+                toast.success('Раунд начался', Constants.toastParams)
+            })
+            .catch(error => {
+                console.error(error)
+                toast.error('Произошла ошибка, пиши Никите', Constants.toastParams)
+            })
+    }, [pairings, handleStartRoundMeta])
 
     const handleCheckPlayer = (id, table) => (checked) => {
         let newData = [...playersForChange]
@@ -174,52 +175,12 @@ const Admin = () => {
     }
 
     return <div id='column' className='Chapter'>
-        <b id={Styles.text}>Мета</b>
-        <p id={Styles.text}>Раунд - {meta.round || 0}</p>
-        <p id={Styles.text}>Статус Раунда - {meta.isRoundActive ? 'Активен' : 'Не Активен'}</p>
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangeNewRound}
-            label='Установить Раунд'
-            value={newRound}
-        />
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangeNewStatus}
-            label='Установить Статус'
-            placeholder='1 - активен, 0 - не активен'
-            value={newStatus}
-        />
-        <button id={Styles.button} onClick={handleChangeMeta}>Изменить мету</button>
-        <p id={Styles.text}>Изменить параметр игрока</p>
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangePlayerId}
-            label='ID игрока'
-            value={playerId}
-        />
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangeKey}
-            label='Параметр'
-            value={key}
-        />
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleChangeValue}
-            label='Значение'
-            value={value}
-        />
-        <button id={Styles.button} onClick={handleChangeParam}>Изменить параметр</button>
-        <FloatingLabelInput
-            style={inputStyle}
-            onChange={handleSetRound}
-            label='№ следующего раунда'
-            value={round}
-        />
-        <button id={Styles.button} onClick={handleCreateParings}>Создать паринги нового раунда</button>
-        {pairings
-            ? <>
+        <b id={Styles.text}>Состояние турнира</b>
+        <p id={Styles.text}>Статус: {setTournamentStatus(meta.isRoundActive, meta.round)}</p>
+        <button id={meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</button>
+        {isEmpty(pairings)
+            ? null
+            : <>
                 <b id={Styles.text}>Паринги</b>
                 <div>
                     {map(pairings, renderPairing)}
@@ -227,10 +188,11 @@ const Admin = () => {
                 <button id={isChangeButtonDisabled ? Styles.disableButton : Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
                     Запарить выбранных игроков друг на друга
                 </button>
+                <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button>
             </>
-            : null
         }
-        <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button>
+        <button id={!meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleFinishRound} disabled={!meta.isRoundActive}>Закончить раунд</button>
+        <ToastContainer />
     </div>
 }
 
