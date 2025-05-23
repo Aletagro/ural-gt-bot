@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useReducer, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import useDebounce from '../utilities/useDebounce'
-import {players, search, player} from '../utilities/appState'
+import {players, search, player, meta} from '../utilities/appState'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
@@ -25,7 +25,10 @@ const Players = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
-    const sortPlayers = useCallback((array) => reverse(sortBy(array, ['win', 'draw', 'tp_sum', lastColumnValues[lastColumn]])), [lastColumn])
+    const sortPlayers = useCallback((array) => meta.round || meta.isRostersShow
+        ? reverse(sortBy(array, ['win', 'draw', 'tp_sum', lastColumnValues[lastColumn]]))
+        :array
+    , [lastColumn])
 
     useDebounce(() => {
         if (searchValue) {
@@ -63,7 +66,9 @@ const Players = () => {
     }, [lastColumn, sortPlayers])
 
     const handleClickPlayer = (player) => () => {
-        navigate('/playerInfo', {state: {player, title: `${player.surname} ${player.name}`}})
+        if (meta.round || meta.isRostersShow) {
+            navigate('/playerInfo', {state: {player, title: `${player.surname} ${player.name}`}})
+        }
     }
 
     const handleSearch = (e) => {
@@ -83,11 +88,16 @@ const Players = () => {
     const renderRow = (place, player, army, w, d, tp, last, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{place}</p>
         <p id={Styles.сolumn}>{player}</p>
-        <p id={Styles.сolumn}>{army}</p>
-        <p id={Styles.extraSmallColumn}>{w || 0}</p>
-        <p id={Styles.extraSmallColumn}>{d || 0}</p>
-        <p id={Styles.smallColumn}>{tp || 0}</p>
-        <p id={Styles.smallColumn}>{last || 0}</p>
+        {meta.round || meta.isRostersShow
+            ? <>
+                <p id={Styles.сolumn}>{army}</p>
+                <p id={Styles.extraSmallColumn}>{w || 0}</p>
+                <p id={Styles.extraSmallColumn}>{d || 0}</p>
+                <p id={Styles.smallColumn}>{tp || 0}</p>
+                <p id={Styles.smallColumn}>{last || 0}</p>
+            </>
+            : null
+        }
     </div>
 
     const renderPlayer = (player, index) => {

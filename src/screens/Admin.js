@@ -62,8 +62,10 @@ const Admin = () => {
         fetch('https://aoscom.online/tournament-meta/')
             .then(response => response.json())
             .then(data => {
-                meta.round = Number(data.round)
-                meta.isRoundActive = Number(data.isRoundActive)
+                meta.round = data.round
+                meta.isRoundActive = data.isRoundActive
+                meta.rostersBeingAccepted = data.rostersBeingAccepted
+                meta.isRostersShow = data.isRostersShow
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -72,7 +74,7 @@ const Admin = () => {
     const handleFinishRoundMeta = useCallback(async () => {
         await fetch('https://aoscom.online/tournament-meta/any_state', {
             method: 'PUT',
-            body: JSON.stringify({round: meta.round, isRoundActive: false}),
+            body: JSON.stringify({...meta, isRoundActive: false}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -100,7 +102,7 @@ const Admin = () => {
     const handleStartRoundMeta = useCallback(async () => {
         await fetch('https://aoscom.online/tournament-meta/any_state', {
             method: 'PUT',
-            body: JSON.stringify({round: meta.round + 1, isRoundActive: true}),
+            body: JSON.stringify({...meta, round: meta.round + 1}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -144,6 +146,36 @@ const Admin = () => {
         setPlayersForChange(newData)
     }
 
+    const handleChangeRosterAccepted = useCallback(async () => {
+        await fetch('https://aoscom.online/tournament-meta/any_state', {
+            method: 'PUT',
+            body: JSON.stringify({...meta, rostersBeingAccepted: !meta.rostersBeingAccepted}),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                handleGetMeta()
+            })
+            .catch(error => console.error(error))
+    }, [handleGetMeta])
+
+    const handleChangeRostersShow = useCallback(async () => {
+        await fetch('https://aoscom.online/tournament-meta/any_state', {
+            method: 'PUT',
+            body: JSON.stringify({...meta, isRostersShow: !meta.isRostersShow}),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                handleGetMeta()
+            })
+            .catch(error => console.error(error))
+    }, [handleGetMeta])
+
     const renderPlayer = (player, table, isFirst) => {
         const playerArmy = JSON.parse(player?.roster_stat)?.allegiance
         const isChecked = find(playersForChange, p => p[1] === player?.id)
@@ -177,6 +209,11 @@ const Admin = () => {
     return <div id='column' className='Chapter'>
         <b id={Styles.text}>Состояние турнира</b>
         <p id={Styles.text}>Статус: {setTournamentStatus(meta.isRoundActive, meta.round)}</p>
+        {meta.round === 0
+            ? <button id={Styles.button} onClick={handleChangeRosterAccepted}>{meta.rostersBeingAccepted ? 'Прекратить приём ростеров' : 'Начать принимать ростера'}</button>
+            : null
+        }
+        <button id={Styles.button} onClick={handleChangeRostersShow}>{meta.isRostersShow ? 'Скрыть ростера' : 'Открыть ростера для всех'}</button>
         <button id={meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</button>
         {isEmpty(pairings)
             ? null

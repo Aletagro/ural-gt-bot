@@ -8,8 +8,7 @@ import {player, players, fetching, meta} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
-// import UGT from '../images/UGT.png'
-import Strelka from '../images/Strelka.png'
+import Image from '../images/Strelka.png'
 
 import size from 'lodash/size'
 import includes from 'lodash/includes'
@@ -109,8 +108,10 @@ const Registration = () => {
         fetch('https://aoscom.online/tournament-meta/')
             .then(response => response.json())
             .then(data => {
-                meta.round = Number(data.round)
-                meta.isRoundActive = Number(data.isRoundActive)
+                meta.round = data.round
+                meta.isRoundActive = data.isRoundActive
+                meta.rostersBeingAccepted = data.rostersBeingAccepted
+                meta.isRostersShow = data.isRostersShow
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -182,7 +183,7 @@ const Registration = () => {
     </div>
 
     return <>
-        <HeaderImage src={Strelka} alt='Core Documents' isUral />
+        <HeaderImage src={Image} alt='Core Documents' isUral />
         {fetching.main
             ? <div id={Styles.loaderContainer}>
                 <CircularProgress variant="soft"/>
@@ -196,10 +197,13 @@ const Registration = () => {
                         ? <Row title='Ваш ростер' navigateTo='roster' state={{isInfo: true}} />
                         : null
                     }
-                    {/* <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' /> */}
-                    {/* <Row title='Ростера' navigateTo='rosters' /> */}
-                    {/* <Row title='Раунды' navigateTo='rounds' state={{title: 'Strelka 2025', round: meta.round}} /> */}
-                    <Row title='Турнирная Таблица' navigateTo='players' />
+                    {meta.rostersBeingAccepted
+                        ? <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
+                        : null
+                    }
+                    {meta.isRostersShow ? <Row title='Ростера' navigateTo='rosters' /> : null}
+                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Strelka 2025', round: meta.round}} /> : null}
+                    <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' />
                     {player.reg && meta.round === 5 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
                         : null

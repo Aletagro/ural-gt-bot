@@ -1,9 +1,9 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
-import {roster, player, navigationState} from '../utilities/appState'
+import {roster, player, navigationState, meta} from '../utilities/appState'
 import {getErrors, getWarnings, getWoundsCount} from '../utilities/utils'
 
 import map from 'lodash/map'
@@ -17,6 +17,7 @@ const additionalOptions = ['Ensorcelled Banners', 'First Circle Titles']
 const tg = window.Telegram.WebApp
 
 const Export = () => {
+    const [isCopy, setIsCopy] = useState(false)
     const user = tg.initDataUnsafe?.user
     const errors = getErrors(roster)
     const warnings = getWarnings(roster)
@@ -102,6 +103,53 @@ const Export = () => {
         points: regimentOfRenown.regimentOfRenownPointsCost
     })
 
+    const getErrorText = (error) => `- ${error}`
+
+    const getErrorsText = (_errors) => _errors.map(getErrorText).join('\n')
+
+    const getUnitForExport = (unit) => `${unit.modelCount ? `${unit.modelCount * (unit.isReinforced ? 2 : 1)} x` : ''} ${unit.name} (${unit.points || unit.regimentOfRenownPointsCost || 0} points)${unit.artefact ? `\n[Artefact]: ${unit.artefact}` : ''}${unit.heroicTrait ? `\n[Heroic Trait]: ${unit.heroicTrait}` : ''}${unit.weaponOptions ? `${getWeaponOptionsForExport(unit)}` : ''}${unit.marksOfChaos ? `\n• ${unit.marksOfChaos}` : ''}${unit['Ensorcelled Banners'] ? `\n• ${unit['Ensorcelled Banners']}` : ''}${unit.otherWarscrollOption ? `\n• ${unit.otherWarscrollOption}` : ''}`
+
+    const getRoRUnitForExport = (unit) => `${unit.modelCount ? `${unit.modelCount} x` : ''} ${unit.name} ${unit.artefact ? `\n[Artefact]: ${unit.artefact}` : ''}${unit.heroicTrait ? `\n[Heroic Trait]: ${unit.heroicTrait}` : ''}${unit.weaponOptions ? `${getWeaponOptionsForExport(unit)}` : ''}${unit.marksOfChaos ? `\n• ${unit.marksOfChaos}` : ''}${unit['Ensorcelled Banners'] ? `\n• ${unit['Ensorcelled Banners']}` : ''}${unit.otherWarscrollOption ? `\n• ${unit.otherWarscrollOption}` : ''}`
+
+    const getUnitsForExport = (units, isRoR) => units.map(isRoR ? getRoRUnitForExport : getUnitForExport).join('\n')
+
+    const getWeaponForExport = ([key, value]) => value
+        ? `\n• ${value} x ${key}`
+        : ''
+
+    const getWeaponOptionForExport = ([key, value]) => {
+        return Object.entries(value).map(getWeaponForExport)
+    }
+
+    const getWeaponOptionsForExport = (unit) => {
+        const text = Object.entries(unit.weaponOptions).map(getWeaponOptionForExport)
+        return `${text}`.replace(/,/g, '')
+    }
+
+    const getRegimentForExport = (regiment, index) => `Regiment ${index + 1}\n${roster.generalRegimentIndex === index ? "General's regiment\n" : ''}${regiment.units.map(getUnitForExport).join('\n')}\n----`
+
+    const getRegimentsForExport = () => roster.regiments.map(getRegimentForExport).join('\n')
+
+    const handleExportList = () => {
+        const rosterText = `${errors.length > 0 ? `Roster errors:\n${getErrorsText(errors)}\n\n` : ''}${warnings.length > 0 ? `Roster warnings:\n${getErrorsText(warnings)}\n\n` : ''}Grand Alliance: ${roster.grandAlliance}
+Faction: ${roster.allegiance}
+Battle Formation: ${roster.battleFormation}
+Drops: ${roster.regiments.length + roster.auxiliaryUnits.length + (roster.regimentOfRenown ? 1 : 0)}${roster.auxiliaryUnits.length > 0 ? `\nAuxiliaries: ${roster.auxiliaryUnits.length}` : ''}
+
+${roster.spellsLore ? `Spell Lore: ${roster.spellsLore}` : ''}${roster.prayersLore ? `\nPrayer Lore: ${roster.prayersLore}` : ''}${roster.manifestationLore ? `\nManifestation Lore: ${roster.manifestationLore}` : ''}${roster.factionTerrain ? `\nFaction Terrain: ${roster.factionTerrain}` : ''}
+-----
+${getRegimentsForExport()}
+${roster.regimentOfRenown ? `Regiment Of Renown\n${getUnitForExport(roster.regimentOfRenown)}\n` : ''}
+${roster.regimentsOfRenownUnits.length > 0 ? `${getUnitsForExport(roster.regimentsOfRenownUnits, true)}\n-----` : ''}
+${roster.auxiliaryUnits.length > 0 ? `Auxiliary Units\n${getUnitsForExport(roster.auxiliaryUnits)}\n-----` : ''}
+Wounds: ${getWoundsCount(roster)}
+${roster.points}/${roster.pointsLimit} Pts
+`
+        navigator.clipboard.writeText(rosterText)
+        toast.success('List Copied', Constants.toastParams)
+        setIsCopy(true)
+    }
+
     const handleSendRoster = useCallback(async () => {
         const r_stat = {
             grandAlliance: roster.grandAlliance,
@@ -129,7 +177,6 @@ const Export = () => {
             regimentsOfRenownUnits: map(roster.regimentsOfRenownUnits, setUnitForExport),
             spellsLore: roster.spellsLore
         }
-        // console.log(JSON.stringify(_roster))
         await fetch(`https://aoscom.online/rosters/?tg_id=${user?.id}&roster=${JSON.stringify(_roster)}&r_stat=${JSON.stringify(r_stat)}`, {
             method: 'PUT'
         })
@@ -186,13 +233,20 @@ const Export = () => {
     const renderWarning = (error, index) => <p  id={Styles.warning}>&#8226; {error}</p>
 
     return <div id={Styles.container}>
-        <div id={Styles.buttonContainer}>
-            <button id={disableButton ? Styles.disableButton : Styles.button} disabled={disableButton} onClick={handleSendRoster}>Отправить ростер</button>
-        </div>
-        {disableButton
-             ? <p id={Styles.errorText}>Пока не будут исправлены все ошибки, ростер нельзя отправить</p>
-             : null
-         }
+        {meta.rostersBeingAccepted
+            ? <>
+                <div id={Styles.buttonContainer}>
+                    <button id={disableButton ? Styles.disableButton : Styles.button} disabled={disableButton} onClick={handleSendRoster}>Отправить ростер</button>
+                </div>
+                {disableButton
+                    ? <p id={Styles.errorText}>Пока не будут исправлены все ошибки, ростер нельзя отправить</p>
+                    : null
+                }
+            </>
+            : <div id={Styles.buttonContainer}>
+                <button id={Styles.button} onClick={handleExportList}>{isCopy ? 'Лист скопирован' : 'Копировать лист'}</button>
+            </div>
+        }
         {errors.length > 0
             ? <div id={Styles.errorsContainer}>
                 <p id={Styles.error}>Roster errors:</p>

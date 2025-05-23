@@ -447,7 +447,9 @@ export const getRegimentOption = (option, unit) => {
 
 export const setTournamentStatus = (isRoundActive, round) => {
     if (isRoundActive) {
-        return `Идёт ${round} раунд`
+        return round === 0
+            ? 'Турнир еще не начался'
+            : `Идёт ${round} раунд`
     }
     switch (round) {
         case 0:
