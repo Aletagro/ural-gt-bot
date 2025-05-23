@@ -1,10 +1,9 @@
 import React, {useEffect, useReducer} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import {rounds, players, meta} from '../utilities/appState'
+import RoundPlay from '../components/RoundPlay'
 
 import map from 'lodash/map'
-import find from 'lodash/find'
-import get from 'lodash/get'
 
 import Styles from './styles/Rounds.module.css'
 
@@ -41,10 +40,6 @@ const Rounds = () => {
     // eslint-disable-next-line
     }, [rounds?.selected])
 
-    const handleClickPlayer = (player) => () => {
-        navigate('/playerInfo', {state: {player, title: `${player?.surname} ${player?.name}`}})
-    }
-
     const handleClickPrevRound = () => {
         navigate('/rounds')
         rounds.selected = rounds.selected - 1
@@ -57,22 +52,11 @@ const Rounds = () => {
         rounds.stuckCount = rounds.stuckCount + 1
     }
 
-    const renderPlay = (play, index) => {
-        const playerOne = find(players.data, ['id', play[0]])
-        const playerTwo = find(players.data, ['id', play[1]])
-        return <div key={index} id={Styles.row} style={{'background': `${index % 2 ? '#ECECEC' : ''}`}}>
-            <p id={Styles.smallColumn}>{index}</p>
-            <button id={Styles.сolumn} onClick={handleClickPlayer(playerOne)}>
-                <p>{`${playerOne.surname} ${playerOne.name}`}</p>
-            </button>
-            <p id={Styles.smallColumn}>
-                {get(playerOne, `game_${rounds.selected}_tp`) || 0} - {get(playerTwo, `game_${rounds.selected}_tp`) || 0}
-            </p>
-            <button id={Styles.сolumn} onClick={handleClickPlayer(playerTwo)}>
-                <p>{`${playerTwo.surname} ${playerTwo.name}`}</p>
-            </button>
-        </div>
-    }
+    const renderPlay = (play, index) => <RoundPlay
+        play={play}
+        table={index}
+        round={rounds.selected}
+    />
 
     return <div id='column' className='Chapter'>
         <div id={Styles.buttonContainer}>

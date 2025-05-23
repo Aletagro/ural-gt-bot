@@ -21,7 +21,7 @@ export const sortByName = (array, param, asc) => param
 
 export const unitsSortesByType = (units) => {
     const getUnitsByType = (type) => {
-        const _units = filter(units, unit => includes(unit?.referenceKeywords, type.name) && (type.withoutHero ? !includes(unit.referenceKeywords, 'Hero') : true))
+        const _units = filter(units, unit => includes(unit?.referenceKeywords, type.name) && (type.withoutHero ? !includes(unit.referenceKeywords, 'Hero') : true) && (type.name === 'Manifestation' ? true : !includes(unit.referenceKeywords, 'Manifestation')))
         if (_units.length > 0) {
             sortByName(_units)
             return {units: _units, title: replace(type.name, /,/g, '')}

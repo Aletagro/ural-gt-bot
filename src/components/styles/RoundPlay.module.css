@@ -1,0 +1,30 @@
+#row {
+  display: flex;
+  padding: 16px 0px;
+}
+#сolumn {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  font: inherit;
+  background: inherit;
+}
+#smallColumn {
+  display: flex;
+  min-width: 10%;
+  justify-content: center;
+  align-items: center;
+}
+#changeContainer {
+  padding: 12px;
+}
+#changeButton {
+  background: #2E2D32;
+  color: white;
+  border-width: 0px;
+  border-radius: 4px;
+  padding: 12px;
+  width: 100%;
+}
