@@ -1,9 +1,10 @@
-import React, {useReducer} from 'react'
+import React, {useReducer, useState, useCallback} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import Roster from '../components/Roster'
 import RosterEasy from '../components/RosterEasy'
 import Checkbox from '../components/Checkbox'
-import {players, rosterViewType} from '../utilities/appState'
+import Modal from '../components/Modal'
+import {players, player as _player, rosterViewType} from '../utilities/appState'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -18,7 +19,9 @@ const PlayerInfo = () => {
     const {player} = useLocation().state
     const rosterInfo = JSON.parse(player.roster_stat)
     const roster = JSON.parse(player.roster)
-    
+    const [modalData, setModalData] = useState({visible: false, title: ''})
+    const [isPlayerDrop, setIsPlayerDrop] = useState(false)
+
     const handleClickAllegiance = () => {
         navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: roster.allegianceId}})
     }
@@ -31,6 +34,35 @@ const PlayerInfo = () => {
         rosterViewType.easy = !rosterViewType.easy
         forceUpdate()
     }
+
+    const handleCloseModal = () => {
+        setModalData({visible: false, title: '', text: ''})
+    }
+
+    const handleOpenDropModal = () => {
+        setModalData({visible: true, title: 'Вы уверен, что хотите удалить игрока с турнира?', Content: renderModalConent})
+    }
+
+    const handleDropPlayer = useCallback(async () => {
+        handleCloseModal()
+        await fetch(`https://aoscom.online/players/?${player?.tgId}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                setIsPlayerDrop(true)
+                forceUpdate()
+            })
+            .catch(error => console.error(error))
+      }, [player?.tgId])
+
+    const renderModalConent = () => <div id={Styles.modal}>
+        <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
+        <button id={Styles.modalButton} onClick={handleDropPlayer}>Да, удалить</button>
+    </div>
 
     const renderPlayRow = (number, player, result, to, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.extraSmallColumn}>{number}</p>
@@ -52,6 +84,7 @@ const PlayerInfo = () => {
     }
     
     return <div id='column' className='Chapter'>
+        {isPlayerDrop ? <p id={Styles.isPlayerDrop}>Игрок удалён с турнира</p> : null}
         <p id={Styles.title}><b>Город:</b> {player.city}</p>
         <p id={Styles.title}><b>Гранд Альянс:</b> {rosterInfo?.grandAlliance}</p>
         <p id={Styles.title}><b>Армия:</b> {rosterInfo?.allegiance}</p>
@@ -80,6 +113,11 @@ const PlayerInfo = () => {
             </>
             : null
         }
+        {_player.isJudge
+            ? <button id={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</button>
+            : null
+        }
+        <Modal {...modalData} onClose={handleCloseModal} />
     </div>
 }
 

@@ -57,3 +57,18 @@
     justify-content: center;
     padding-top: 100px;
 }
+#modal {
+    display: flex;
+    gap: 16px;
+    padding-top: 12px;
+}
+#modalButton {
+    width: 100%;
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+}

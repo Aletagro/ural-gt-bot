@@ -65,9 +65,9 @@ const Players = () => {
         }
     }, [lastColumn, sortPlayers])
 
-    const handleClickPlayer = (player) => () => {
-        if (meta.round || meta.isRostersShow) {
-            navigate('/playerInfo', {state: {player, title: `${player.surname} ${player.name}`}})
+    const handleClickPlayer = (_player) => () => {
+        if (meta.round || meta.isRostersShow || player.isJudge) {
+            navigate('/playerInfo', {state: {player: _player, title: `${_player.surname} ${_player.name}`}})
         }
     }
 

@@ -8,6 +8,7 @@ import {player, players, fetching, meta} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
+import Modal from '../components/Modal'
 import Image from '../images/Strelka.png'
 
 import size from 'lodash/size'
@@ -50,6 +51,7 @@ const Registration = () => {
     const [name, setName] = useState(user?.first_name || '')
     const [surname, setSurname] = useState(user?.last_name || '')
     const [city, setCity] = useState('')
+    const [modalData, setModalData] = useState({visible: false, title: ''})
 
     const isDisableButton = !name || !surname || !city
     if (includes(Constants.judgesIds, user?.id)) {
@@ -69,10 +71,27 @@ const Registration = () => {
             .catch(error => console.error(error))
       }, [name, surname, city, user?.id])
 
+    const handleDrop = useCallback(async () => {
+        handleCloseModal()
+        await fetch(`https://aoscom.online/players/?${user?.id}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                player.isDrop = true
+                player.reg = false
+                forceUpdate()
+            })
+            .catch(error => console.error(error))
+      }, [user?.id])
+
     useEffect(() => {
         if (!player.isRequested) {
             player.isRequested = true
-            // fetch(`https://aoscom.online/players/player/?tg_id=${208050275}`)
+            // fetch(`https://aoscom.online/players/player/?tg_id=${530569849}`)
             fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
                 .then(response => response.json())
                 .then(data => {
@@ -117,6 +136,14 @@ const Registration = () => {
             .catch(error => console.error(error))
     }, [])
 
+    const handleCloseModal = () => {
+        setModalData({visible: false, title: ''})
+    }
+
+    const handleOpenDropModal = () => {
+        setModalData({visible: true, title: 'Вы уверен, что хотите отказаться от участия на турнире?', Content: renderModalConent})
+    }
+
     const handleChangeName = (e) => {
         setName(e.target.value)
     }
@@ -141,6 +168,16 @@ const Registration = () => {
             .catch(error => console.error(error))
         toast.success('Судья спешит на помощь!', Constants.toastParams)
     }
+
+    const handleRetry = () => {
+        player.isDrop = false
+        forceUpdate()
+    }
+
+    const renderModalConent = () => <div id={Styles.modal}>
+        <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
+        <button id={Styles.modalButton} onClick={handleDrop}>Да</button>
+    </div>
 
     const renderRegForm = () => <div>
         <h2 id={Styles.title}>Регистрация на Стрелка 2025</h2>
@@ -182,6 +219,15 @@ const Registration = () => {
         <h2 id={Styles.title}>Пожалуйста, напишите организаторам, чтобы они добавили вас в лист ожидания</h2>
     </div>
 
+    if (player.isDrop) {
+        return <>
+            <HeaderImage src={Image} alt='Core Documents' isUral />
+            <h2 id={Styles.title}>Вы были удалены из списка участников турнира</h2>
+            <h2 id={Styles.title}>Вы сможете в любой момент подать регистрацию снова</h2>
+            <button id={Styles.regButton} onClick={handleRetry}>Зарегистрироваться</button>
+        </>
+    }
+
     return <>
         <HeaderImage src={Image} alt='Core Documents' isUral />
         {fetching.main
@@ -217,12 +263,14 @@ const Registration = () => {
                     <Row title='Регламент Стрелка 2025' navigateTo='tournamentRules' />
                     <Row title='Подсказка во время игры' navigateTo='help' />
                     {meta.isRoundActive ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
+                    {meta.round ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}
                     <ToastContainer />
                 </div>
                 : size(players.data) >= PLAYERS_LIMIT
                     ? renderPlayersLimitStub()
                     : renderRegForm()
         }
+        <Modal {...modalData} onClose={handleCloseModal} />
     </>
 }
 
