@@ -73,7 +73,7 @@ const Registration = () => {
 
     const handleDrop = useCallback(async () => {
         handleCloseModal()
-        await fetch(`https://aoscom.online/players/?${user?.id}/`, {
+        await fetch(`https://aoscom.online/players/?tg_id=${user?.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

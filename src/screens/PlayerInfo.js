@@ -21,6 +21,7 @@ const PlayerInfo = () => {
     const roster = JSON.parse(player.roster)
     const [modalData, setModalData] = useState({visible: false, title: ''})
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
+    const [isPlayerActive, setIsPlayerActive] = useState(Boolean(player?.status))
 
     const handleClickAllegiance = () => {
         navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: roster.allegianceId}})
@@ -40,12 +41,16 @@ const PlayerInfo = () => {
     }
 
     const handleOpenDropModal = () => {
-        setModalData({visible: true, title: 'Вы уверен, что хотите удалить игрока с турнира?', Content: renderModalConent})
+        setModalData({visible: true, title: 'Вы уверен, что хотите удалить игрока с турнира?', Content: renderDropModalConent})
+    }
+
+    const handleOpenStatusModal = () => {
+        setModalData({visible: true, title: `Вы уверен, что изменить статус игрока на ${isPlayerActive ? '"Не активен"' : '"Активен"'}`, Content: renderStatusModalConent})
     }
 
     const handleDropPlayer = useCallback(async () => {
         handleCloseModal()
-        await fetch(`https://aoscom.online/players/?${player?.tgId}/`, {
+        await fetch(`https://aoscom.online/players/?tg_id=${player?.tgId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,9 +64,30 @@ const PlayerInfo = () => {
             .catch(error => console.error(error))
       }, [player?.tgId])
 
-    const renderModalConent = () => <div id={Styles.modal}>
+    const handlChangeStatus = useCallback(async () => {
+        handleCloseModal()
+        await fetch(`https://aoscom.online/players/status/?tg_id=${player?.tgId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                setIsPlayerActive(!isPlayerActive)
+                forceUpdate()
+            })
+            .catch(error => console.error(error))
+      }, [player?.tgId, isPlayerActive])
+
+    const renderDropModalConent = () => <div id={Styles.modal}>
         <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
         <button id={Styles.modalButton} onClick={handleDropPlayer}>Да, удалить</button>
+    </div>
+
+    const renderStatusModalConent = () => <div id={Styles.modal}>
+        <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
+        <button id={Styles.modalButton} onClick={handlChangeStatus}>Да, изменить</button>
     </div>
 
     const renderPlayRow = (number, player, result, to, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
@@ -85,6 +111,10 @@ const PlayerInfo = () => {
     
     return <div id='column' className='Chapter'>
         {isPlayerDrop ? <p id={Styles.isPlayerDrop}>Игрок удалён с турнира</p> : null}
+        {_player.isJudge
+            ? <p id={Styles.title}>Статус игрока: <b>{isPlayerActive ? '"Не активен"' : '"Активен"'}</b></p>
+            : null
+        }
         <p id={Styles.title}><b>Город:</b> {player.city}</p>
         <p id={Styles.title}><b>Гранд Альянс:</b> {rosterInfo?.grandAlliance}</p>
         <p id={Styles.title}><b>Армия:</b> {rosterInfo?.allegiance}</p>
@@ -111,6 +141,10 @@ const PlayerInfo = () => {
                 }
                 <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
             </>
+            : null
+        }
+        {_player.isJudge
+            ? <button id={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</button>
             : null
         }
         {_player.isJudge
