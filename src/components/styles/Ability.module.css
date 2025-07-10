@@ -48,6 +48,10 @@
   top: 1px;
 }
 
+#points {
+  color: white;
+}
+
 #container {
   padding: 0px 8px;
 }

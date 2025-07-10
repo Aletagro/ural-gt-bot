@@ -1,10 +1,13 @@
 import React from 'react';
 import {useNavigate, useLocation} from 'react-router-dom';
-import {roster, search, navigationState, rostersStuck, rounds} from '../utilities/appState'
+import {search, navigationState, rostersStuck, rounds, isCollapseUnitsTypes, isCollapseRegimentAlliances} from '../utilities/appState'
+import Constants from '../Constants'
 import Search from '../icons/search.svg'
 import ArrowBack from '../icons/arrowBack.svg'
 import Export from '../icons/export.svg'
 import Home from '../icons/home.svg'
+
+import forEach from 'lodash/forEach'
 
 import Styles from './styles/Header.module.css'
 
@@ -12,22 +15,16 @@ const Header = () => {
     const navigate = useNavigate()
     const {pathname, state} = useLocation()
 
+    const clearCollapseUnitsType = (_, key) => {
+        isCollapseUnitsTypes[key] = false
+    }
+
+    const clearCollapseRegimentAlliance = (_, key) => {
+        isCollapseRegimentAlliances[key] = false
+    }
+
     const clearAppState = () => {
         if (pathname === '/builder') {
-            roster.regiments = [{units: [], heroId: '', points: 0}]
-            roster.generalRegimentIndex = null
-            roster.battleFormation = null
-            roster.withoutBattleFormation = false
-            roster.points = 0
-            roster.spellsLore = ''
-            roster.prayersLore = ''
-            roster.manifestationLore = ''
-            roster.manifestationsList = []
-            roster.factionTerrain = ''
-            roster.auxiliaryUnits = []
-            roster.regimentOfRenown = null
-            roster.battleFormation = ''
-            roster.requiredGeneral = null
             navigationState.isBuilder = false
         } else if (pathname === '/search') {
             search.value = ''
@@ -37,6 +34,10 @@ const Header = () => {
         } else if (pathname === '/rosters') {
             search.rostersValue = ''
             search.rosters = []
+        } else if (pathname === '/units') {
+            forEach(Constants.defaultIsCollapseUnitsTypes, clearCollapseUnitsType)
+        } else if (pathname === '/regimentOfRenownList') {
+            forEach(Constants.defaultIsCollapseRegimentAlliances, clearCollapseRegimentAlliance)
         }
     }
 
@@ -92,7 +93,7 @@ const Header = () => {
             ? null
             : <button id={Styles.leftButton} onClick={handleGoBack}><img src={ArrowBack} alt='' /></button>
         }
-        <p id={Styles.title}>{state?.title || 'Strelka 2025'}</p>
+        <p id={Styles.title}>{state?.title || 'Wild Khan 2025'}</p>
         {renderRightButton()}
     </div>
 }

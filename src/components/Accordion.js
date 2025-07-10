@@ -8,7 +8,7 @@ import map from 'lodash/map'
 
 import Styles from './styles/Accordion.module.css'
 
-const CustomAccordion = ({expanded, title, data, renderItem, onChangeExpand}) => {
+const CustomAccordion = ({expanded, title, subtitle, data, renderItem, onChangeExpand}) => {
 
     const handleChangeExpand = useCallback((e) => {
         if (onChangeExpand) {
@@ -19,7 +19,10 @@ const CustomAccordion = ({expanded, title, data, renderItem, onChangeExpand}) =>
     return <div id={Styles.typeContainer} key={title}>
         <Accordion expanded={expanded} defaultExpanded={true} onChange={handleChangeExpand}>
             <AccordionSummary id={Styles.headerContainer} sx={(theme) => (Constants.accordionStyle)}>
-                <h4 id={Styles.header}>{title}</h4>
+                <div>
+                    <h4 id={Styles.header}>{title}</h4>
+                    {subtitle ? <p id={Styles.subtitle}>{subtitle}</p> : null}
+                </div>
             </AccordionSummary>
             <AccordionDetails>
                 {map(data, renderItem)}

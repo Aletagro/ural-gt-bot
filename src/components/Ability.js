@@ -2,7 +2,7 @@ import React from 'react'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
-import {replaceAsterisks, removeAsterisks} from '../utilities/utils'
+import {replaceAsterisks} from '../utilities/utils'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -28,7 +28,7 @@ const Ability = ({ability, abilityKeywordsName, abilityIdName, isRegimentOfRenow
             onClick(ability)
         } else {
             const abilityText = `${ability.name}
-Phase: ${ability.phaseDetails}${ability.cpCost && !isRegimentOfRenown ? `\nCP Cost: ${ability.cpCost}` : ''}${castingValue ? `\nCasting Value: ${castingValue}` : ''}\n${ability.declare ? `\nDeclare: ${removeAsterisks(ability.declare)}` : ''}${ability.effect ? `\nEffect: ${removeAsterisks(ability.effect)}` : ''}
+Phase: ${ability.phaseDetails}${ability.cpCost && !isRegimentOfRenown ? `\nCP Cost: ${ability.cpCost}` : ''}${castingValue ? `\nCasting Value: ${castingValue}` : ''}\n${ability.declare ? `\nDeclare: ${ability.declare}` : ''}${ability.effect ? `\nEffect: ${ability.effect}` : ''}
 ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), ', ')}` : ''}
 `
             navigator.clipboard.writeText(abilityText)
@@ -49,6 +49,7 @@ ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), 
                     </div>
                     : null
                 }
+                {ability.points ? <b id={Styles.points}>{ability.points} pts</b> : null}
             </div>
             <div id={Styles.container}>
                 <h4 id={Styles.name}>{ability.name}</h4>

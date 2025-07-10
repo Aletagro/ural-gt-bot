@@ -12,7 +12,6 @@ const ChooseOption = () => {
     const navigate = useNavigate()
     const options = dataBase.data.option.filter(option => option.optionGroupId === optionGroup.id)
 
-
     const handleClickOption = (option) => () => {
         if (isRoRUnitWithKeyword) {
             const newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [optionGroup.optionGroupType]: capitalizeFirstLetter(option)}

@@ -12,7 +12,7 @@ import Styles from './styles/ArmyInfo.module.css'
 
 const ArmyInfo = () => {
     const {allegiance, info} = useLocation().state
-    const armyEnhancement = find(Constants.armyEnhancements, enhancement => enhancement.title === info?.title)
+    const armyEnhancement = find(Constants.armyEnhancements, enhancement => enhancement.title === info.title)
 
     const renderAbility = (ability) => <Ability
         key={ability.id}
@@ -21,9 +21,12 @@ const ArmyInfo = () => {
         abilityIdName={armyEnhancement?.abilityIdName}
     />
 
-    const renderBlock = (block) => <div key={block?.id}>
-        <p id={Styles.title}>{block?.name}</p>
-        {map(block?.abilities, renderAbility)}
+    const renderBlock = (block) => <div key={block.id}>
+        <div id={Styles.blockHeader}>
+            <b id={Styles.title}>{block.name}</b>
+            {block.points ? <p id={Styles.title}>{block.points} pts</p> : null}
+        </div>
+        {map(block.abilities, renderAbility)}
     </div>
 
     return <>

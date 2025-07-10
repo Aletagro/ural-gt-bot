@@ -4,8 +4,11 @@ import {sortByName} from '../utilities/utils'
 import {search} from '../utilities/appState'
 import Row from '../components/Row'
 import Accordion from '../components/Accordion'
+import Ability from '../components/Ability'
 
+import map from 'lodash/map'
 import size from 'lodash/size'
+import find from 'lodash/find'
 import filter from 'lodash/filter'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
@@ -23,14 +26,29 @@ const Search = () => {
         if (value) {
             const warscrolls = filter(dataBase.data.warscroll, (warscroll) => !warscroll.isSpearhead && includes(lowerCase(warscroll.name), lowerCase(value)))
             search.Warscrolls = sortByName(warscrolls.splice(0, 20))
-            const rules = filter(dataBase.data.rule_container, (rule) => includes(lowerCase(rule.title), lowerCase(value)))
-            search.Rules = sortByName(rules.splice(0, 20), 'title')
+            const ruleTitles = filter(dataBase.data.rule_container, (rule) => includes(lowerCase(rule.title), lowerCase(value)))
+            const inTexts = filter(dataBase.data.rule_container_component, (rule) => rule.contentType === 'text' && includes(lowerCase(rule.textContent), lowerCase(value)))
+            const inTextRule = map(inTexts, rule => find(dataBase.data.rule_container, ['id', rule.ruleContainerId]))
+            const rules = filter(sortByName([...ruleTitles, ...inTextRule], 'title'), ['isHiddenFromSearch', false])
+            search.Rules = rules.splice(0, 40)
             const allegiances = filter(dataBase.data.faction_keyword, (faction) => includes(lowerCase(faction.name), lowerCase(value)) && faction.name !== 'Orruk Warclans')
             search.Allegiances = sortByName(allegiances.splice(0, 20))
+            const battleFormation = filter(dataBase.data.battle_formation_rule, (rule) => includes(lowerCase(rule.name), lowerCase(value)))
+            search['Battle Formation'] = sortByName(battleFormation.splice(0, 20))
+            const abilities = filter(dataBase.data.ability, (ability) => includes(lowerCase(ability.name), lowerCase(value)))
+            search.Abilities = sortByName(abilities.splice(0, 20))
+            const loreAbility = filter(dataBase.data.lore_ability, (ability) => includes(lowerCase(ability.name), lowerCase(value)))
+            search['Lore Abilities'] = sortByName(loreAbility.splice(0, 20))
+            const ror = filter(dataBase.data.ability_group, (ability) => ability.abilityGroupType === 'regimentOfRenown' && includes(lowerCase(ability.name), lowerCase(value)))
+            search['Regiment of Renown'] = sortByName(ror.splice(0, 20))
         } else {
             search.Warscrolls = []
             search.Rules = []
             search.Allegiances = []
+            search['Battle Formation'] = []
+            search.Abilities = []
+            search['Lore Abilities'] = []
+            search['Regiment of Renown'] = []
         }
         forceUpdate()
       }, [value], 300
@@ -56,12 +74,19 @@ const Search = () => {
         state={{unit}}
     />
 
-    const renderRule = (rule) => <Row
-        key={rule.id}
+    const renderRule = (rule, index) => <Row
+        key={index}
         title={rule.title}
-        subtitle={rule.updateType || 'rule'}
+        subtitle={rule.updateType}
         navigateTo='rules'
         state={{rules: [rule]}}
+    />
+
+    const renderRoR = (regiment) => <Row
+        key={regiment.id}
+        title={regiment.name}
+        navigateTo='regimentOfRenown'
+        state={{regiment}}
     />
 
     const renderAllegiance = (allegiance) => <Row
@@ -71,7 +96,11 @@ const Search = () => {
         state={{allegiance}}
     />
 
+    const renderAbility = (ability) =>
+        <Ability key={ability.id} ability={ability} />
+
     const renderAccordion = (type, renderItem) => <Accordion
+        key={type}
         title={type}
         data={search[type]}
         renderItem={renderItem}
@@ -81,12 +110,16 @@ const Search = () => {
 
     return <>
         <div id={Styles.container}>
-            <input id={Styles.input} onChange={handleChange} autoFocus placeholder='Start Typing' type='search' name='search' />
+            <input id={Styles.input} onChange={handleChange} autoFocus placeholder='Start Typing' type='search' name='search' size={40} />
         </div>
         <div id='column' className='Chapter'>
             {size(search.Warscrolls) ? renderAccordion('Warscrolls', renderWarscroll) : null}
             {size(search.Rules) ? renderAccordion('Rules', renderRule) : null}
             {size(search.Allegiances) ? renderAccordion('Allegiances', renderAllegiance) : null}
+            {size(search['Battle Formation']) ? renderAccordion('Battle Formation', renderAbility) : null}
+            {size(search.Abilities) ? renderAccordion('Abilities', renderAbility) : null}
+            {size(search['Lore Abilities']) ? renderAccordion('Lore Abilities', renderAbility) : null}
+            {size(search['Regiment of Renown']) ? renderAccordion('Regiment of Renown', renderRoR) : null}
         </div>
     </>
 }

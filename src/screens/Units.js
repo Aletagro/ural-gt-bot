@@ -1,20 +1,36 @@
-import React from 'react';
+import React, {useCallback, useReducer} from 'react';
 import {useLocation} from 'react-router-dom'
 import {unitsSortesByType} from '../utilities/utils'
+import {isCollapseUnitsTypes} from '../utilities/appState'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Accordion from '../components/Accordion'
+import Constants from '../Constants'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
+import includes from 'lodash/includes'
 
 const dataBase = require('../dataBase.json')
 
 const Units = () => {
-    const allegiance = useLocation().state.allegiance
-    const warscrollIds = map(filter(dataBase.data.warscroll_faction_keyword, (item) => item.factionKeywordId === allegiance.id), item => item.warscrollId)
-    const units = unitsSortesByType(filter(map(warscrollIds, warscrollId => find(dataBase.data.warscroll, scroll => scroll.id === warscrollId)), unit => !unit.isSpearhead && !unit.isLegends))
+    const {allegiance, units} = useLocation().state
+    // eslint-disable-next-line
+    const [_, forceUpdate] = useReducer((x) => x + 1, 0)
+    let _units = []
+    if (units) {
+        _units = unitsSortesByType(units)
+    } else {
+        const isLegendaryArmies = includes(Constants.legendaryArmies, allegiance.id)
+        const warscrollIds = map(filter(dataBase.data.warscroll_faction_keyword, (item) => item.factionKeywordId === allegiance.id), item => item.warscrollId)
+        _units = unitsSortesByType(filter(map(warscrollIds, warscrollId => find(dataBase.data.warscroll, scroll => scroll.id === warscrollId)), unit => !unit.isSpearhead && (isLegendaryArmies ? true : !unit.isLegends)))
+    }
+
+    const handleChangeExpand = useCallback((e) => {
+        isCollapseUnitsTypes[e.nativeEvent.target?.innerText] = !isCollapseUnitsTypes[e.nativeEvent.target?.innerText]
+        forceUpdate()
+    }, [])
 
     const renderRow = (unit) => <Row
         key={unit?.id}
@@ -29,12 +45,17 @@ const Units = () => {
         title={type.title}
         data={type.units}
         renderItem={renderRow}
+        expanded={!isCollapseUnitsTypes[type.title]}
+        onChangeExpand={handleChangeExpand}
     />
 
     return <>
-        <HeaderImage src={allegiance.rosterHeaderImage} alt={allegiance.name} isWide />
+        {allegiance?.rosterHeaderImage
+            ? <HeaderImage src={allegiance?.rosterHeaderImage} alt={allegiance?.name} isWide />
+            : null
+        }
         <div id='column' className='Chapter'>
-            {units.map(renderUnitsType)}
+            {_units.map(renderUnitsType)}
         </div>
     </>
 }

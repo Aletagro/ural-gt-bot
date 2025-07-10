@@ -11,6 +11,7 @@ const dataBase = require('../dataBase.json')
 
 const Rules = ({info}) => {
     const {paragraph, rules} = useLocation().state
+    console.log({paragraph, rules, info})
     const _paragraph = info || paragraph
     const _rules = rules || filter(dataBase.data.rule_container, (group) => group.ruleSectionId === _paragraph.id)
     _rules.sort((a, b) => a.displayOrder - b.displayOrder)

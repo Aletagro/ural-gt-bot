@@ -28,6 +28,7 @@ const Manifestations = () => {
         const units = map(spells, spell => find(dataBase.data.warscroll, warscroll => warscroll.id === spell.linkedWarscrollId))
         return <Accordion
             title={lore.name}
+            subtitle={lore.points ? `${lore.points} pts` : undefined}
             data={units}
             renderItem={renderUnit}
         />

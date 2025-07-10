@@ -7,9 +7,7 @@ export const roster = {
         {
             units: [],
             heroId: '',
-            points: 0,
-            artefact: '',
-            heroicTrait: ''
+            points: 0
         }
     ],
     generalRegimentIndex: null,
@@ -24,7 +22,11 @@ export const roster = {
     manifestationsList: [],
     factionTerrain: '',
     pointsLimit: 2000,
-    points: 0
+    points: {
+        all: 0
+    },
+    tactics: [],
+    otherEnhancement: undefined
 }
 
 export const search = {
@@ -32,15 +34,19 @@ export const search = {
     Warscrolls: [],
     Rules: [],
     Allegiances: [],
+    'Battle Formation': [],
+    Abilities: [],
+    'Lore Abilities': [],
+    'Regiment of Renown': [],
     expand: {
         Warscrolls: true,
         Rules: true,
-        Allegiances: true
-    },
-    rostersValue: '',
-    rosters: [],
-    playersValue: '',
-    players: []
+        Allegiances: true,
+        'Battle Formation': true,
+        Abilities: true,
+        'Lore Abilities': true,
+        'Regiment of Renown': true
+    }
 }
 
 export const builderFilters = {
@@ -101,4 +107,13 @@ export const meta = {
 
 export const rosterViewType = {
     easy: false
+}
+
+export const isCollapseUnitsTypes = Constants.defaultIsCollapseUnitsTypes
+
+export const isCollapseRegimentAlliances = Constants.defaultIsCollapseRegimentAlliances
+
+export const lists = {
+    count: 0,
+    data: []
 }

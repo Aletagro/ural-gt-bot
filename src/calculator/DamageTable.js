@@ -1,5 +1,11 @@
-import React from 'react';
+import React from 'react'
+import {ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
+
+import map from 'lodash/map'
+import size from 'lodash/size'
+import replace from 'lodash/replace'
 
 import Styles from './styles/DamageTable.module.css'
 
@@ -70,6 +76,36 @@ const DamageTable = ({units, target}) => {
         })
     })
 
+    const handleCopy = () => {
+         // Находим индекс первого элемента с "+" (начало строк данных)
+        const firstDataRowIndex = data.findIndex(item => item.endsWith('+'))
+        // Заголовки - все элементы до "2+"
+        const headers = map(data.slice(0, firstDataRowIndex), item => replace(item, /\s-\s.*$/, ''))
+        const columnCount = size(headers)
+        // Преобразуем данные в двумерный массив
+        const tableData = [headers]
+        const rowCount = (data.length - firstDataRowIndex) / columnCount
+        for (let i = 0; i < rowCount; i++) {
+            const startIndex = firstDataRowIndex + i * columnCount;
+            const row = data.slice(startIndex, startIndex + columnCount);
+            tableData.push(row);
+        }
+        // Рассчитываем максимальную ширину для каждой колонки
+        const columnWidths = map(tableData[0], (_, colIndex) =>
+            Math.max(...map(tableData, row => String(row[colIndex] || '').length))
+        )
+        let textToCopy = ''
+        textToCopy += tableData[0].map((header, i) => ` ${header.padEnd(columnWidths[i])} `).join('|') + '\n'
+        // Разделительная линия
+        textToCopy += columnWidths.map(width => '-'.repeat(width + 2)).join('+') + '\n'
+        for (let i = 1; i < tableData.length; i++) {
+            textToCopy += tableData[i].map((cell, j) => 
+            ` ${String(cell).padEnd(columnWidths[j] + 2)} `).join('|') + '\n'
+        }
+        navigator.clipboard.writeText(textToCopy)
+        toast.success('Data Copied', Constants.toastParams)
+    }
+
     const renderCell = (text, index) => {
         const isFirstColumn = (index + 1) % (results.length + 1) === 1
         const isEvenRow = index % ((results.length + 1) * 2) < results.length + 1
@@ -86,8 +122,9 @@ const DamageTable = ({units, target}) => {
         </p>
     }
 
-    return <div id={Styles.container} style={{display: 'grid', 'grid-template-columns': `repeat(${results.length + 1}, 1fr)`}}>
+    return <div id={Styles.container} onClick={handleCopy} style={{display: 'grid', 'grid-template-columns': `repeat(${results.length + 1}, 1fr)`}}>
         {data.map(renderCell)}
+        <ToastContainer />
     </div>
 }
 

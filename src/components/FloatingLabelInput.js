@@ -54,21 +54,22 @@ const StyledLabel = styled('label')(({ theme }) => ({
 }));
 
 const InnerInput = (props) => {
+  const id = React.useId()
   return <>
-    <StyledInput {...props} />
-    <StyledLabel>{props.label}</StyledLabel>
+    <StyledInput {...props} id={id} />
+    <StyledLabel htmlFor={id}>{props.label}</StyledLabel>
   </>
 }
 
-const FloatingLabelInput = ({style, onChange, onBlur, onFocus, placeholder, label, value}) => {
+const FloatingLabelInput = ({style, onChange, onBlur, placeholder, label, value, defaultValue}) => {
   return <Input
     onChange={onChange}
     onBlur={onBlur}
-    onFocus={onFocus}
     slots={{input: InnerInput}}
     slotProps={{input: {placeholder: placeholder || '', label}}}
     sx={style}
     value={value}
+    defaultValue={defaultValue}
   />
 }
 

@@ -1,0 +1,24 @@
+#button {
+    background: rgb(245, 201, 80);
+    color: black;
+    border-radius: 4px;
+    border-width: 0px;
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+}
+  
+#disabledButton {
+    background: rgb(201, 200, 199);
+    color: white; 
+    border-radius: 4px;
+    border-width: 0px;
+    padding: 12px;
+    font-size: 16px;
+    width: 100%;
+}
+
+#notice {
+    padding-bottom: 12px;
+    font-size: 12px;
+}

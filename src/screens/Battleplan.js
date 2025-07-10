@@ -1,27 +1,25 @@
 import React from 'react';
 import {useLocation} from 'react-router-dom'
-import {replaceAsterisks} from '../utilities/utils'
+import {sortByName} from '../utilities/utils'
+import Rule from '../components/Rule'
 
+import map from 'lodash/map'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
-
-import Styles from './styles/Battleplan.module.css'
 
 const dataBase = require('../dataBase.json')
 
 const Battleplan = () => {
     const {battleplan} = useLocation().state
-    const info = filter(dataBase.data.rule_container_component, (component) => component.ruleContainerId === battleplan.id)
-    info.sort((a, b) => a.displayOrder - b.displayOrder)
-    const imageUrl = find(info, rule => rule.contentType === 'image')?.imageUrl
-    const twist = find(info, rule => rule.contentType === 'text')?.textContent
-    return <>
-        <img src={imageUrl} alt='battleplan' width='100%' />
-        <div id='column' className='Chapter'>
-        <h3>Twist</h3>
-        <p id={Styles.text}>{replaceAsterisks(twist)}</p>
-        </div>
-    </>
+    const id = find(dataBase.data.rule_container, ['ruleSectionId', battleplan.id])?.id
+    const data = filter(dataBase.data.rule_container_component, ['ruleContainerId', id])
+    sortByName(data, 'displayOrder')
+
+    const renderRuleComponent = (rule) => <Rule key={rule.id} rule={rule} />
+
+    return <div id='column' className='Chapter'>
+        {map(data, renderRuleComponent)}
+    </div>
 }
 
 export default Battleplan

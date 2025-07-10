@@ -3,10 +3,12 @@ import {useLocation} from 'react-router-dom'
 import {sortByName} from '../utilities/utils'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
+import Constants from '../Constants'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
+import includes from 'lodash/includes'
 
 const dataBase = require('../dataBase.json')
 
@@ -22,12 +24,15 @@ const Catalog = () => {
     }
     sortByName(allegiances)
 
-    const renderRow = (allegiance) => <Row
-        key={allegiance.id}
-        title={allegiance.name}
-        navigateTo='army'
-        state={{allegiance, grandAlliance: grandAlliance.name}}
-    />
+    const renderRow = (allegiance) => {
+        const isLegendaryArmies = includes(Constants.legendaryArmies, allegiance.id)
+        return <Row
+            key={allegiance.id}
+            title={`${allegiance.name}${isLegendaryArmies ? ' (Legend)' : ''}`}
+            navigateTo='army'
+            state={{allegiance, grandAlliance: grandAlliance.name}}
+        />
+    }
 
     return <>
         <HeaderImage src={grandAlliance.image} alt={grandAlliance.name} isWide />

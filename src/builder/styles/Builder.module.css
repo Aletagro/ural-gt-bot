@@ -99,8 +99,18 @@
 #pointsContainer {
   background: rgb(46, 46, 49);
   border-radius: 4px;
-  padding: 16px 16px;
+  padding: 16px;
   margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#errorPointsContainer {
+  background: red;
+  border-radius: 4px;
+  border-width: 0px;
+  padding: 16px;
+  margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
 }

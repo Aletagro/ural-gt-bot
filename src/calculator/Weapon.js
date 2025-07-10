@@ -37,7 +37,7 @@ const inputStyles = {
     }
 }
 
-const Weapon = ({index, weapon, onChange, onChangeAbilitiy, onDelete, updateCount}) => {
+const Weapon = ({index, weapon, onChange, onChangeAbilitiy, onDelete}) => {
     const [errors, setErrors] = useState({})
     const [weaponName, setWeaponName] = useState(weapon.name || '')
 

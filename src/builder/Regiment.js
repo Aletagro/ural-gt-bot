@@ -15,12 +15,12 @@ const emptyRegiment = {
     heroicTrait: ''
 }
 
-const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicTraits, isInfo, isGeneral, onOpenModal}) => {
+const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicTraits, otherEnhancement}) => {
     const navigate = useNavigate()
 
     const handleDeleteRegiment = () => {
         const newRegiments = [...roster.regiments]
-        roster.points = roster.points - newRegiments[index].points
+        roster.points.all -= newRegiments[index].points
         newRegiments.splice(index, 1)
         roster.regiments = newRegiments
         forceUpdate()
@@ -42,10 +42,10 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
     const handleDeleteUnit = (unit, unitIndex) => {
         const newRegiment = {...regiment}
         if (unitIndex === 0) {
-            roster.points = roster.points - newRegiment.points
+            roster.points.all -= newRegiment.points
             roster.regiments[index] = emptyRegiment
         } else {
-            roster.points = roster.points - unit.points
+            roster.points.all -= unit.points
             newRegiment.points = newRegiment.points - unit.points
             newRegiment.units.splice(unitIndex, 1)
             roster.regiments[index] = newRegiment
@@ -56,7 +56,7 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
     const handleCopy = (unit) => {
         roster.regiments[index].units.push(unit)
         roster.regiments[index].points = roster.regiments[index].points + unit.points
-        roster.points = roster.points + unit.points
+        roster.points.all += unit.points
         forceUpdate()
     }
 
@@ -69,7 +69,7 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
                 points: _points
             }
             roster.regiments[index].points = roster.regiments[index].points - _points
-            roster.points = roster.points - _points
+            roster.points.all -= _points
         } else {
             roster.regiments[index].units[unitIndex] = {
                 ...roster.regiments[index].units[unitIndex],
@@ -77,7 +77,7 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
                 points: unit.points * 2
             }
             roster.regiments[index].points = roster.regiments[index].points + unit.points
-            roster.points = roster.points + unit.points
+            roster.points.all += unit.points
         }
         forceUpdate()
     }
@@ -98,35 +98,27 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
         onCopy={handleCopy}
         artefacts={artefacts}
         heroicTraits={heroicTraits}
-        isGeneral={regiment.heroId && _index === 0 && (roster.generalRegimentIndex === index || isGeneral)}
+        otherEnhancement={otherEnhancement}
+        isGeneral={regiment.heroId && _index === 0 && roster.generalRegimentIndex === index}
         alliganceId={alliganceId}
-        onOpenModal={onOpenModal}
-        isInfo={isInfo}
     />
 
     const title = regiment.heroId ? 'Add Unit' : 'Add Hero'
-    return <div id={isInfo ? Styles.infoContainer : Styles.container} key={index}>
+    return <div id={Styles.container} key={index}>
         <div id={Styles.title}>
             <div id={Styles.titleSubContainer}>
                 <p id={Styles.text}>Regiment {index + 1}</p>
-                {isInfo ? null : <p id={Styles.points}>{regiment.points} Points</p>}
+                <p id={Styles.points}>{regiment.points} Points</p>
             </div>
-            {isInfo ? <p id={Styles.points}>{regiment.points} Points</p> : null}
-            {isInfo
-                ? null
-                : <div id={Styles.rightBlock}>
-                    <button id={Styles.deleteButton} onClick={handleChooseGeneral}><img src={General} alt="" /></button>
-                    <button id={Styles.deleteButton} onClick={handleDeleteRegiment}><img src={Delete} alt="" /></button>
-                </div>
-            }
+            <div id={Styles.rightBlock}>
+                <button id={Styles.deleteButton} onClick={handleChooseGeneral}><img src={General} alt="" /></button>
+                <button id={Styles.deleteButton} onClick={handleDeleteRegiment}><img src={Delete} alt="" /></button>
+            </div>
         </div>
         {regiment.units.map(renderUnit)}
-        {isInfo
-            ? null
-            : <div id={Styles.addUnitContainer}>
-                <button id={Styles.addUnitButton} onClick={handleAddUnit(regiment, title, index)}>{title}</button>
-            </div>
-        }
+        <div id={Styles.addUnitContainer}>
+            <button id={Styles.addUnitButton} onClick={handleAddUnit(regiment, title, index)}>{title}</button>
+        </div>
     </div>
 }
 

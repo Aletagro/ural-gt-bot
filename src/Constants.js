@@ -76,12 +76,13 @@ const Constants = {
             abilityGroupType: undefined,
             abilityKeywordsName: 'lore_ability_keyword',
             abilityIdName: 'loreAbilityId',
-            includesTexts: ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures']
+            includesTexts: ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Bendictions', 'Gifts']
         }
     ],
     coreDocumentsId: 'e918110c-418e-4a50-90bc-484581a0fa5c',
+    ghbId: '3e05b549-40a4-43e5-b0f7-5ef6d1ffdbd2',
     rulesImage: 'https://dhss9aar8ocw.cloudfront.net/09a5c1fd-a186-4517-8a6f-0a107374eb45',
-    manifestationsPublicationId: '318c212e-cbcd-4b44-a44d-318f3ae180a0',
+    manifestationsPublicationId: '38c85d13-0436-48ac-adb3-1c9319b16d13',
     regimentsOfRenownImage: 'https://dhss9aar8ocw.cloudfront.net/39478fae-cf03-40ee-a130-6fef03492c44',
     unitsTypes: [
         {
@@ -125,11 +126,9 @@ const Constants = {
         endOfTurn: 'indigo'
     },
     tacticsTypes: {
-        UNIVERSAL: 'black',
-        CHAOS: 'darkred',
-        DESTRUCTION: 'darkgreen',
-        ORDER: 'rgb(26, 72, 110)',
-        DEATH: 'indigo'
+        affray: 'darkgreen',
+        strike: 'rgb(26, 72, 110)',
+        domination: 'rgb(182, 92, 28)'
     },
     regimentOfRenownsWithWizard: [
         {
@@ -236,7 +235,7 @@ const Constants = {
         {modificator: 2, title: 'Crit on 5+'},
         {modificator: 1, title: 'Crit on 6+'}
     ],
-    battleplansRuleSectionId: '97befff2-c7fa-4ee2-aa73-1e7fe2e8d8cd',
+    battleplansRuleSectionId: '4870769b-c759-4fa2-bc85-da79ab5d6957',
     tacticsIds: {
         Universal: 'b14bc337-1f07-47ab-853c-e7484b6b6661',
         Order: 'b2e81319-fd3c-4ee4-aae6-f3547efee8b6',
@@ -244,7 +243,6 @@ const Constants = {
         Destruction: '0cc9bec3-40fe-4ed4-af4e-3e2e9e099c31',
         Chaos: 'a25e9b34-58df-468f-8f57-d7f7cbdfaec1'
     },
-    tacticsIdsArray: ['b14bc337-1f07-47ab-853c-e7484b6b6661', 'b2e81319-fd3c-4ee4-aae6-f3547efee8b6', '9a1ff3fc-662d-4e98-ae89-8fe0b08136f8', '0cc9bec3-40fe-4ed4-af4e-3e2e9e099c31', 'a25e9b34-58df-468f-8f57-d7f7cbdfaec1'],
     newPlayer: {
         name: '',
         alliance: {
@@ -413,66 +411,89 @@ const Constants = {
             background: '#2E2D32',
         }
     },
-
+    defaultIsCollapseUnitsTypes: {
+        'Hero': false,
+        'Infantry': false,
+        'Cavalry': false,
+        'Beast': false,
+        'Monster': false,
+        'War Machine': false,
+        'Manifestation': false,
+        'Faction Terrain': false
+    },
+    defaultIsCollapseRegimentAlliances: {
+        'Chaos': false,
+        'Death': false,
+        'Destruction': false,
+        'Order': false
+    },
+    legendaryArmies: ['262eabc2-f3b4-4296-9ef5-632d6cf1aadf', '5425ee6d-56cb-44a3-9f82-78b6864890da'],
+    noBreakSpace: '\u00a0',
+    listsMax: 3,
+    chaosFaction: [
+        "Beasts of Chaos",
+        "Blades of Khorne",
+        "Disciples of Tzeentch",
+        "Hedonites of Slaanesh",
+        "Maggotkin of Nurgle",
+        "Skaven",
+        "Slaves to Darkness",
+        "The Great-Grand Gnawhorde",
+        "Thanquol's Mutated Menagerie",
+        "The Swords of Chaos",
+        "Tribes of the Snow Peaks",
+        "Legion of the First Prince"
+    ],
+    deathFaction: [
+        "Flesh-eater Courts",
+        "Nighthaunt",
+        "Ossiarch Bonereapers",
+        "Soulblight Gravelords",
+        "Knights of the Crimson Keep",
+        "Scions of Nulahmia",
+        "Barrow Legion"
+    ],
+    destructionFaction: [
+        "Bonesplitterz",
+        "Gloomspite Gitz",
+        "Ironjawz",
+        "Kruleboyz",
+        "Ogor Mawtribes",
+        "Sons of Behemat",
+        "The Roving Maw",
+        "Krazogg’s Grunta Stampede",
+        "Zoggrok's Ironmongerz",
+        "Murkvast Menagerie",
+        "Big Waaagh!",
+        "King Brodd's Stomp",
+        "Trugg's Troggherd",
+        "Da King's Gitz",
+        "Droggz's Gitmob"
+    ],
     tournamentBattleplans: [
         {
-            "id": "86dbc020-5032-4f29-8753-e9d11e41c2e3",
-            "title": "Border War",
-            "scoreParams": [
-                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
-                {title: 'Friendly Objective', id: 'friendlyObjective', value: 1, completed: false},
-                {title: 'First Border Objective', id: 'firstBorderObjective', value: 2, completed: false},
-                {title: 'Second Border Objective', id: 'secondBorderObjective', value: 2, completed: false},
-                {title: 'Enemy Objective', id: 'enemyObjective', value: 5, completed: false}
-            ],
-            "maxForObjectives": 6
+            "id": "bcb1e9cb-fc58-4ebc-b8b1-5419dec6d91b",
+            "title": "Linked Ley Lines"
         },
         {
-            "id": "53d86219-6dae-4b17-97ab-e2fa8279c949",
-            "title": "Feral Foray",
-            "scoreParams": [
-                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
-                {title: 'One', id: 'one', value: 2, completed: false},
-                {title: 'Two and More', id: 'twoAndMore', value: 2, completed: false},
-                {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false}
-            ]
+            "id": "0958926a-1faa-4ee0-a349-5d92fddb3b1d",
+            "title": "Roiling Roots"
         },
         {
-            "id": "aac58435-a144-4260-a633-c17558c2014f",
-            "title": "The Vice",
-            "scoreParams": [
-                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
-                {title: 'One', id: 'one', value: 2, completed: false},
-                {title: 'Two and More', id: 'twoAndMore', value: 2, completed: false, round: '3-'},
-                {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false},
-                {title: 'No Enemy Units Near', id: 'noEnemyUnitsNear', value: 2, completed: false, round: '4+'}
-            ]
+            "id": "d87f219f-f8e9-4ce9-933f-2f64b4201019",
+            "title": "Lifecycle"
         },
         {
-            "id": "97c0441a-4155-47b3-92bb-ed612265dcae",
-            "title": "Focal Points",
-            "scoreParams": [
-                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
-                {title: 'One', id: 'one', value: 1, completed: false},
-                {title: 'Two and More', id: 'twoAndMore', value: 1, completed: false},
-                {title: 'More Than Opp', id: 'moreThan', value: 1, completed: false},
-                {title: '2 or more home/flank objectives', id: 'home/flank', value: 3, completed: false}
-            ]
+            "id": "667bd7d9-206b-4479-bb55-20c0214dd95f",
+            "title": "Surge of Slaughter"
         },
         {
-            "id": "375743bf-f4c8-4eff-ba26-4fc304ce8d4f",
-            "title": "The Jaws of Gallet",
-            "scoreParams": [
-                {title: 'Tactics Complete', id: 'tactics', value: 4, completed: false},
-                {title: 'One', id: 'one', value: 2, completed: false},
-                {title: 'Two and More', id: 'twoAndMore', value: 2, completed: false},
-                {title: 'More Than Opp', id: 'moreThan', value: 2, completed: false}
-            ]
+            "id": "c03fa51c-d43f-4078-8f5a-197155b0cded",
+            "title": "Grasp of Thorns"
         }
     ],
-
     myTgId: 530569849,
-    judgesIds: [208050275, 5010865849]
+    judgesIds: [205134265, 210233387]
 }
 
 export default Constants

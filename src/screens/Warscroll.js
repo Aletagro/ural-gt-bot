@@ -65,7 +65,7 @@ const Warscroll = () => {
             damage: getValue(weapon.damage),
             toHit: Number(weapon.hit[0]),
             toWound: Number(weapon.wound[0]),
-            models: Number(unit.modelCount),
+            models: Number(unit.modelCount * (unit.isReinforced ? 2 : 1)),
             rend: Number(weapon.rend) || 0,
             champion: includes(unit.referenceKeywords, 'Champion') && !getWeaponAbilityForCalculator(weaponsAbilities[index], 'Companion'),
             mortal: getWeaponAbilityForCalculator(weaponsAbilities[index], 'Crit (Mortal)'),

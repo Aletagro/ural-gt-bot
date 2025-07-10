@@ -20,6 +20,7 @@
   margin: 0;
   flex: 1;
   text-align: start;
+  font-family: 'Minion Pro Semi-Bold';
 }
 #subtitle {
   font-size: 14px;

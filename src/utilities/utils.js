@@ -1,9 +1,12 @@
 import parse from 'html-react-parser';
 import Constants from '../Constants'
+import {roster} from '../utilities/appState'
 
 import map from 'lodash/map'
-import find from 'lodash/find'
+import get from 'lodash/get'
 import size from 'lodash/size'
+import find from 'lodash/find'
+import split from 'lodash/split'
 import filter from 'lodash/filter'
 import indexOf from 'lodash/indexOf'
 import forEach from 'lodash/forEach'
@@ -13,10 +16,8 @@ import lowerCase from 'lodash/lowerCase'
 
 const dataBase = require('../dataBase.json')
 
-export const sortByName = (array, param, asc) => param
-    ? asc
-        ? array.sort((a,b) => (b[param] > a[param]) ? 1 : ((a[param] > b[param]) ? -1 : 0))
-        : array.sort((a,b) => (a[param] > b[param]) ? 1 : ((b[param] > a[param]) ? -1 : 0))
+export const sortByName = (array, param) => param
+    ? array.sort((a,b) => (a[param] > b[param]) ? 1 : ((b[param] > a[param]) ? -1 : 0))
     : array.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
 
 export const unitsSortesByType = (units) => {
@@ -50,7 +51,7 @@ export const getErrors = (roster) => {
     if (!roster) {
         return errors
     }
-    if (roster.points > roster.pointsLimit) {
+    if (roster.points.all > roster.pointsLimit) {
         errors.push(`You use more than ${roster.pointsLimit} points`)
     }
     if (!roster.battleFormation  && !roster.withoutBattleFormation) {
@@ -62,10 +63,12 @@ export const getErrors = (roster) => {
     const uniqueUnits = []
     let heroicTraitsCount = 0
     let atrefactsCount = 0
-    let ensorcelledBannersCount = 0
+    let otherEnhancementCount = 0
     let hasWarmasterInRegiments = []
     let hasRequiredGeneral = false
     let isRequiredGeneralIsGeneral = false
+    let jawsCount = 0
+            let krulsCount = 0
     forEach(roster.regiments, (regiment, index) => {
         if (index === roster.generalRegimentIndex && regiment.units.length > 5) {
             errors.push("In General's Regiment you have more than 4 units")
@@ -82,8 +85,8 @@ export const getErrors = (roster) => {
             if (unit.artefact) {
                 atrefactsCount += 1
             }
-            if (unit['Ensorcelled Banners']) {
-                ensorcelledBannersCount += 1
+            if (unit[roster.otherEnhancement]) {
+                otherEnhancementCount += 1
             }
             if (unit.points * 2 > roster.pointsLimit) {
                 errors.push(`${unit.name} cost more than half the army`)
@@ -98,15 +101,34 @@ export const getErrors = (roster) => {
                 }
             }
         })
+        if (roster.allegiance === 'Big Waaagh!') {
+            if (get(regiment, 'units[0].name', '') === 'Kragnos, the End of Empire') {
+            } else if (includes(get(regiment, 'units[0].referenceKeywords', ''), 'Ironjawz')) {
+                jawsCount = jawsCount + 1
+            } else if (includes(get(regiment, 'units[0].referenceKeywords', ''), 'Kruleboyz')) {
+                krulsCount = krulsCount + 1
+            }
+        }
     })
+    // RoR с дп может брать артефакты и трейты
+    if (roster.regimentOfRenown?.id === '11cc4585-4cf5-43eb-af29-e2cbcdb6f5dd') {
+        roster.regimentsOfRenownUnits.forEach((unit) => {
+            if (unit.heroicTrait) {
+                heroicTraitsCount += 1
+            }
+            if (unit.artefact) {
+                atrefactsCount += 1
+            }
+        })
+    }
     if (heroicTraitsCount > 1) {
         errors.push(`You have ${heroicTraitsCount} Heroic Traits`)
     }
     if (atrefactsCount > 1) {
         errors.push(`You have ${atrefactsCount} Atrefacts`)
     }
-    if (ensorcelledBannersCount > 1) {
-        errors.push(`You have ${ensorcelledBannersCount} Ensorcelled Banners`)
+    if (otherEnhancementCount > (roster.otherEnhancement === 'First Circle Titles' ? 3 : 1)) {
+        errors.push(`You have ${otherEnhancementCount} ${roster.otherEnhancement}`)
     }
     if (hasWarmasterInRegiments.length && !includes(hasWarmasterInRegiments, roster.generalRegimentIndex) && !roster.requiredGeneral) {
         errors.push("You have a Warmaster hero, but he isn't your general")
@@ -130,6 +152,9 @@ export const getErrors = (roster) => {
     forEach(duplicateUniqueUnits, unit => {
         errors.push(`You have more then one ${unit}`)
     })
+    if (jawsCount !== krulsCount) {
+        errors.push('For every regiment led by a Kruleboyz Hero you must also include regiment led by a Ironjawz Hero')
+    }
     return errors
 }
 
@@ -202,11 +227,7 @@ export const getValue = (value) => {
             } else {
                 return undefined
             }
-            if (valueAfterD[1] === '-') {
-                return average * (Number(splitedValue[0]) || 1) - Number(valueAfterD[2])
-            } else {
-                return average * (Number(splitedValue[0]) || 1) + Number(valueAfterD[2])
-            }
+            return average * (Number(splitedValue[0]) || 1) + Number(valueAfterD[1])
         }
         if (splitedValue[0]) {
             return average * Number(splitedValue[0])
@@ -304,18 +325,9 @@ export const getNewRound = (battleplan) => {
     return newRound
 }
 
-export const setTacticColor = (tactic) => {
-    const match = tactic.match(/Keywords:\s*(\S+)/)
-    if (match) {
-        const keyword = match[1].replaceAll('*', '')
-        return Constants.tacticsTypes[keyword] || Constants.tacticsTypes.UNIVERSAL
-    }
-    return Constants.tacticsTypes.UNIVERSAL
-}
-
 export const getInfo = (screen, allegiance) => {
     let abilitiesGroup = dataBase.data[screen.groupName].filter((item) => 
-        item.factionId === allegiance?.id &&
+        item.factionId === allegiance.id &&
         item.abilityGroupType === screen.abilityGroupType &&
         (screen.includesTexts
             ? Boolean(screen.includesTexts.find(text => item.name.includes(text)))
@@ -327,7 +339,7 @@ export const getInfo = (screen, allegiance) => {
     }
     const abilitiesRules = abilitiesGroup.map(formation => dataBase.data[screen.ruleName].filter((item) => item[screen.ruleIdName] === formation?.id))
     const abilities = abilitiesGroup.map((formation, index) => {
-        return {name: formation?.name, id: formation?.id, abilities: abilitiesRules[index]}
+        return {name: formation?.name, id: formation?.id, points: formation?.points || 0, abilities: abilitiesRules[index]}
     })
     if (abilities.length > 0) {
         return {title: screen.title, abilities}
@@ -380,7 +392,7 @@ export const getRegimentOption = (option, unit) => {
     }
     const warscrollIds = dataBase.data.warscroll_faction_keyword.filter((item) => item.factionKeywordId === alliganceId).map(item => item.warscrollId)
     // определяем всех юнитов фракции
-    const allUnits = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && !unit.isLegends && unit.points !== null)
+    const allUnits = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && !unit.isLegends && !includes(unit.referenceKeywords, 'Faction Terrain') && !includes(unit.referenceKeywords, 'Manifestation'))
     // определяем кейворды всех юнитов фракции
     const allUnitsKeywordsIds = allUnits.map(unit => dataBase.data.warscroll_keyword.filter(keyword => keyword.warscrollId === unit.id))
     let units = []
@@ -443,6 +455,150 @@ export const getRegimentOption = (option, unit) => {
         }
     }
     return {}
+}
+
+export const cleanBuilder = () => {
+    roster.id = undefined
+    roster.allegiance = ''
+    roster.allegianceId = ''
+    roster.auxiliaryUnits = []
+    roster.battleFormation = ''
+    roster.factionTerrain = ''
+    roster.generalRegimentIndex = null
+    roster.grandAlliance = ''
+    roster.manifestationLore = ''
+    roster.manifestationsList = []
+    roster.points = {all: 0}
+    roster.pointsLimit = 2000
+    roster.prayersLore = ''
+    roster.regimentOfRenown = null
+    roster.regiments = [{units: [], heroId: '', points: 0}]
+    roster.regimentsOfRenownUnits = []
+    roster.requiredGeneral = null
+    roster.spellsLore = ''
+    roster.tactics = []
+    roster.isPublic = true
+    roster.note = ''
+    roster.listName = ''
+    roster.withoutBattleFormation = false
+    roster.otherEnhancement = undefined
+}
+
+export const getStringAfterDash = (text) => {
+    const match = text.match(/ - (.+)/)
+    return match ? match[1] : text
+}
+
+export const setRosterGrandAlliance = (allegiance) => {
+    let grandAlliance = 'Order'
+    if (includes(Constants.chaosFaction, allegiance)) {
+        grandAlliance = 'Chaos'
+    } else if (includes(Constants.deathFaction, allegiance)) {
+        grandAlliance = 'Death'
+    } else if (includes(Constants.destructionFaction, allegiance)) {
+        grandAlliance = 'Destruction'
+    }
+    roster.grandAlliance = grandAlliance
+}
+
+export const cleanObject = (object) => {  
+    for (let key in object) {
+      if (object[key] === '' || object[key] === null || object[key] === undefined) {
+        delete object[key]
+      }
+    }  
+    return object
+}
+
+export const getTextAfter = (searchIn, searchFor, before = false) => {
+    // Используем indexOf для поиска индекса начала искомой строки
+    const index = searchIn.indexOf(searchFor)
+    // Если строка не найдена — возвращаем null
+    if (index === -1) {
+        return null
+    }
+    if (before) {
+        // Возвращаем то, что до searchFor
+        const lineStart = searchIn.lastIndexOf('\n', index) + 1
+        const lineContentBefore = searchIn.slice(lineStart, index).trim()
+        return lineContentBefore
+    } else {
+        // Возвращаем то, что после searchFor
+        const startIndex = index + searchFor.length
+        const endIndex = searchIn.indexOf('\n', startIndex)
+        const endOfString = endIndex === -1 ? searchIn.length : endIndex
+        return searchIn.slice(startIndex, endOfString).trim()
+    }
+}
+
+export const parseRegiments = (input) => {
+    const lines = input.split('\n')
+    const regiments = []
+    const auxiliaryUnits = []
+    const regimentOfRenown = {name: '', units: []}
+    let currentRegiment = null
+    let generalIndex = null
+    let isAuxiliaryUnits = false
+    let isRegimentOfRenown = false
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        // Начало РоРа
+        if (line.startsWith('Regiment Of Renown')) {
+            isRegimentOfRenown = true
+            regimentOfRenown.name = split(lines[i + 1], ' (')[0]
+        }
+        // Начало нового реджимента
+        else if (line.startsWith('Regiment')) {
+            const match = line.match(/Regiment (\d+)/);
+            if (match) {
+                const index = parseInt(match[1], 10) - 1; // отсчёт с 0
+                currentRegiment = [];
+                regiments[index] = currentRegiment; // сохраняем по индексу
+                // Проверяем, есть ли "General's regiment" в следующей строке
+                if (i + 1 < lines.length && lines[i + 1].trim() === "General's regiment") {
+                    generalIndex = index;
+                }
+            }
+        }
+        // Начало Auxiliary юнитов
+        if (line.startsWith('Auxiliary Units')) {
+            isAuxiliaryUnits = true
+            isRegimentOfRenown = false
+        }
+        // Юнит: начинается с числа и "x"
+        else if (/^\d+ x/.test(line)) {
+            const unit = {};
+            const modelCountMatch = line.match(/^(\d+) x/);
+            const nameMatch = line.match(/\d+\sx\s(.+?)(?:\s*\(\d+\s*points?\))?$/);
+            const pointsMatch = line.match(/\((\d+)\s*points?\)/);
+    
+            unit.modelCount = parseInt(modelCountMatch[1], 10);
+            unit.name = nameMatch ? nameMatch[1].trim() : '';
+            unit.points = pointsMatch ? parseInt(pointsMatch[1], 10) : 0;
+            if (isRegimentOfRenown) {
+                regimentOfRenown.units.push(unit)
+            } else if (isAuxiliaryUnits) {
+                auxiliaryUnits.push(unit)
+            } else {
+                currentRegiment.push(unit)
+            }
+        }
+        // Улучшения: [Type]: Value
+        else if (line.startsWith('[')) {
+            const propMatch = line.match(/^\[(.+?)\]:\s*(.+)$/);
+            if (propMatch && currentRegiment && currentRegiment.length > 0) {
+            const lastUnit = isRegimentOfRenown
+                ? regimentOfRenown.units[regimentOfRenown.units.length - 1]
+                : isAuxiliaryUnits
+                    ? auxiliaryUnits[auxiliaryUnits.length - 1]
+                    : currentRegiment[currentRegiment.length - 1];
+            const key = propMatch[1].trim();
+            const value = propMatch[2].trim();
+            lastUnit[key] = value;
+            }
+        }
+    }
+    return {generalIndex, regiments, auxiliaryUnits, regimentOfRenown}
 }
 
 export const setTournamentStatus = (isRoundActive, round) => {

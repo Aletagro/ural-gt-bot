@@ -11,7 +11,6 @@ import Play from './screens/Play'
 import Vote from './screens/Vote'
 import Admin from './screens/Admin'
 import Help from './screens/Help'
-import Tactics from './screens/Tactics'
 import MainRules from './screens/MainRules'
 import Catalog from './screens/Catalog'
 import Army from './screens/Army'
@@ -30,6 +29,7 @@ import Rules from './screens/Rules'
 import Battleplan from './screens/Battleplan'
 import Legends from './screens/Legends'
 import LegendUnits from './screens/LegendUnits'
+import Tactic from './screens/Tactic'
 import Header from './components/Header'
 import Lists from './builder/Lists'
 import ChooseGrandAlliance from './builder/ChooseGrandAlliance'
@@ -40,6 +40,8 @@ import ChooseEnhancement from './builder/ChooseEnhancement'
 import ChooseOption from './builder/ChooseOption'
 import ChooseWeapon from './builder/ChooseWeapon'
 import Export from './builder/Export'
+import BuilderChooseTacticsCard from './builder/BuilderChooseTacticsCard'
+import PasteList from './builder/PasteList'
 import Calculator from './calculator/Calculator'
 import Developer from './screens/Developer'
 
@@ -72,7 +74,6 @@ function App() {
       <Route path={'vote'} element={<Vote />} />
       <Route path={'admin'} element={<Admin />} />
       <Route path={'help'} element={<Help />} />
-      <Route path={'tactics'} element={<Tactics />} />
       <Route path={'mainRules'} element={<MainRules />} />
       <Route path={'catalog'} element={<Catalog />} />
       <Route path={'army'} element={<Army />} />
@@ -103,6 +104,9 @@ function App() {
       <Route path={'chooseFaction'} element={<ChooseFaction />} />
       <Route path={'export'} element={<Export />} />
       <Route path={'developer'} element={<Developer />} />
+      <Route path={'builderChooseTacticsCard'} element={<BuilderChooseTacticsCard />} />
+      <Route path={'tactic'} element={<Tactic />} />
+      <Route path={'pasteList'} element={<PasteList />} />
     </Routes>
   </div>
 }

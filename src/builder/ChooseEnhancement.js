@@ -24,7 +24,7 @@ const ChooseEnhancement = () => {
     if (type === 'spellsLore' || type === 'prayersLore') {
         const loresRules = data.map(lore => dataBase.data.lore_ability.filter((item) => item.loreId === lore?.id))
         _data = data.map((lore, index) => {
-            return {name: lore?.name, id: lore?.id, abilities: loresRules[index]}
+            return {name: lore?.name, id: lore?.id, points: lore?.points || 0, abilities: loresRules[index]}
         })
         info = {
             abilityKeywordsName: 'lore_ability_keyword',
@@ -32,13 +32,13 @@ const ChooseEnhancement = () => {
         }
     }
     if (type === 'factionTerrain') {
-        _data = data.map((terrain, index) => ({name: terrain?.name, id: terrain?.id}))
+        _data = data.map((terrain, index) => ({name: terrain?.name, id: terrain?.id, points: terrain?.points || 0}))
     }
     if (type === 'manifestationLore') {
         const lores = data.map(lore => dataBase.data.lore_ability.filter((item) => item.loreId === lore?.id))
         const units = lores.map(lore => lore.map(spell => dataBase.data.warscroll.find(warscroll => warscroll.id === spell.linkedWarscrollId)))
         _data = data.map((lore, index) => {
-            return {name: lore?.name, id: lore?.id, abilities: units[index]}
+            return {name: lore?.name, id: lore?.id, points: lore?.points || 0, abilities: units[index]}
         })
     }
     if (isAdditionalOption) {
@@ -53,7 +53,21 @@ const ChooseEnhancement = () => {
             const newUnit = {...roster.auxiliaryUnits[unitIndex], [type]: enhancement.name}
             roster.auxiliaryUnits[unitIndex] = newUnit
         } else {
-            const newUnit = {...roster.regiments[regimentIndex].units[unitIndex], [type]: enhancement.name}
+            let newUnit = {}
+            let enhancementPointsDiff = 0
+            if (enhancement.points !== (roster.regiments[regimentIndex].units[unitIndex][`${type}-points`] || 0)) {
+                enhancementPointsDiff = enhancement.points - (roster.regiments[regimentIndex].units[unitIndex][`${type}-points`] || 0)
+                newUnit = {
+                    ...roster.regiments[regimentIndex].units[unitIndex],
+                    points: roster.regiments[regimentIndex].units[unitIndex].points + enhancementPointsDiff,
+                    [type]: enhancement.name,
+                    [`${type}-points`]: enhancement.points
+                }
+                roster.regiments[regimentIndex].points += enhancementPointsDiff
+                roster.points.all += enhancementPointsDiff
+            } else {
+                newUnit = {...roster.regiments[regimentIndex].units[unitIndex], [type]: enhancement.name}
+            }
             roster.regiments[regimentIndex].units[unitIndex] = newUnit
         }
         navigate(-1)
@@ -63,6 +77,21 @@ const ChooseEnhancement = () => {
         roster[type] = block.name
         if (type === 'manifestationLore') {
             roster.manifestationsList = block.abilities
+            if (block.points !== roster.points.manifestations) {
+                const pointsDiff = block.points - (roster.points.manifestations || 0)
+                roster.points.all += pointsDiff
+                roster.points.manifestations = block.points
+            }
+        }
+        if (type === 'spellsLore' && block.points !== roster.points.spellsLore) {
+            const pointsDiff = block.points - (roster.points.spellsLore || 0)
+            roster.points.all += pointsDiff
+            roster.points.spellsLore = block.points
+        }
+        if (type === 'factionTerrain' && block.points !== roster.points.terrain) {
+            const pointsDiff = block.points - (roster.points.terrain || 0)
+            roster.points.all += pointsDiff
+            roster.points.terrain = block.points
         }
         navigate(-1)
     }
@@ -72,6 +101,16 @@ const ChooseEnhancement = () => {
             roster[type] = ''
             if (type === 'manifestationLore') {
                 roster.manifestationsList = []
+                if (roster.points.manifestations) {
+                    roster.points.all -= roster.points.manifestations
+                    roster.points.manifestations = 0
+                }
+            } else if (type === 'spellsLore' && roster.points.spellsLore) {
+                roster.points.all -= roster.points.spellsLore
+                roster.points.spellsLore = 0
+            } else if (type === 'factionTerrain' && roster.points.terrain) {
+                roster.points.all -= roster.points.terrain
+                roster.points.terrain = 0
             }
         } else if (isRoRUnitWithKeyword) {
             const newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [type]: ''}
@@ -80,7 +119,20 @@ const ChooseEnhancement = () => {
             const newUnit = {...roster.auxiliaryUnits[unitIndex], [type]: ''}
             roster.auxiliaryUnits[unitIndex] = newUnit
         } else {
-            const newUnit = {...roster.regiments[regimentIndex].units[unitIndex], [type]: ''}
+            let newUnit = {}
+            const enhancementPoints = roster.regiments[regimentIndex].units[unitIndex][`${type}-points`]
+            if (enhancementPoints) {
+                newUnit = {
+                    ...roster.regiments[regimentIndex].units[unitIndex],
+                    [type]: '',
+                    points: roster.regiments[regimentIndex].units[unitIndex].points - enhancementPoints,
+                    [`${type}-points`]: 0
+                }
+                roster.regiments[regimentIndex].points -= enhancementPoints
+                roster.points.all -= enhancementPoints
+            } else {
+                newUnit = {...roster.regiments[regimentIndex].units[unitIndex], [type]: ''}
+            }
             roster.regiments[regimentIndex].units[unitIndex] = newUnit
         }
         navigate(-1)
@@ -103,7 +155,10 @@ const ChooseEnhancement = () => {
     </div>
 
     const renderBlock = (block) => <button key={block.id} id={Styles.block} onClick={handleClickBlock(block)}>
-        <p id={Styles.title}>{block.name}</p>
+        <div id={Styles.blockHeader}>
+            <b id={Styles.title}>{block.name}</b>
+            {block.points ? <p id={Styles.title}>{block.points} pts</p> : null}
+        </div>
         {block.abilities?.map(type === 'manifestationLore' ? renderManifestation : renderEnhancement)}
     </button>
 

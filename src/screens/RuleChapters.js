@@ -2,6 +2,7 @@ import React from 'react';
 import {useLocation} from 'react-router-dom'
 import Row from '../components/Row'
 import Battleplans from '../components/Battleplans'
+import Tactics from '../components/Tactics'
 import Rules from './Rules'
 
 import map from 'lodash/map'
@@ -29,7 +30,9 @@ const RuleChapters = () => {
         </>
         : chapter.name === 'Battleplans'
             ? <Battleplans id={chapter.id} />
-            : <Rules info={chapter} />
+            : chapter.name === 'Battle Tactics 2025-26'
+                ? <Tactics id={chapter.id} /> 
+                : <Rules info={chapter} />
 }
 
 export default RuleChapters

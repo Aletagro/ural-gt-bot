@@ -86,7 +86,6 @@ const CalcUnit = ({index, unit, onDelete, onUpdate}) => {
         onChange={handleChangeCharacteristics}
         onChangeAbilitiy={handleChangeAbilitiy}
         onDelete={handleDeleteWeapon}
-        onUpdate={onUpdate}
     />
 
     return  <div id={Styles.container}>

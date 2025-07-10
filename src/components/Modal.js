@@ -4,11 +4,10 @@ import ModalClose from '@mui/joy/ModalClose'
 import ModalDialog from '@mui/joy/ModalDialog'
 import DialogTitle from '@mui/joy/DialogTitle'
 import DialogContent from '@mui/joy/DialogContent'
-import Ability from './Ability'
 
 import Styles from './styles/Modal.module.css'
 
-const CustomModal = ({title, text, visible, ability, onClose, Content}) => {
+const CustomModal = ({title, text, visible, onClose}) => {
     const [_visible, setVisible] = useState(visible)
 
     useEffect(() => {
@@ -24,26 +23,12 @@ const CustomModal = ({title, text, visible, ability, onClose, Content}) => {
         }
     }
 
-    const renderContent = () => Content()
-
     return <>
         <Modal open={visible} onClose={handleClose}>
         <ModalDialog layout='center'>
             <ModalClose />
-            {ability
-                ? <div id={Styles.abilityContainer}>
-                    <Ability ability={ability} />
-                </div>
-                : <>
-                    <DialogTitle>{title}</DialogTitle>
-                    <DialogContent>
-                        {Content
-                            ? renderContent()
-                            : <p id={Styles.text}>{text}</p>
-                        }
-                    </DialogContent>
-                </>
-            }
+            <DialogTitle>{title}</DialogTitle>
+            <DialogContent><p id={Styles.text}>{text}</p></DialogContent>
         </ModalDialog>
         </Modal>
     </>

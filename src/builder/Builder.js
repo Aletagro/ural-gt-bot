@@ -1,10 +1,10 @@
-import React, {useCallback, useReducer, useState} from 'react'
+import React, {useCallback, useReducer, useState, useEffect} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import Modal from '@mui/joy/Modal'
 import ModalDialog from '@mui/joy/ModalDialog'
 import Constants from '../Constants'
 import {roster} from '../utilities/appState'
-import {getWoundsCount, getInfo} from '../utilities/utils'
+import {getWoundsCount, getInfo, setRosterGrandAlliance} from '../utilities/utils'
 import Regiment from './Regiment'
 import UnitRow from './UnitRow'
 import Row from '../components/Row'
@@ -12,25 +12,30 @@ import Add from '../icons/add.svg'
 import Info from '../icons/info.svg'
 import WhiteInfo from '../icons/whiteInfo.svg'
 
+import map from 'lodash/map'
+import size from 'lodash/size'
+import find from 'lodash/find'
+import filter from 'lodash/filter'
+import flatten from 'lodash/flatten'
+
 import Styles from './styles/Builder.module.css'
 
 const dataBase = require('../dataBase.json')
 
 const spellsIncludesTexts = ['Lore of', 'Spell Lore', 'Arcane']
-const preyersIncludesTexts = ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures']
+const preyersIncludesTexts = ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Bendictions', 'Gifts']
 const pointsLimits = ['1000', '1500', '2000', '2500', '3000']
 
 const emptyRegiment = {
     units: [],
     heroId: '',
-    points: 0,
-    artefact: '',
-    heroicTrait: ''
+    points: 0
 }
 
 const Builder = () => {
     const {allegiance, alliganceId} = useLocation().state
     const [open, setOpen] = useState(false)
+    const [pointError, setPointError] = useState(false)
     const _alliganceId = alliganceId || allegiance?.id
     const navigate = useNavigate()
     // eslint-disable-next-line
@@ -50,12 +55,18 @@ const Builder = () => {
             manifestationsLores.unshift(lore)
         }
     })
-    const artefactsGroup = dataBase.data.ability_group.find(group => group.factionId === _alliganceId && group.abilityGroupType === 'artefactsOfPower')
-    const artefacts = dataBase.data.ability.filter(ability => ability.abilityGroupId === artefactsGroup?.id)
-    const heroicTraitsGroup = dataBase.data.ability_group.find(group => group.factionId === _alliganceId && group.abilityGroupType === 'heroicTraits')
-    const heroicTraits = dataBase.data.ability.filter(ability => ability.abilityGroupId === heroicTraitsGroup?.id)
+    const artefactsGroups = dataBase.data.ability_group.filter(group => group.factionId === _alliganceId && group.abilityGroupType === 'artefactsOfPower')
+    const artefacts = flatten(map(artefactsGroups, artefactsGroup => dataBase.data.ability.filter(ability => ability.abilityGroupId === artefactsGroup?.id)))
+    const heroicTraitsGroups = dataBase.data.ability_group.filter(group => group.factionId === _alliganceId && group.abilityGroupType === 'heroicTraits')
+    const heroicTraits = flatten(map(heroicTraitsGroups, heroicTraitsGroup => dataBase.data.ability.filter(ability => ability.abilityGroupId === heroicTraitsGroup?.id)))
     const battleFormations = dataBase.data.battle_formation.filter(formation => formation.factionId === _alliganceId)
-
+    const otherEnhancementsGroup = find(dataBase.data.ability_group, (item) => item.factionId === _alliganceId && item.abilityGroupType === 'otherEnhancements')
+    let otherEnhancement = null
+    if (otherEnhancementsGroup) {
+        const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
+        otherEnhancement = {name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities}
+        roster.otherEnhancement = otherEnhancement.name
+    }
     if (spellsLores.length === 1 && !roster.spellsLore) {
         roster.spellsLore = spellsLores[0].name
     }
@@ -65,21 +76,32 @@ const Builder = () => {
     if (manifestationsLores.length === 1 && !roster.manifestationLore) {
         roster.manifestationLore = manifestationsLores[0].name
     }
-    if (factionTerrains.length === 1 && !roster.factionTerrain) {
+    if (factionTerrains.length === 1 && !roster.factionTerrain && !factionTerrains[0].points) {
         roster.factionTerrain = factionTerrains[0].name
+        roster.points.terrain = factionTerrains[0].points
+        roster.points.all += factionTerrains[0].points
     }
     if (!battleFormations.length) {
         roster.withoutBattleFormation = true
     }
-    let requiredGeneralId = allegiance?.rosterFactionKeywordRequiredGeneralWarscrollId
-    if (!allegiance) {
-        requiredGeneralId = dataBase.data.faction_keyword.find(faction => faction.id === _alliganceId)?.rosterFactionKeywordRequiredGeneralWarscrollId
-    }
-    let requiredGeneral = undefined
+    let requiredGeneralId = find(dataBase.data.roster_faction_keyword_required_general_warscroll, ['factionKeywordId', _alliganceId])?.warscrollId
     if (requiredGeneralId) {
-        requiredGeneral = dataBase.data.warscroll.find(unit => unit.id === requiredGeneralId)
-        roster.requiredGeneral = requiredGeneral
+        roster.requiredGeneral = find(dataBase.data.warscroll, ['id', requiredGeneralId])
     }
+    if (!roster.grandAlliance) {
+        setRosterGrandAlliance(roster.allegiance)
+    }
+
+    useEffect(() => {
+        let hasError = false
+        if (roster.pointsLimit - roster.points.all < 0) {
+            hasError = true
+        }
+        if (hasError !== pointError) {
+            setPointError(hasError)
+        }
+    // eslint-disable-next-line
+    }, [roster.points.all])
 
     const handleAddRegiment = useCallback(() => {
         roster.regiments = [...roster.regiments, emptyRegiment]
@@ -96,14 +118,14 @@ const Builder = () => {
 
     const handleDeleteAuxiliaryUnit = (unit, index) => {
         roster.auxiliaryUnits.splice(index, 1)
-        roster.points = roster.points - unit.points
+        roster.points.all -= unit.points
         forceUpdate()
     }
 
     const handleDeleteRegimentOfRenown = (regiment, index) => {
         roster.regimentOfRenown = null
         roster.regimentsOfRenownUnits = []
-        roster.points = roster.points - regiment.regimentOfRenownPointsCost
+        roster.points.all -= regiment.regimentOfRenownPointsCost
         forceUpdate()
     }
 
@@ -125,10 +147,15 @@ const Builder = () => {
 
     const handleChooseEnhancement = (name, type, data, isInfo) => () => {
         if (type === 'factionTerrain' && isInfo) {
-            navigate('/warscroll', {state: {unit: data.find(terrain => terrain.name === roster.factionTerrain)}})
+            const terrain = data.find(terrain => terrain.name === roster.factionTerrain)
+            navigate('/warscroll', {state: {unit: terrain, title: terrain.name}})
         } else {
             navigate('/chooseEnhancement', {state: {title: name, data, type, isRosterInfo: true, isInfo}})
         }
+    }
+
+    const handleChooseTactics = () => {
+        navigate('/builderChooseTacticsCard', {state: {title: 'Choose Tactics Card'}})
     }
 
     const handleReinforcedAuxiliary = (unit, unitIndex) => {
@@ -139,14 +166,14 @@ const Builder = () => {
                 isReinforced: false,
                 points: _points
             }
-            roster.points = roster.points - _points
+            roster.points.all -= _points
         } else {
             roster.auxiliaryUnits[unitIndex] = {
                 ...roster.auxiliaryUnits[unitIndex],
                 isReinforced: true,
                 points: unit.points * 2
             }
-            roster.points = roster.points + unit.points
+            roster.points.all += unit.points
         }
         forceUpdate()
     }
@@ -165,6 +192,10 @@ const Builder = () => {
         handleCloseModal()
     }
 
+    const handleClickTactics = (card) => () => {
+        navigate('/tactic', {state: {title: card.name, tactic: card}})
+    }
+
     const renderRegiment = (regiment, index) => <Regiment
         key={index}
         regiment={regiment}
@@ -173,6 +204,7 @@ const Builder = () => {
         forceUpdate={forceUpdate}
         artefacts={artefacts}
         heroicTraits={heroicTraits}
+        otherEnhancement={otherEnhancement}
     />
 
     const renderAuxiliaryUnit = (unit, index) => <UnitRow
@@ -187,6 +219,7 @@ const Builder = () => {
         alliganceId={_alliganceId}
         withoutMargin
         isAuxiliary
+        otherEnhancement={otherEnhancement}
     />
 
     const renderRegimentOfRenown = () => <UnitRow
@@ -227,17 +260,30 @@ const Builder = () => {
         state={{unit: manifestation}}
     />
 
-    const renderEnhancement = (name, type, data) => data.length === 1
+    const renderEnhancementPoints = (type) => {
+        switch (type) {
+            case 'manifestationLore':
+                return roster.points?.manifestations ? ` (${roster.points?.manifestations}${Constants.noBreakSpace}pts)` : ''
+            case 'factionTerrain':
+                return roster.points?.terrain ? ` (${roster.points?.terrain}${Constants.noBreakSpace}pts)` : ''
+            case 'spellsLore':
+                return roster.points?.spellsLore ? ` (${roster.points?.spellsLore}${Constants.noBreakSpace}pts)` : ''
+            default:
+                return ''
+        }
+    }
+
+    const renderEnhancement = (name, type, data) => data.length === 1 && !data[0].points
         ? <div id={Styles.secondAddButton}>
-            <button id={Styles.addButtonText} onClick={handleChooseEnhancement(name, type, data)}>
-                {data[0].name}
+            <button id={Styles.addButtonText} onClick={handleChooseEnhancement(name, type, data, true)}>
+                {data[0].name}{renderEnhancementPoints(type)}
             </button>
             <button id={Styles.infoIcon} onClick={handleChooseEnhancement(name, type, data, true)}><img className={Styles.icon} src={Info} alt="" /></button>
         </div>
         : <div id={Styles.addButton}>
             <button id={Styles.addButtonText} onClick={handleChooseEnhancement(name, type, data)}>
                 {roster[type]
-                    ? `${name} : ${roster[type]}`
+                    ? `${name} : ${roster[type]}${renderEnhancementPoints(type)}`
                     : `Choose ${name}`
                 }
             </button>
@@ -263,8 +309,8 @@ const Builder = () => {
             <p id={Styles.text}>Allegiance: <b>{roster.allegiance}</b></p>
             <p>Wounds: {getWoundsCount(roster)}</p>
         </button>
-        <button onClick={handleOpenModal} id={Styles.pointsContainer}>
-            <p id={Styles.pointsTitle}>Army: {roster.points}/{roster.pointsLimit} Points</p>
+        <button onClick={handleOpenModal} id={pointError ? Styles.errorPointsContainer : Styles.pointsContainer}>
+            <p id={Styles.pointsTitle}>Army: {roster.points?.all}/{roster.pointsLimit} Points ({roster.pointsLimit - roster.points?.all})</p>
             <img id={Styles.pointsTitleInfoIcon} src={WhiteInfo} alt="" />
         </button>
         {battleFormations.length
@@ -273,6 +319,23 @@ const Builder = () => {
                     ? `Battle Formation : ${roster.battleFormation}`
                     : 'Choose Battle Formation'
                 }
+            </button>
+            : null
+        }
+        <button id={size(roster.tactics) === 2 ? Styles.secondAddButton : Styles.addButton} onClick={handleChooseTactics}>
+            {size(roster.tactics) === 2 ? `Your Tactics Cards` : 'Choose Tactics Cards'}
+        </button>
+        {roster.tactics[0]
+            ? <button onClick={handleClickTactics(roster.tactics[0])} id={Styles.secondAddButton}>
+                <p>First Card: {roster.tactics[0].name}</p>
+                <img src={Info} alt="" />
+            </button>
+            : null
+        }
+        {roster.tactics[1]
+            ? <button onClick={handleClickTactics(roster.tactics[1])} id={Styles.secondAddButton}>
+                <p>Second Card: {roster.tactics[1].name}</p>
+                <img src={Info} alt="" />
             </button>
             : null
         }

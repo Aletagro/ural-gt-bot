@@ -9,16 +9,16 @@ import DarkGeneral from '../icons/darkGeneral.svg'
 import Info from '../icons/info.svg'
 import {capitalizeFirstLetter, camelCaseToWords} from '../utilities/utils'
 
-import map from 'lodash/map'
 import find from 'lodash/find'
+import includes from 'lodash/includes'
 
 import Styles from './styles/UnitRow.module.css'
 
 const dataBase = require('../dataBase.json')
 
 const UnitRow = ({
-    unit, unitIndex, regimentIndex, isAddUnit, onClick, onDelete, onCopy,onReinforced, artefacts, withoutMargin, onOpenModal,
-    heroicTraits, withoutCopy, isAuxiliary, isGeneral, alliganceId, isRegimentsOfRenown, isRoRUnitWithKeyword, isInfo
+    unit, unitIndex, regimentIndex, isAddUnit, onClick, onDelete, onCopy,onReinforced, artefacts, withoutMargin,
+    heroicTraits, withoutCopy, isAuxiliary, isGeneral, alliganceId, isRegimentsOfRenown, isRoRUnitWithKeyword, otherEnhancement
 }) => {
     const navigate = useNavigate()
     const isHero = unit.referenceKeywords?.includes('Hero') 
@@ -35,17 +35,15 @@ const UnitRow = ({
     if (isRegimentsOfRenown) {
         rowImage = find(dataBase.data.warscroll, ['id', unit.regimentOfRenownRowImageWarscrollId])?.rowImage
     }
-    let unitInfo = {}
-    if (isInfo) {
-        unitInfo = isRegimentsOfRenown
-            ? find(dataBase.data.ability_group, ['id', unit.id])
-            : find(dataBase.data.warscroll, ['id', unit.id])
-        rowImage = unitInfo?.rowImage
-    }
+    let requiredKeyword = undefined
+    if (otherEnhancement) {
+        const requiredKeywordId = find(dataBase.data.ability_group_required_keyword, ['abilityGroupId', otherEnhancement.id])?.keywordId
+        requiredKeyword = find(dataBase.data.keyword, ['id', requiredKeywordId])?.name
+    } 
 
     const handleClick = () => {
         if (onClick) {
-            onClick(isInfo ? unitInfo : unit)
+            onClick(unit)
         }
     }
 
@@ -118,10 +116,6 @@ const UnitRow = ({
         Weapon Options
     </button>
 
-    const renderWeapon = (count, weapon) => <p id={Styles.weapon}>{count} x {weapon}</p>
-
-    const renderWeaponOption = (weaponOption) => map(weaponOption, renderWeapon)
-
     return <div id={withoutMargin ? Styles.rorContainer : Styles.container}>
         <div className={Styles.row}>
             <button id={Styles.addUnitButton} onClick={handleClick}>
@@ -132,60 +126,42 @@ const UnitRow = ({
                 </div>
                 <p id={Styles.price}>{unit.points || unit.regimentOfRenownPointsCost || 0} pts</p>
             </button>
-            {isAddUnit || unit.cannotBeReinforced || unit.abilityGroupType === 'regimentOfRenown' || isInfo
+            {isAddUnit || unit.cannotBeReinforced || unit.abilityGroupType === 'regimentOfRenown'
                 ? null
                 : unit.isReinforced
                     ? <button id={Styles.button} onClick={handleReinforced}><img src={Minus} alt="" /></button>
                     : <button id={Styles.button} onClick={handleReinforced}><img src={Plus} alt="" /></button>
             }
-            {isAddUnit || isHero || withoutCopy || isAuxiliary || unit.onlyOne || isInfo
+            {isAddUnit || isHero || withoutCopy || isAuxiliary || unit.onlyOne
                 ? null
                 : <button id={Styles.button} onClick={handleCopy}><img src={Copy} alt="" /></button>
             }
-            {onDelete && !isInfo ? <button id={Styles.button} onClick={handleDelete}><img src={Close} alt="" /></button> : null}
+            {onDelete ? <button id={Styles.button} onClick={handleDelete}><img src={Close} alt="" /></button> : null}
             {isAddUnit ? <button id={Styles.infoButton} onClick={handleClickInfo}><img src={Info} alt="" /></button> : null}
         </div>
-        {isInfo
-            ? <>
-                {unit.artefact && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit.artefact, 'artefact')}>
-                    {`Artefact: ${unit.artefact}`}
-                </button>}
-                {unit.heroicTrait && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit.heroicTrait, 'heroicTrait')}>
-                    {`Heroic Trait: ${unit.heroicTrait}`}
-                </button>}
-                {unit.weaponOptions
-                    ? map(unit.weaponOptions, renderWeaponOption)
+        {isShowEnhancements && !isAddUnit
+            ? <div id={Styles.enhancementsContainer}>
+                <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Artefacts', 'artefact')}>
+                    {unit.artefact ? `Artefact: ${unit.artefact}` : 'Сhoose Artefact'}
+                </button>
+                <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Heroic Traits', 'heroicTrait')}>
+                    {unit.heroicTrait ? `Heroic Trait: ${unit.heroicTrait}` : 'Сhoose Heroic Trait'}
+                </button>
+            </div>
+            : null
+        }
+        {(optionGroups.length > 0 || additionalOption || otherEnhancement) && !isAddUnit
+            ? <div id={Styles.enhancementsContainer}>
+                {weaponOptions.length > 0 ? renderChooseWeapon() : null}
+                {marksOfChaos ? renderChooseOptionButton(marksOfChaos) : null}
+                {additionalOption ? renderAdditionalOption(additionalOption) : null}
+                {otherWarscrollOption ? renderChooseOptionButton(otherWarscrollOption) : null}
+                {otherEnhancement && includes(unit.referenceKeywords, requiredKeyword) && !unit.referenceKeywords?.includes('Unique')
+                    ? renderAdditionalOption(otherEnhancement)
                     : null
                 }
-                {unit['Ensorcelled Banners'] && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit['Ensorcelled Banners'], 'ensorcelledBanners')}>
-                    {`Ensorcelled Banners: ${unit['Ensorcelled Banners']}`}
-                </button>}
-                {unit['First Circle Titles'] && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit['First Circle Titles'], 'firstCircleTitles')}>
-                    {`First Circle Titles: ${unit['First Circle Titles']}`}
-                </button>}
-            </>
-            : <>
-                {isShowEnhancements && !isAddUnit
-                    ? <div id={Styles.enhancementsContainer}>
-                        <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Artefacts', 'artefact')}>
-                            {unit.artefact ? `Artefact: ${unit.artefact}` : 'Сhoose Artefact'}
-                        </button>
-                        <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Heroic Traits', 'heroicTrait')}>
-                            {unit.heroicTrait ? `Heroic Trait: ${unit.heroicTrait}` : 'Сhoose Heroic Trait'}
-                        </button>
-                    </div>
-                    : null
-                }
-                {(optionGroups.length > 0 || additionalOption) && !isAddUnit
-                    ? <div id={Styles.enhancementsContainer}>
-                        {weaponOptions.length > 0 ? renderChooseWeapon() : null}
-                        {marksOfChaos ? renderChooseOptionButton(marksOfChaos) : null}
-                        {additionalOption ? renderAdditionalOption(additionalOption) : null}
-                        {otherWarscrollOption ? renderChooseOptionButton(otherWarscrollOption) : null}
-                    </div>
-                    : null
-                }
-            </>
+            </div>
+            : null
         }
     </div>
 }

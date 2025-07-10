@@ -9,7 +9,7 @@ import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Modal from '../components/Modal'
-import Image from '../images/Strelka.png'
+import Image from '../images/WildKhan.png'
 
 import size from 'lodash/size'
 import includes from 'lodash/includes'
@@ -39,7 +39,9 @@ const cities = [
     'Самара',
     'Тверь',
     'Тула',
-    'Краснодар'
+    'Краснодар',
+    'Орёл',
+    'Тюмень'
 ]
 
 const PLAYERS_LIMIT = 24
@@ -91,8 +93,8 @@ const Registration = () => {
     useEffect(() => {
         if (!player.isRequested) {
             player.isRequested = true
-            // fetch(`https://aoscom.online/players/player/?tg_id=${530569849}`)
-            fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
+            fetch(`https://aoscom.online/players/player/?tg_id=${530569849}`)
+            // fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.tgId) {
@@ -180,7 +182,7 @@ const Registration = () => {
     </div>
 
     const renderRegForm = () => <div>
-        <h2 id={Styles.title}>Регистрация на Стрелка 2025</h2>
+        <h2 id={Styles.title}>Регистрация на WildKhan 2025</h2>
         <FloatingLabelInput
             style={inputStyle}
             onChange={handleChangeName}
@@ -248,19 +250,19 @@ const Registration = () => {
                         : null
                     }
                     {meta.isRostersShow ? <Row title='Ростера' navigateTo='rosters' /> : null}
-                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Strelka 2025', round: meta.round}} /> : null}
+                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Wild Khan 2025', round: meta.round}} /> : null}
                     <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' />
-                    {player.reg && meta.round === 5 && !player.sport_voted
+                    {/* {player.reg && meta.round === 5 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
                         : null
                     }
                     {player.reg && ((meta.round === 4 && !meta.isRoundActive) || meta.round === 5) && !player.paint_voted
                         ? <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} />
                         :null
-                    }
+                    } */}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
-                    <Row title='Регламент Стрелка 2025' navigateTo='tournamentRules' />
+                    <Row title='Регламент Wild Khan 2025' navigateTo='tournamentRules' />
                     <Row title='Подсказка во время игры' navigateTo='help' />
                     {meta.isRoundActive ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     {meta.round ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}

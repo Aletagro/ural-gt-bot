@@ -1,5 +1,6 @@
 #container {
   padding: 8px 8px;
+  margin-top: 8px;
 }
 
 #buttonContainer {
@@ -14,20 +15,18 @@
   border-width: 0px;
   padding: 12px;
   font-size: 16px;
-  margin-top: 8px;
   margin-bottom: 16px;
   width: 100%;
 }
 
-#disableButton {
+#disabledButton {
   background: rgb(201, 200, 199);
-  color: white;
+  color: white; 
   border-radius: 4px;
   border-width: 0px;
   padding: 12px;
   font-size: 16px;
-  margin-top: 16px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   width: 100%;
 }
 
@@ -60,6 +59,46 @@
   margin: 0px;
 }
 
-#errorText {
-  color: red;
+#publicCheckboxContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#publicNote {
+  font-size: 12px;
+  color: lightgray;
+  margin-top: -12px;
+}
+
+#listDeletedContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#listDeletedTitle {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+#listDeletedSubtitle {
+  font-size: 12px;
+  line-height: 16px;
+  color: lightgray;
+}
+
+#modalTitle {
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+}
+
+#modalText {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+#regiment {
+  padding-bottom: 12px;
 }

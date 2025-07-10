@@ -6,19 +6,12 @@
   border-radius: 8px;
 }
 
-#infoContainer {
-  border: 1px solid rgb(46, 46, 49);
-  margin-bottom: 16px;
-  align-items: center;
-  border-radius: 8px;
-}
-
 #title {
   background: rgb(46, 46, 49);
   color: white;
   border-radius: 4px 4px 0px 0px;
   padding: 12px 16px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
