@@ -44,7 +44,7 @@ const cities = [
     'Тюмень'
 ]
 
-const PLAYERS_LIMIT = 24
+const PLAYERS_LIMIT = 40
 
 const Registration = () => {
     // eslint-disable-next-line
@@ -251,7 +251,7 @@ const Registration = () => {
                     }
                     {meta.isRostersShow ? <Row title='Ростера' navigateTo='rosters' /> : null}
                     {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Wild Khan 2025', round: meta.round}} /> : null}
-                    {/* <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> */}
+                    {user?.id === Constants.myTgId || player.isJudge ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
                     {/* {player.reg && meta.round === 5 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
                         : null
