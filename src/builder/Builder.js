@@ -46,6 +46,7 @@ const Builder = () => {
     const spellsLores = []
     const preyersLores = []
     const manifestationsLores = dataBase.data.lore.filter(lore => lore.factionId === null)
+    const canCreateNewRegiment = size(roster.regiments) + (roster.regimentOfRenown ? 1 : 0) < 5
     lores.forEach(lore => {
         if (spellsIncludesTexts.find(text => lore.name.includes(text))) {
             spellsLores.push(lore)
@@ -343,7 +344,7 @@ const Builder = () => {
             ? roster.regiments.map(renderRegiment)
             : null
         }
-        {roster.regiments.length < 5
+        {canCreateNewRegiment
             ? <button id={Styles.addButton} onClick={handleAddRegiment}>
                 <p>Add Regiment</p>
                 <img src={Add} alt='' />
@@ -361,10 +362,12 @@ const Builder = () => {
                 {renderRegimentOfRenown()}
                 {roster.regimentsOfRenownUnits?.map(renderRegimentOfRenownUnit)}
             </>
-            : <button id={Styles.secondAddButton} onClick={handleAddRegimentsOfRenown}>
-                <p>Add Regiments Of Renown</p>
-                <img src={Add} alt='' />
-            </button>
+            : canCreateNewRegiment
+                ? <button id={Styles.secondAddButton} onClick={handleAddRegimentsOfRenown}>
+                    <p>Add Regiments Of Renown</p>
+                    <img src={Add} alt='' />
+                </button>
+                : null
         }
         <p id={Styles.title}>Lores</p>
         {spellsLores.length > 0 ? renderEnhancement('Spell Lore', 'spellsLore', spellsLores) : null}
