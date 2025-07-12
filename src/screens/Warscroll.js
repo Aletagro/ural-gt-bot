@@ -22,14 +22,18 @@ const Warscroll = () => {
     window.scrollTo(0, 0)
     const [modalData, setModalData] = useState({visible: false, title: '', text: ''})
     const navigate = useNavigate()
-    const unit = useLocation().state.unit
+    const {unit, allegianceId} = useLocation().state
     const weapons = filter(dataBase.data.warscroll_weapon, weapon => weapon.warscrollId === unit.id)
     const meleeWeapons = filter(weapons, weapon => weapon.type === 'melee')
     const rangeWeapons = filter(weapons, weapon => weapon.type === 'ranged')
     let abilities = filter(dataBase.data.warscroll_ability, ability => ability.warscrollId === unit.id)
     const regimentOptions = filter(dataBase.data.warscroll_regiment_option, option => option.warscrollId === unit.id)
     const isManifestation = includes(unit.referenceKeywords, 'Manifestation')
-    const manifestationInfo = isManifestation ? find(dataBase.data.lore_ability, ability => ability.linkedWarscrollId === unit.id) : undefined
+    let manifestationInfo = undefined
+    if (isManifestation) {
+        const loreId = find(dataBase.data.lore , lore => lore.factionId === allegianceId && includes(lore.name, 'Manifestation'))?.id
+        manifestationInfo = find(dataBase.data.lore_ability, ability => ability.linkedWarscrollId === unit.id && (loreId ? ability.loreId === loreId : true))
+    }
     const characteristics = [
         {value: unit.move, title: 'Move'},
         {value: unit.health, title: 'Health'},
@@ -146,7 +150,7 @@ const Warscroll = () => {
         {replaceAsterisks(option.optionText)}
     </p>
 
-    const renderCharacteristic = (characteristic) => <div key={characteristic.value} id={Styles.characteristicSubContainer} style={{width: '20%'}}>
+    const renderCharacteristic = (characteristic, index) => <div key={index} id={Styles.characteristicSubContainer} style={{width: '20%'}}>
         <div id={Styles.characteristicValueContainer}>
             <p id={characteristic.value.length > 3 ? Styles.characteristicLongValue : Styles.characteristicValue}>
                 {characteristic.value}

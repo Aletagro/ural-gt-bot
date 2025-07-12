@@ -38,7 +38,7 @@ const Units = () => {
         rightText={unit?.points ? `${unit?.points} pts` : undefined}
         image={unit?.rowImage}
         navigateTo='warscroll'
-        state={{unit}}
+        state={{unit, allegianceId: allegiance.id}}
     />
 
     const renderUnitsType = (type) => <Accordion

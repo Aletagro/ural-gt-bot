@@ -258,7 +258,7 @@ const Builder = () => {
         title={manifestation.name}
         image={manifestation.rowImage}
         navigateTo='warscroll'
-        state={{unit: manifestation}}
+        state={{unit: manifestation, allegianceId: _alliganceId}}
     />
 
     const renderEnhancementPoints = (type) => {
