@@ -6,6 +6,7 @@ import map from 'lodash/map'
 import get from 'lodash/get'
 import size from 'lodash/size'
 import find from 'lodash/find'
+import last from 'lodash/last'
 import split from 'lodash/split'
 import filter from 'lodash/filter'
 import indexOf from 'lodash/indexOf'
@@ -514,7 +515,7 @@ export const cleanObject = (object) => {
     return object
 }
 
-export const getTextAfter = (searchIn, searchFor, before = false) => {
+export const getTextAfter = (searchIn, searchFor, before = false, nextLine = false) => {
     // Используем indexOf для поиска индекса начала искомой строки
     const index = searchIn.indexOf(searchFor)
     // Если строка не найдена — возвращаем null
@@ -529,9 +530,22 @@ export const getTextAfter = (searchIn, searchFor, before = false) => {
     } else {
         // Возвращаем то, что после searchFor
         const startIndex = index + searchFor.length
-        const endIndex = searchIn.indexOf('\n', startIndex)
-        const endOfString = endIndex === -1 ? searchIn.length : endIndex
-        return searchIn.slice(startIndex, endOfString).trim()
+        if (nextLine) {
+            // Находим конец текущей строки
+            const lineEnd = searchIn.indexOf('\n', startIndex);
+            if (lineEnd === -1) return null;
+            
+            // Находим начало следующей строки
+            const nextLineStart = lineEnd + 1;
+            const nextLineEnd = searchIn.indexOf('\n', nextLineStart);
+            const endIndex = nextLineEnd === -1 ? searchIn.length : nextLineEnd;
+            
+            return searchIn.slice(nextLineStart, endIndex).trim();
+        } else {
+            const endIndex = searchIn.indexOf('\n', startIndex)
+            const endOfString = endIndex === -1 ? searchIn.length : endIndex
+            return searchIn.slice(startIndex, endOfString).trim()
+        }
     }
 }
 
@@ -549,7 +563,7 @@ export const parseRegiments = (input) => {
         // Начало РоРа
         if (line.startsWith('Regiment Of Renown')) {
             isRegimentOfRenown = true
-            regimentOfRenown.name = split(lines[i + 1], ' (')[0]
+            regimentOfRenown.name = split(lines[i + 1], ' (')[0].trim()
         }
         // Начало нового реджимента
         else if (line.startsWith('Regiment')) {
@@ -571,7 +585,7 @@ export const parseRegiments = (input) => {
         }
         // Юнит: начинается с числа и "x"
         else if (/^\d+ x/.test(line)) {
-            const unit = {};
+            const unit = {weapons: []};
             const modelCountMatch = line.match(/^(\d+) x/);
             const nameMatch = line.match(/\d+\sx\s(.+?)(?:\s*\(\d+\s*points?\))?$/);
             const pointsMatch = line.match(/\((\d+)\s*points?\)/);
@@ -601,8 +615,183 @@ export const parseRegiments = (input) => {
             lastUnit[key] = value;
             }
         }
+        // Выбранное оружие юнита
+        else if (line.startsWith('• ')) {
+            const lastUnit = isRegimentOfRenown
+                ? regimentOfRenown.units[regimentOfRenown.units.length - 1]
+                : isAuxiliaryUnits
+                    ? auxiliaryUnits[auxiliaryUnits.length - 1]
+                    : currentRegiment[currentRegiment.length - 1];
+            lastUnit.weapons.push(line.replace('• ', ''))
+        }
     }
     return {generalIndex, regiments, auxiliaryUnits, regimentOfRenown}
+}
+
+export const parseRegimentsForWHAoS = (input) => {
+    const lines = input.split('\n')
+    const regiments = []
+    const auxiliaryUnits = []
+    const regimentOfRenown = {name: '', units: []}
+    let currentRegiment = null
+    let generalIndex = null
+    let isAuxiliaryUnits = false
+    let isRegimentOfRenown = false
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        // Начало РоРа
+        if (line.startsWith('Regiments of Renown')) {
+            isRegimentOfRenown = true
+            regimentOfRenown.name = split(lines[i + 1], ' (')[0].trim()
+        }
+        // Начало нового реджимента
+        else if (line.startsWith('Regiment') || line === "General's Regiment") {
+            const match = line.match(/Regiment (\d+)/)
+            if (match) {
+            }
+            const index = match ? parseInt(match[1], 10) : 0 // Генеральский реджимент всегда выводиться первым
+            currentRegiment = [];
+            regiments[index] = currentRegiment; // сохраняем по индексу
+            // Генеральскй реджимент
+            if (line === "General's Regiment") {
+                generalIndex = index
+            }
+        }
+        // Начало Auxiliary юнитов
+        if (line.startsWith('Auxiliary Units')) {
+            isAuxiliaryUnits = true
+            isRegimentOfRenown = false
+        }
+        // Юнит: строка содержит цену в скобках
+        else if (/\(\d+\)$/.test(line)) {
+            const unit = {enhancements: [], weapons: []};
+            const nameMatch = line.match(/^(.+?)\s*\(\d+\)$/);
+            const pointsMatch = line.match(/\((\d+)\)$/);
+    
+            unit.name = nameMatch ? nameMatch[1].trim() : '';
+            unit.points = pointsMatch ? parseInt(pointsMatch[1], 10) : 0;
+            if (isRegimentOfRenown) {
+                regimentOfRenown.units.push(unit)
+            } else if (isAuxiliaryUnits) {
+                auxiliaryUnits.push(unit)
+            } else {
+                currentRegiment.push(unit)
+            }
+        }
+        // Улучшения
+        else if (line.startsWith('• ')) {
+            const value = line.replace('• ', '')
+            if (!['Reinforced', 'General'].includes(value)) {
+                const lastUnit = isRegimentOfRenown
+                    ? regimentOfRenown.units[regimentOfRenown.units.length - 1]
+                    : isAuxiliaryUnits
+                        ? auxiliaryUnits[auxiliaryUnits.length - 1]
+                        : currentRegiment[currentRegiment.length - 1]
+                // Проверяем оружие это или энчант
+                if (/^\d/.test(value.trim())) {
+                    lastUnit.weapons.push(value)
+                } else {
+                    lastUnit.enhancements.push(value)
+                }
+            }
+        }
+    }
+    return {generalIndex, regiments, auxiliaryUnits, regimentOfRenown}
+}
+
+export const getFactionForWHAoS = (text) => {
+    // Регулярное выражение для поиска шаблона "часть1 | часть2 | часть3"
+    const regex = /^([^|\n]+)\s*\|\s*([^|\n]+)\s*\|\s*([^|\n]+)$/m;
+    const lines = text.split('\n');
+    
+    for (const line of lines) {
+        const match = line.trim().match(regex);
+        if (match) {
+            // Возвращаем части без лишних пробелов
+            return [match[1].trim(), match[2].trim(), match[3].trim()];
+        }
+    }
+    
+    return null; // Если ничего не найдено
+}
+
+export const findCommonOptionId = (arrays) => {
+    if (arrays.length === 0) return null
+    // Создаем Set из optionId первого подмассива
+    let commonOptions = new Set(arrays[0].map(item => item.optionId))
+    // Пересекаем с optionId остальных подмассивов
+    for (let i = 1; i < arrays.length; i++) {
+        const currentOptions = new Set(arrays[i].map(item => item.optionId))
+        commonOptions = new Set([...commonOptions].filter(option => currentOptions.has(option)))
+        // Если нет общих элементов, возвращаем null
+        if (commonOptions.size === 0) return null
+    }
+    // Возвращаем первый найденный общий optionId
+    return commonOptions.values().next().value
+}
+
+export const parseListForListbot = (input) => {
+    const lines = input.split('\n')
+    let regiments = [[]]
+    const meta = []
+    let currentRegimentIndex = 0
+    let factionTerrain = ''
+    let generalIndex = null
+    let isMetaCollected = true
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim()
+        if (isMetaCollected) {
+            // Если встретили строку с юнитом, прекращаем сбор меты
+            if (/^.+\s\(\d+\)$/.test(line)) {
+                isMetaCollected = false
+            // Ищем текст в квадратных скобках
+            } else if (line.startsWith('[')) {
+                const match = line.match(/^\[([^\]]+)\]$/)
+                if (match) {
+                    meta.push(match[1])
+                }
+            }
+        }
+        // сделано так, а не через if else, потому что в ифе выше может isMetaCollected изменится
+        if (!isMetaCollected) {
+            if (/\(\d+\)$/.test(line)) {
+                const unit = {enhancements: []};
+                const modelCountMatch = line.match(/^-\s(\d+)\sx/);
+                let nameMatch = line.match(/-\s\d+\sx\s(.+?)\s*(?:\(\d+\s*points?\)|\(\d+\))\s*$/);
+                const pointsMatch = line.match(/\((\d+)\)$/);
+                
+                if (modelCountMatch) {
+                    unit.modelCount = parseInt(modelCountMatch[1], 10);
+                } else {
+                    unit.modelCount = 1
+                }
+                if (!nameMatch) {
+                    nameMatch = line.match(/^(.+?)\s*\(\d+\)$/)
+                }
+                unit.name = nameMatch ? nameMatch[1].trim() : '';
+                unit.points = pointsMatch ? parseInt(pointsMatch[1], 10) : 0;
+                regiments[currentRegimentIndex].push(unit)
+            } else if (!line) {
+                currentRegimentIndex ++
+                regiments[currentRegimentIndex] = []
+            } else if (line.startsWith('[')) {
+                const enhancement = replace(line, /\[|\]/g, '')
+                if (enhancement === 'General') {
+                    generalIndex = currentRegimentIndex
+                } else {
+                    const lastUnit = last(regiments[currentRegimentIndex])
+                    lastUnit.enhancements.push(enhancement)
+                }
+            } else if (/^[^(]+\(\d+pts\)$/.test(line)) {
+                const match = line.trim().match(/^([^(]+)\(\d+pts\)$/)
+                if (match) {
+                    factionTerrain = match[1].trim()
+                }
+            }
+        }
+    }
+    regiments = filter(regiments, regiment => size(regiment))
+    return {generalIndex, regiments, meta, factionTerrain}
 }
 
 export const setTournamentStatus = (isRoundActive, round) => {
