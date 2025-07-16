@@ -332,10 +332,14 @@ export const getInfo = (screen, allegiance) => {
         (screen.includesTexts
             ? Boolean(screen.includesTexts.find(text => item.name.includes(text)))
             : true
+        ) &&
+        (screen.excludedTexts
+            ? Boolean(screen.excludedTexts.find(text => !item.name.includes(text)))
+            : true
         )
     )
     if (screen.abilityGroupType === 'battleTraits') {
-        abilitiesGroup = [abilitiesGroup.find(({name})=> replaceQuotation(name).includes(replaceQuotation(allegiance.name)))]
+        abilitiesGroup = size(abilitiesGroup) === 1 ? abilitiesGroup : filter(abilitiesGroup, item => item.restrictionText)
     }
     const abilitiesRules = abilitiesGroup.map(formation => dataBase.data[screen.ruleName].filter((item) => item[screen.ruleIdName] === formation?.id))
     const abilities = abilitiesGroup.map((formation, index) => {

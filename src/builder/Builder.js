@@ -23,6 +23,7 @@ import Styles from './styles/Builder.module.css'
 const dataBase = require('../dataBase.json')
 
 const spellsIncludesTexts = ['Lore of', 'Spell Lore', 'Arcane']
+const spellsExcludedTexts = ['Lore of the Abyss']
 const preyersIncludesTexts = ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Bendictions', 'Gifts']
 const pointsLimits = ['1000', '1500', '2000', '2500', '3000']
 
@@ -48,7 +49,7 @@ const Builder = () => {
     const manifestationsLores = dataBase.data.lore.filter(lore => lore.factionId === null)
     const canCreateNewRegiment = size(roster.regiments) + (roster.regimentOfRenown ? 1 : 0) < 5
     lores.forEach(lore => {
-        if (spellsIncludesTexts.find(text => lore.name.includes(text))) {
+        if (spellsIncludesTexts.find(text => lore.name.includes(text)) && spellsExcludedTexts.find(text => !lore.name.includes(text))) {
             spellsLores.push(lore)
         } else if (preyersIncludesTexts.find(text => lore.name.includes(text))) {
             preyersLores.push(lore)
