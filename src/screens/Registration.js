@@ -238,7 +238,7 @@ const Registration = () => {
             </div>
             : player.reg || player.isJudge
                 ? <div id='column' className='Chapter'>
-                    {user?.id === Constants.myTgId || player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
+                    {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {/* <Row title='Кабинет Организатора' navigateTo='admin' /> */}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
                     {player.reg && player.roster
@@ -251,7 +251,7 @@ const Registration = () => {
                     }
                     {meta.isRostersShow ? <Row title='Ростера' navigateTo='rosters' /> : null}
                     {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Wild Khan 2025', round: meta.round}} /> : null}
-                    {user?.id === Constants.myTgId || player.isJudge ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
+                    {player.isJudge ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
                     {/* {player.reg && meta.round === 5 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
                         : null
