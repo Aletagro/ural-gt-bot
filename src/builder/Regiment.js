@@ -15,7 +15,7 @@ const emptyRegiment = {
     heroicTrait: ''
 }
 
-const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicTraits, otherEnhancement}) => {
+const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicTraits, otherEnhancement, isInfo, onOpenModal}) => {
     const navigate = useNavigate()
 
     const handleDeleteRegiment = () => {
@@ -101,24 +101,32 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
         otherEnhancement={otherEnhancement}
         isGeneral={regiment.heroId && _index === 0 && roster.generalRegimentIndex === index}
         alliganceId={alliganceId}
+        onOpenModal={onOpenModal}
+        isInfo={isInfo}
     />
 
     const title = regiment.heroId ? 'Add Unit' : 'Add Hero'
-    return <div id={Styles.container} key={index}>
+    return <div id={isInfo ? Styles.infoContainer : Styles.container} key={index}>
         <div id={Styles.title}>
             <div id={Styles.titleSubContainer}>
                 <p id={Styles.text}>Regiment {index + 1}</p>
-                <p id={Styles.points}>{regiment.points} Points</p>
+                {isInfo ? null : <p id={Styles.points}>{regiment.points} Points</p>}
             </div>
-            <div id={Styles.rightBlock}>
-                <button id={Styles.deleteButton} onClick={handleChooseGeneral}><img src={General} alt="" /></button>
-                <button id={Styles.deleteButton} onClick={handleDeleteRegiment}><img src={Delete} alt="" /></button>
-            </div>
+            {isInfo
+                ? null
+                : <div id={Styles.rightBlock}>
+                    <button id={Styles.deleteButton} onClick={handleChooseGeneral}><img src={General} alt="" /></button>
+                    <button id={Styles.deleteButton} onClick={handleDeleteRegiment}><img src={Delete} alt="" /></button>
+                </div>
+            }
         </div>
         {regiment.units.map(renderUnit)}
-        <div id={Styles.addUnitContainer}>
-            <button id={Styles.addUnitButton} onClick={handleAddUnit(regiment, title, index)}>{title}</button>
-        </div>
+        {isInfo
+            ? null
+            : <div id={Styles.addUnitContainer}>
+                <button id={Styles.addUnitButton} onClick={handleAddUnit(regiment, title, index)}>{title}</button>
+            </div>
+        }
     </div>
 }
 

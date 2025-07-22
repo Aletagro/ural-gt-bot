@@ -1,18 +1,21 @@
-import React, {useState, useReducer} from 'react'
+import React, {useState, useReducer, useCallback} from 'react'
 import {ToastContainer, toast} from 'react-toastify'
+import {useNavigate} from 'react-router-dom'
 import Modal from '@mui/joy/Modal'
 import ModalDialog from '@mui/joy/ModalDialog'
 import 'react-toastify/dist/ReactToastify.css'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Checkbox from '../components/Checkbox'
 import Constants from '../Constants'
-import {roster, lists} from '../utilities/appState'
-import {getErrors, getWarnings, getWoundsCount, cleanObject} from '../utilities/utils'
+import {roster, player, lists, meta} from '../utilities/appState'
+import {getErrors, getWarnings, getWoundsCount, cleanObject, cleanBuilder} from '../utilities/utils'
 import Close from '../icons/close.svg'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
 import size from 'lodash/size'
+import forEach from 'lodash/forEach'
+import includes from 'lodash/includes'
 
 import Styles from './styles/Export.module.css'
 
@@ -36,6 +39,65 @@ const Export = () => {
     const wounds = getWoundsCount(roster)
     const drops = roster.regiments.length + roster.auxiliaryUnits.length + (roster.regimentOfRenown ? 1 : 0)
     const user = tg.initDataUnsafe?.user
+    const disableButton = Boolean(errors.length || warnings.length)
+    const navigate = useNavigate()
+
+    const getUniques = () => {
+        let uniqueUnits = ''
+        forEach(roster.regiments, (regiment, index) => {
+            regiment.units.forEach(unit => {
+                if (includes(unit.referenceKeywords, 'Unique')) {
+                    uniqueUnits = uniqueUnits ? `${uniqueUnits}, ${unit.name}` : unit.name
+                }
+            })
+        })
+        return uniqueUnits
+    }
+
+    const additionalUnitOptions = ['artefact', 'heroicTrait', 'weaponOptions', 'marksOfChaos', 'Ensorcelled Banners', 'First Circle Titles', 'otherWarscrollOption', `${roster.otherEnhancement}`]
+
+    const setUnitForExport = (unit) => {
+        const data = {
+            id: unit.id,
+            name: unit.name,
+            points: unit.points,
+            modelCount: (unit.isReinforced ? 2 : 1) * unit.modelCount,
+        }
+        forEach(additionalUnitOptions, option => {
+            if (unit[option]) {
+                data[option] = unit[option]
+            }
+        })
+        return data
+    }
+
+    const setManifestationForExport = (manifestation) => ({
+        id: manifestation.id,
+        name: manifestation.name
+    })
+
+    const setRegimentForExport = (regiment) => ({
+        heroId: regiment.heroId,
+        points: regiment.points,
+        units: map(regiment.units, setUnitForExport)
+    })
+
+    const setRegimentOfRenownForExport = (regimentOfRenown) => ({
+        id: regimentOfRenown.id,
+        name: regimentOfRenown.name,
+        points: regimentOfRenown.regimentOfRenownPointsCost
+    })
+
+    const getPlayerInfo = useCallback(async () => {
+        fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
+            .then(response => response.json())
+            .then(data => {
+                player.roster = data.roster
+                player.allegianceId = JSON.parse(data.roster_stat)?.allegianceId
+                player.allegiance = JSON.parse(data.roster_stat)?.allegiance
+            })
+            .catch(error => console.error(error))
+    }, [user?.id])
 
     const getErrorText = (error) => `- ${error}`
 
@@ -109,6 +171,48 @@ ${roster.points.all}/${roster.pointsLimit} Pts
             return JSON.stringify({...regiment, units})
         })
     }
+
+    const handleSendRoster = useCallback(async () => {
+        const r_stat = {
+            grandAlliance: roster.grandAlliance,
+            allegiance: roster.allegiance,
+            points: roster.points,
+            drops: drops,
+            wounds: getWoundsCount(roster),
+            uniques: getUniques(),
+        }        
+        const _roster = {
+            allegiance: roster.allegiance,
+            allegianceId: roster.allegianceId,
+            auxiliaryUnits: map(roster.auxiliaryUnits, setUnitForExport),
+            battleFormation: roster.battleFormation,
+            factionTerrain: roster.factionTerrain,
+            generalRegimentIndex: roster.generalRegimentIndex,
+            grandAlliance: roster.grandAlliance,
+            manifestationLore: roster.manifestationLore,
+            manifestationsList: map(roster.manifestationsList, setManifestationForExport),
+            points: roster.points,
+            pointsLimit: roster.pointsLimit,
+            prayersLore: roster.prayersLore,
+            regimentOfRenown: roster.regimentOfRenown ? setRegimentOfRenownForExport(roster.regimentOfRenown) : null,
+            regiments: map(roster.regiments, setRegimentForExport),
+            regimentsOfRenownUnits: map(roster.regimentsOfRenownUnits, setUnitForExport),
+            spellsLore: roster.spellsLore
+        }
+        await fetch(`https://aoscom.online/rosters/?tg_id=${user?.id}&roster=${JSON.stringify(_roster)}&r_stat=${JSON.stringify(r_stat)}`, {
+            method: 'PUT'
+        })
+            .then(response => {
+                toast.success('Благодарим, ваш ростер принят', Constants.toastParams)
+                getPlayerInfo()
+                setTimeout(() => {
+                    navigate('/', {state: {isShowToast: true}})
+                }, 1000)
+                cleanBuilder()
+            })
+            .catch(error => console.error(error))
+    // eslint-disable-next-line
+    }, [])
 
     const handleSaveList = async () => {
         const data = cleanObject({
@@ -272,8 +376,20 @@ ${roster.points.all}/${roster.pointsLimit} Pts
         {/* <div id={Styles.buttonContainer}>
             <button id={Styles.button} onClick={handleClickSaveButton}>Save List</button>
         </div> */}
+        {meta.rostersBeingAccepted
+            ? <>
+                <div id={Styles.buttonContainer}>
+                    <button id={disableButton ? Styles.disableButton : Styles.button} disabled={disableButton} onClick={handleSendRoster}>Отправить ростер</button>
+                </div>
+                {disableButton
+                    ? <p id={Styles.errorText}>Пока не будут исправлены все ошибки, ростер нельзя отправить</p>
+                    : null
+                }
+            </>
+            : null
+        }
         <div id={Styles.buttonContainer}>
-            <button id={Styles.button} onClick={handleExportList}>{isCopy ? 'List Copied' : 'Copy List'}</button>
+            <button id={Styles.button} onClick={handleExportList}>{isCopy ? 'Лист скопирован' : 'Копировать лист'}</button>
         </div>
         {errors.length > 0
             ? <div id={Styles.errorsContainer}>

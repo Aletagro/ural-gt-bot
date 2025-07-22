@@ -2,12 +2,22 @@ import React from 'react'
 
 import map from 'lodash/map'
 import size from 'lodash/size'
+import find from 'lodash/find'
+import filter from 'lodash/filter'
 
 import Styles from './styles/Roster.module.css'
 
 const additionalOptions = ['Ensorcelled Banners', 'First Circle Titles']
 
+const dataBase = require('../dataBase.json')
+
 const RosterEasy = ({roster, info}) => {
+    let otherEnhancement = null
+    const otherEnhancementsGroup = find(dataBase.data.ability_group, (item) => item.factionId === roster.allegianceId && item.abilityGroupType === 'otherEnhancements')
+    if (otherEnhancementsGroup) {
+        const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
+        otherEnhancement = {name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities}
+    }
 
     const renderWeapon = ([key, value]) => value
         ? <p>&#8226; {value} x {key}</p>
@@ -29,6 +39,7 @@ const RosterEasy = ({roster, info}) => {
         {unit.heroicTrait ? <p>&#8226; {unit.heroicTrait}</p> : null}
         {unit.weaponOptions ? renderWeaponOptions(unit.weaponOptions) : null}
         {unit.marksOfChaos ? <p>&#8226; Mark Of Chaos: {unit.marksOfChaos}</p> : null}
+        {unit[otherEnhancement?.name] ? <p>&#8226; {otherEnhancement?.name}: {unit[otherEnhancement?.name]}</p> : null}
         {map(additionalOptions, renderAdditionalOption(unit))}
         {unit.otherWarscrollOption ? <p>&#8226; {unit.otherWarscrollOption}</p> : null}
     </div>
@@ -45,13 +56,13 @@ const RosterEasy = ({roster, info}) => {
         {roster.generalRegimentIndex === index ? <p>General's regiment</p> : null}
         {map(regiment.units, renderUnit)}
     </div>
-    
+
     return <div id={Styles.container}>
         <p>Grand Alliance: {roster.grandAlliance}</p>
         <p>Faction: {roster.allegiance}</p>
         <p>Battle Formation: {roster.battleFormation}</p>
         <p>Drops: {info.drops}</p>
-        {size(roster.auxiliaryUnits) && <p>Auxiliaries: {size(roster.auxiliaryUnits)}</p>}
+        {size(roster.auxiliaryUnits) ? <p>Auxiliaries: {size(roster.auxiliaryUnits)}</p> : null}
         <br/>
         {roster.spellsLore ? <p>Spell Lore: {roster.spellsLore}</p> : null}
         {roster.prayersLore ? <p>Prayer Lore: {roster.prayersLore}</p> : null}
@@ -78,7 +89,7 @@ const RosterEasy = ({roster, info}) => {
             : null
         }
         <p>Wounds: {info.wounds}</p>
-        <p>{roster.points}/{roster.pointsLimit} Pts</p>
+        <p>{roster.points?.all}/{roster.pointsLimit} Pts</p>
     </div>
 }
 

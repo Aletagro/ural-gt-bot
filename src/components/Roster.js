@@ -19,6 +19,12 @@ const dataBase = require('../dataBase.json')
 const Roster = ({roster, info}) => {
     const navigate = useNavigate()
     const [modalData, setModalData] = useState({visible: false, title: '', text: ''})
+    let otherEnhancement = null
+    const otherEnhancementsGroup = find(dataBase.data.ability_group, (item) => item.factionId === roster.allegianceId && item.abilityGroupType === 'otherEnhancements')
+    if (otherEnhancementsGroup) {
+        const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
+        otherEnhancement = {name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities}
+    }
 
     const handleClickAllegiance = () => {
         const armyInfo = getInfo(Constants.armyEnhancements[0], {id: roster.allegianceId, name: roster.allegiance})
@@ -74,6 +80,7 @@ const Roster = ({roster, info}) => {
         alliganceId={roster.allegianceId}
         index={index}
         isGeneral={index === roster.generalRegimentIndex}
+        otherEnhancement={otherEnhancement}
         onOpenModal={handleOpenModal}
         isInfo
     />
@@ -92,6 +99,7 @@ const Roster = ({roster, info}) => {
     const renderRegimentOfRenown = () => <UnitRow
         unit={roster.regimentOfRenown}
         onClick={handleClickRegimentOfRenown}
+        otherEnhancement={otherEnhancement}
         alliganceId={roster.alliganceId}
         isRegimentsOfRenown
         withoutMargin
@@ -106,6 +114,7 @@ const Roster = ({roster, info}) => {
             key={unit.id}
             unit={unit}
             onClick={handleClickAuxiliaryUnit}
+            otherEnhancement={otherEnhancement}
             unitIndex={index}
             isRoRUnitWithKeyword
             withoutMargin
@@ -127,6 +136,7 @@ const Roster = ({roster, info}) => {
         unitIndex={index}
         alliganceId={roster.alliganceId}
         onOpenModal={handleOpenModal}
+        otherEnhancement={otherEnhancement}
         withoutMargin
         isAuxiliary
         isInfo
@@ -152,6 +162,7 @@ const Roster = ({roster, info}) => {
             <p id={Styles.text}>Allegiance: {roster.allegiance}</p>
             <p id={Styles.text}>Wounds: {info.wounds}</p>
             <p id={Styles.text}>Drops: {info.drops}</p>
+            <p id={Styles.text}>Points: {roster.points?.all}/{roster.pointsLimit}</p>
         </div>
         <div id={Styles.block} onClick={handleClickFormation}>
             <p id={Styles.text}>Battle Formation: {roster.battleFormation}</p>
