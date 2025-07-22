@@ -31,6 +31,10 @@
     font: inherit;
     background: inherit;
 }
+#rosterIcon {
+    margin-right: 12px;
+    margin-left: 12px;
+}
 #input {
     margin-bottom: 16px;
     margin-top: 2px;

@@ -2,6 +2,7 @@ import React, {useState, useEffect, useReducer, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import useDebounce from '../utilities/useDebounce'
 import {players, search, player, meta} from '../utilities/appState'
+import General from '../icons/blackGeneral.svg'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
@@ -85,7 +86,7 @@ const Players = () => {
         setLastColumn(newValue)
     }
 
-    const renderRow = (place, player, army, w, d, tp, last, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+    const renderRow = (place, player, army, w, d, tp, last, isOddRow, withRoster) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{place}</p>
         <p id={Styles.сolumn}>{player}</p>
         {meta.round || meta.isRostersShow
@@ -96,14 +97,16 @@ const Players = () => {
                 <p id={Styles.smallColumn}>{tp || 0}</p>
                 <p id={Styles.smallColumn}>{last || 0}</p>
             </>
-            : null
+            : withRoster
+                ? <img id={Styles.rosterIcon} src={General} alt="" />
+                : null
         }
     </div>
 
     const renderPlayer = (player, index) => {
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
-            {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, player.win, player.draw, player.tp_sum, player[lastColumnValues[lastColumn]], index % 2)}
+            {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, player.win, player.draw, player.tp_sum, player[lastColumnValues[lastColumn]], index % 2, player.roster)}
         </button>
     }
 
