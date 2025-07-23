@@ -5,7 +5,7 @@ import Modal from './Modal'
 import Regiment from '../builder/Regiment'
 import UnitRow from '../builder/UnitRow'
 import Constants from '../Constants'
-import {getInfo} from '../utilities/utils'
+import {getInfo, getStringAfterDash} from '../utilities/utils'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -72,6 +72,11 @@ const Roster = ({roster, info}) => {
 
     const handleClickAuxiliaryUnit = (unit) => {
         navigate('/warscroll', {state: {title: unit.name, unit}})
+    }
+
+    const handleClickTacticCard = (cardName) => () => {
+        const tacticCard = find(dataBase.data.rule_container, (card) => getStringAfterDash(card.title) === cardName)
+        navigate('/tactic', {state: {title: cardName, tactic: tacticCard}})
     }
 
     const renderRegiment = (regiment, index) => <Regiment
@@ -157,6 +162,12 @@ const Roster = ({roster, info}) => {
         return null
     }
 
+    const renderBattleTacticCard = (card, index) => {
+        return <div id={Styles.block} onClick={handleClickTacticCard(card)}>
+            <p id={Styles.text}>{index === 0 ? 'First' : 'Second'} Tactics Cards: {card}</p>
+        </div>
+    }
+
     return <div >
         <div id={Styles.block} onClick={handleClickAllegiance}>
             <p id={Styles.text}>Grand Alliance: {roster.grandAlliance}</p>
@@ -168,6 +179,7 @@ const Roster = ({roster, info}) => {
         <div id={Styles.block} onClick={handleClickFormation}>
             <p id={Styles.text}>Battle Formation: {roster.battleFormation}</p>
         </div>
+        {map(roster.tactics, renderBattleTacticCard)}
         {roster.spellsLore
             ? <div id={Styles.block} onClick={handleClickSpellsLore}>
                 <p id={Styles.text}>Spells Lore: {roster.spellsLore}</p>

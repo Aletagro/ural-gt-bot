@@ -1,5 +1,6 @@
 import React from 'react'
 
+import get from 'lodash/get'
 import map from 'lodash/map'
 import size from 'lodash/size'
 import find from 'lodash/find'
@@ -61,6 +62,7 @@ const RosterEasy = ({roster, info}) => {
         <p>Grand Alliance: {roster.grandAlliance}</p>
         <p>Faction: {roster.allegiance}</p>
         <p>Battle Formation: {roster.battleFormation}</p>
+        <p>Battle Tactics Cards: {get(roster, 'tactics[0]', '')}{size(roster.tactics) === 2 ? ` and ${get(roster, 'tactics[1]', '')}` : ''}</p>
         <p>Drops: {info.drops}</p>
         {size(roster.auxiliaryUnits) ? <p>Auxiliaries: {size(roster.auxiliaryUnits)}</p> : null}
         <br/>

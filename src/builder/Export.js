@@ -197,7 +197,8 @@ ${roster.points.all}/${roster.pointsLimit} Pts
             regimentOfRenown: roster.regimentOfRenown ? setRegimentOfRenownForExport(roster.regimentOfRenown) : null,
             regiments: map(roster.regiments, setRegimentForExport),
             regimentsOfRenownUnits: map(roster.regimentsOfRenownUnits, setUnitForExport),
-            spellsLore: roster.spellsLore
+            spellsLore: roster.spellsLore,
+            tactics: map(roster.tactics, 'name')
         }
         await fetch(`https://aoscom.online/rosters/?tg_id=${user?.id}&roster=${JSON.stringify(_roster)}&r_stat=${JSON.stringify(r_stat)}`, {
             method: 'PUT'

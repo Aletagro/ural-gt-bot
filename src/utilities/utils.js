@@ -61,6 +61,9 @@ export const getErrors = (roster) => {
     if (roster.generalRegimentIndex === null) {
         errors.push('Choose General')
     }
+    if (size(roster.tactics) !== 2) {
+        errors.push(`Choose 2 Battle Tactics Cards (now selected ${size(roster.tactics)})`)
+    }
     const uniqueUnits = []
     let heroicTraitsCount = 0
     let atrefactsCount = 0
