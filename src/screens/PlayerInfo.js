@@ -112,7 +112,7 @@ const PlayerInfo = () => {
     return <div id='column' className='Chapter'>
         {isPlayerDrop ? <p id={Styles.isPlayerDrop}>Игрок удалён с турнира</p> : null}
         {_player.isJudge
-            ? <p id={Styles.title}>Статус игрока: <b>{isPlayerActive ? '"Не активен"' : '"Активен"'}</b></p>
+            ? <p id={Styles.title}>Статус игрока: <b>{isPlayerActive ? 'Активен' : 'Не активен'}</b></p>
             : null
         }
         <p id={Styles.title}><b>Город:</b> {player.city}</p>
