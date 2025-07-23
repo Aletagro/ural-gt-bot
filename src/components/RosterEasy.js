@@ -8,8 +8,6 @@ import filter from 'lodash/filter'
 
 import Styles from './styles/Roster.module.css'
 
-const additionalOptions = ['Ensorcelled Banners', 'First Circle Titles']
-
 const dataBase = require('../dataBase.json')
 
 const RosterEasy = ({roster, info}) => {
@@ -30,10 +28,6 @@ const RosterEasy = ({roster, info}) => {
 
     const renderWeaponOptions = (weaponOptions) => map(Object.entries(weaponOptions), renderWeaponOption)
 
-    const renderAdditionalOption = (unit) => (additionalOption) =>
-        unit[additionalOption] ? <p>&#8226; {additionalOption}: {unit[additionalOption]}</p> : null
-
-
     const renderUnit = (unit, index) => <div key={`${unit.id}-${index}`}>
         <p><b>{unit.modelCount ? `${unit.modelCount * (unit.isReinforced ? 2 : 1)} x` : ''} {unit.name}</b> ({unit.points || unit.regimentOfRenownPointsCost || 0} points)</p>
         {unit.artefact ? <p>&#8226; {unit.artefact}</p> : null}
@@ -41,7 +35,6 @@ const RosterEasy = ({roster, info}) => {
         {unit.weaponOptions ? renderWeaponOptions(unit.weaponOptions) : null}
         {unit.marksOfChaos ? <p>&#8226; Mark Of Chaos: {unit.marksOfChaos}</p> : null}
         {unit[otherEnhancement?.name] ? <p>&#8226; {otherEnhancement?.name}: {unit[otherEnhancement?.name]}</p> : null}
-        {map(additionalOptions, renderAdditionalOption(unit))}
         {unit.otherWarscrollOption ? <p>&#8226; {unit.otherWarscrollOption}</p> : null}
     </div>
 
