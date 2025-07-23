@@ -107,26 +107,27 @@ const Roster = ({roster, info}) => {
     />
 
     // RoR с дп может брать артефакты и трейты
-    const renderRegimentOfRenownUnit = ({id}, index) => {
-        const unit = find(dataBase.data.warscroll, ['id', id])
+    const renderRegimentOfRenownUnit = (unit, index) => {
+        const _unit = find(dataBase.data.warscroll, ['id', unit.id])
         return roster.regimentOfRenown.id === '11cc4585-4cf5-43eb-af29-e2cbcdb6f5dd'
-        ? <UnitRow
-            key={unit.id}
-            unit={unit}
-            onClick={handleClickAuxiliaryUnit}
-            otherEnhancement={otherEnhancement}
-            unitIndex={index}
-            isRoRUnitWithKeyword
-            withoutMargin
-            isInfo
-        />
-        : <Row
-            key={`${unit.id}-${index}`}
-            title={`${unit.modelCount} ${unit.name}`}
-            image={unit?.rowImage}
-            navigateTo='warscroll'
-            state={{unit}}
-        />
+            ? <UnitRow
+                key={unit.id}
+                unit={{..._unit, ...unit}}
+                onClick={handleClickAuxiliaryUnit}
+                otherEnhancement={otherEnhancement}
+                onOpenModal={handleOpenModal}
+                unitIndex={index}
+                isRoRUnitWithKeyword
+                withoutMargin
+                isInfo
+            />
+            : <Row
+                key={`${_unit.id}-${index}`}
+                title={`${_unit.modelCount} ${_unit.name}`}
+                image={_unit?.rowImage}
+                navigateTo='warscroll'
+                state={{unit: _unit}}
+            />
     }
 
     const renderAuxiliaryUnit = (unit, index) => <UnitRow
