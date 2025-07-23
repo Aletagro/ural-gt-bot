@@ -46,15 +46,37 @@ const ChooseEnhancement = () => {
     }
 
     const handleClickEnhancement = (enhancement) => {
+        let newUnit = {}
+        let enhancementPointsDiff = 0
         if (isRoRUnitWithKeyword) {
-            const newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [type]: enhancement.name}
+            if (enhancement.points !== (roster.regimentsOfRenownUnits[unitIndex][`${type}-points`] || 0)) {
+                enhancementPointsDiff = enhancement.points - (roster.regimentsOfRenownUnits[unitIndex][`${type}-points`] || 0)
+                newUnit = {
+                    ...roster.regimentsOfRenownUnits[unitIndex],
+                    points: roster.regimentsOfRenownUnits[unitIndex].points + enhancementPointsDiff,
+                    [type]: enhancement.name,
+                    [`${type}-points`]: enhancement.points
+                }
+                roster.points.all += enhancementPointsDiff
+            } else {
+                newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [type]: enhancement.name}
+            }
             roster.regimentsOfRenownUnits[unitIndex] = newUnit
         } else if (isAuxiliary) {
-            const newUnit = {...roster.auxiliaryUnits[unitIndex], [type]: enhancement.name}
+            if (enhancement.points !== (roster.auxiliaryUnits[unitIndex][`${type}-points`] || 0)) {
+                enhancementPointsDiff = enhancement.points - (roster.auxiliaryUnits[unitIndex][`${type}-points`] || 0)
+                newUnit = {
+                    ...roster.auxiliaryUnits[unitIndex],
+                    points: roster.auxiliaryUnits[unitIndex].points + enhancementPointsDiff,
+                    [type]: enhancement.name,
+                    [`${type}-points`]: enhancement.points
+                }
+                roster.points.all += enhancementPointsDiff
+            } else {
+                newUnit = {...roster.auxiliaryUnits[unitIndex], [type]: enhancement.name}
+            }
             roster.auxiliaryUnits[unitIndex] = newUnit
         } else {
-            let newUnit = {}
-            let enhancementPointsDiff = 0
             if (enhancement.points !== (roster.regiments[regimentIndex].units[unitIndex][`${type}-points`] || 0)) {
                 enhancementPointsDiff = enhancement.points - (roster.regiments[regimentIndex].units[unitIndex][`${type}-points`] || 0)
                 newUnit = {
@@ -97,6 +119,7 @@ const ChooseEnhancement = () => {
     }
 
     const handleDeleteEnhancement = () => {
+        let newUnit = {}
         if (isRosterInfo) {
             roster[type] = ''
             if (type === 'manifestationLore') {
@@ -113,13 +136,34 @@ const ChooseEnhancement = () => {
                 roster.points.terrain = 0
             }
         } else if (isRoRUnitWithKeyword) {
-            const newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [type]: ''}
+            const enhancementPoints = roster.regimentsOfRenownUnits[unitIndex][`${type}-points`]
+            if (enhancementPoints) {
+                newUnit = {
+                    ...roster.regimentsOfRenownUnits[unitIndex],
+                    [type]: '',
+                    points: roster.regimentsOfRenownUnits[unitIndex].points - enhancementPoints,
+                    [`${type}-points`]: 0
+                }
+                roster.points.all -= enhancementPoints
+            } else {
+                newUnit = {...roster.regimentsOfRenownUnits[unitIndex], [type]: ''}
+            }
             roster.regimentsOfRenownUnits[unitIndex] = newUnit
         } else if (isAuxiliary) {
-            const newUnit = {...roster.auxiliaryUnits[unitIndex], [type]: ''}
+            const enhancementPoints = roster.auxiliaryUnits[unitIndex][`${type}-points`]
+            if (enhancementPoints) {
+                newUnit = {
+                    ...roster.auxiliaryUnits[unitIndex],
+                    [type]: '',
+                    points: roster.auxiliaryUnits[unitIndex].points - enhancementPoints,
+                    [`${type}-points`]: 0
+                }
+                roster.points.all -= enhancementPoints
+            } else {
+                newUnit = {...roster.auxiliaryUnits[unitIndex], [type]: ''}
+            }
             roster.auxiliaryUnits[unitIndex] = newUnit
         } else {
-            let newUnit = {}
             const enhancementPoints = roster.regiments[regimentIndex].units[unitIndex][`${type}-points`]
             if (enhancementPoints) {
                 newUnit = {
