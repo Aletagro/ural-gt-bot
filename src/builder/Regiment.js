@@ -15,7 +15,7 @@ const emptyRegiment = {
     heroicTrait: ''
 }
 
-const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicTraits, otherEnhancement, isInfo, onOpenModal}) => {
+const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicTraits, otherEnhancement, isInfo, onOpenModal, isGeneral}) => {
     const navigate = useNavigate()
 
     const handleDeleteRegiment = () => {
@@ -113,7 +113,11 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
                 {isInfo ? null : <p id={Styles.points}>{regiment.points} Points</p>}
             </div>
             {isInfo
-                ? null
+                ? isGeneral
+                    ? <div id={Styles.rightBlock}>
+                        <button id={Styles.deleteButton} onClick={handleChooseGeneral}><img src={General} alt="" /></button>
+                    </div>
+                    : null
                 : <div id={Styles.rightBlock}>
                     <button id={Styles.deleteButton} onClick={handleChooseGeneral}><img src={General} alt="" /></button>
                     <button id={Styles.deleteButton} onClick={handleDeleteRegiment}><img src={Delete} alt="" /></button>
