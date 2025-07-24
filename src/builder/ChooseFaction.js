@@ -69,8 +69,8 @@ const ChooseFaction = () => {
     }
 
     const handleClick = ({allegiance}) => {
-        const list = JSON.parse(player?.roster || '')
-        if (list.allegianceId === allegiance.id) {
+        const list = player.roster ? JSON.parse(player?.roster) : undefined
+        if (list?.allegianceId === allegiance.id) {
             handleSetRoster(list)
         } else if (roster.allegianceId !== allegiance.id) {
             cleanBuilder()
