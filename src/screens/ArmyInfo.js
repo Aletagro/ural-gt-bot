@@ -1,7 +1,7 @@
 import React from 'react';
 import {useLocation} from 'react-router-dom'
 import Constants from '../Constants'
-import {replaceAsterisks} from '../utilities/utils'
+import {replaceAsterisks, sortByName} from '../utilities/utils'
 import Ability from '../components/Ability'
 import HeaderImage from '../components/HeaderImage'
 
@@ -21,13 +21,16 @@ const ArmyInfo = () => {
         abilityIdName={armyEnhancement?.abilityIdName}
     />
 
-    const renderBlock = (block) => <div key={block.id}>
-        <div id={Styles.blockHeader}>
-            <b id={Styles.title}>{block.name}</b>
-            {block.points ? <p id={Styles.title}>{block.points} pts</p> : null}
+    const renderBlock = (block) => {
+        const abilities = sortByName(block.abilities, 'displayOrder')
+        return <div key={block.id}>
+            <div id={Styles.blockHeader}>
+                <b id={Styles.title}>{block.name}</b>
+                {block.points ? <p id={Styles.title}>{block.points} pts</p> : null}
+            </div>
+            {map(abilities, renderAbility)}
         </div>
-        {map(block.abilities, renderAbility)}
-    </div>
+    }
 
     return <>
         {allegiance.rosterHeaderImage ? <HeaderImage src={allegiance.rosterHeaderImage} alt={allegiance.name} isWide /> : null}
