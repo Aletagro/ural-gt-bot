@@ -1,6 +1,8 @@
 import React from 'react'
 import {useNavigate} from 'react-router-dom'
 import Constants from '../Constants'
+import {ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 import find from 'lodash/find'
 
@@ -13,6 +15,11 @@ const TournamentRules = () => {
         navigate('/battleplan', {state: {title:battleplan.title, battleplan}})
     }
 
+    const handlleClickOrgLink = () => {
+        navigator.clipboard.writeText('https://vk.com/petjyah')
+        toast.success('Ссылка на соц сети организаторов скопирована', Constants.toastParams)
+    }
+
     const renderBattleplan = (battleplan) =>
         <button id={Styles.battleplan} onClick={handleClickBattleplan(battleplan)}>{battleplan?.title}</button>
 
@@ -20,7 +27,8 @@ const TournamentRules = () => {
         <p id={Styles.text}>Формат турнира — 2000 очков, Battlepack из General Handbook 2024: Pitched Battles 2025-27. Турнир проходит в пять раундов по швейцарской системе.</p>
         <p id={Styles.text}>Играем с учетом официальных FAQ, опубликованных до 27 июля включительно.</p>
         <p id={Styles.text}>Главные судьи турнира — Загубин Денис и Некряченко Пётр. У главных судей будет несколько судей-помощников, мы познакомим вас с ними вначале турнира.</p>
-        <p id={Styles.text}>Подача ростера. Подайте ростер до 23:59 27 июля. Ростер необходимо подать, через данное приложение</p>
+        <p id={Styles.text}>Подача ростера. Подайте ростер до 23:59 27 июля. Ростер необходимо подать, через данное приложение. </p>
+        <p id={Styles.text} onClick={handlleClickOrgLink}>Все участники турнира в обязательном порядке должны отправить фотографии своей армии/ростера в личные сообщения <p id={Styles.orgLink}>организаторам</p> так мы сможем провести модерацию, избежать спорных моментов на турнире, проверить условия покраса и наметить потенциальных победителей в соответствующей номинации. </p>
         <h2>2 августа</h2>
         <table>
         <tr>
@@ -98,6 +106,7 @@ const TournamentRules = () => {
         <b id={Styles.text}>Лучший игрок со счетом побед (1-4)</b>
         <b id={Styles.text}>Заключение</b>
         <p id={Styles.text}>Будем очень рады видеть Вас у нас на турнире <b>Wild Khan 2025</b></p>
+        <ToastContainer />
     </div>
 }
 
