@@ -1,6 +1,6 @@
 #row {
     display: flex;
-    padding: 16px 0px;
+    padding: 12px 0px;
 }
 #сolumn {
     display: flex;
@@ -49,4 +49,16 @@
 }
 #lastColumnContainer {
     padding: 12px;
+}
+#playerInfo {
+    flex: 1;
+    padding-left: 4px;
+    align-items: center;
+    text-align: start;
+    padding-right: 4px;
+}
+#subtitle {
+    padding-top: 2px;
+    color: darkgray;
+    font-size: 12px;
 }

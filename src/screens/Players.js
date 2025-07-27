@@ -86,9 +86,12 @@ const Players = () => {
         setLastColumn(newValue)
     }
 
-    const renderRow = (place, player, army, w, d, tp, last, isOddRow, withRoster) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+    const renderRow = (place, player, city, army, w, d, tp, last, isOddRow, withRoster) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{place}</p>
-        <p id={Styles.сolumn}>{player}</p>
+        <div id={Styles.playerInfo}>
+            <p id={Styles.сolumn}>{player}</p>
+            {city ? <p id={Styles.subtitle}>{city}</p> : null}
+        </div>
         {meta.round || meta.isRostersShow
             ? <>
                 <p id={Styles.сolumn}>{army}</p>
@@ -106,7 +109,7 @@ const Players = () => {
     const renderPlayer = (player, index) => {
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
-            {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, player.win, player.draw, player.tp_sum, player[lastColumnValues[lastColumn]], index % 2, player.roster)}
+            {renderRow(index + 1, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.tp_sum, player[lastColumnValues[lastColumn]], index % 2, player.roster)}
         </button>
     }
 
@@ -120,7 +123,7 @@ const Players = () => {
         }
         <div id='column' className='Chapter'>
             <div>
-                {renderRow('№', 'Игрок', 'Армия', 'W', 'D', 'TO', lastColumn, true)}
+                {renderRow('№', 'Игрок', undefined, 'Армия', 'W', 'D', 'TO', lastColumn, true)}
                 {map(search.players, renderPlayer)}
             </div>
         </div>
