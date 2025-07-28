@@ -240,7 +240,6 @@ const Registration = () => {
             : player.reg || player.isJudge
                 ? <div id='column' className='Chapter'>
                     {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
-                    {/* <Row title='Кабинет Организатора' navigateTo='admin' /> */}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
                     {player.reg && player.roster
                         ? <Row title='Ваш ростер' navigateTo='roster' state={{isInfo: true}} />

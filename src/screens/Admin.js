@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
 import {setTournamentStatus} from '../utilities/utils'
 import Checkbox from '../components/Checkbox'
+import FloatingLabelInput from '../components/FloatingLabelInput'
 import {players, meta} from '../utilities/appState'
 
 import map from 'lodash/map'
@@ -20,6 +21,7 @@ const Admin = () => {
     const [pairings, setPairings] = useState([])
     const [playersForChange, setPlayersForChange] = useState([])
     const isChangeButtonDisabled = size(playersForChange) !== 2
+    const [message, setMessage] = useState('')
 
     // const handleChangeParam = useCallback(async () => {
     //     await fetch(`https://aoscom.online/players/something/?id=${playerId}&column=${key}&value=${value}`, {
@@ -176,6 +178,19 @@ const Admin = () => {
             .catch(error => console.error(error))
     }, [handleGetMeta])
 
+    const handleSendMessage = useCallback(async () => {
+        setMessage('')
+        await fetch(`https://aoscom.online/messages/send_mas_message/?message=${message}`)
+            .then(() => {
+                forceUpdate()
+            })
+            .catch(error => console.error(error))
+      }, [message])
+
+    const handleChangeMessage = (e) => {
+        setMessage(e.target.value)
+    }
+
     const renderPlayer = (player, table, isFirst) => {
         const playerArmy = JSON.parse(player?.roster_stat)?.allegiance
         const isChecked = find(playersForChange, p => p[1] === player?.id)
@@ -206,6 +221,16 @@ const Admin = () => {
         </div>
     }
 
+    const renderSendMessage = () => <div id={Styles.sendMessageContainer}>
+        <FloatingLabelInput
+            style={inputStyle}
+            onChange={handleChangeMessage}
+            label='Cообщение всем игрокам'
+            value={message}
+        />
+        <button id={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</button>
+    </div>
+
     return <div id='column' className='Chapter'>
         <b id={Styles.text}>Состояние турнира</b>
         <p id={Styles.text}>Статус: {setTournamentStatus(meta.isRoundActive, meta.round)}</p>
@@ -229,8 +254,18 @@ const Admin = () => {
             </>
         }
         <button id={!meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleFinishRound} disabled={!meta.isRoundActive}>Закончить раунд</button>
+        {renderSendMessage()}
         <ToastContainer />
     </div>
 }
 
 export default Admin
+
+const inputStyle = {
+    '--Input-minHeight': '48px',
+    'width': '100%',
+    'borderRadius': '4px',
+    'borderColor': '#B4B4B4',
+    'boxShadow': 'none',
+    'fontFamily': 'Minion Pro Regular'
+}

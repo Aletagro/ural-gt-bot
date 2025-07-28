@@ -4,6 +4,7 @@ import Roster from '../components/Roster'
 import RosterEasy from '../components/RosterEasy'
 import Checkbox from '../components/Checkbox'
 import Modal from '../components/Modal'
+import FloatingLabelInput from '../components/FloatingLabelInput'
 import {players, player as _player, rosterViewType} from '../utilities/appState'
 
 import map from 'lodash/map'
@@ -22,6 +23,7 @@ const PlayerInfo = () => {
     const [modalData, setModalData] = useState({visible: false, title: ''})
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(player?.status))
+    const [message, setMessage] = useState('')
 
     const handleClickAllegiance = () => {
         navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: roster.allegianceId}})
@@ -80,6 +82,19 @@ const PlayerInfo = () => {
             .catch(error => console.error(error))
       }, [player?.tgId, isPlayerActive])
 
+    const handleSendMessage = useCallback(async () => {
+        setMessage('')
+        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${player?.tgId}&message=${message}`)
+            .then(() => {
+                forceUpdate()
+            })
+            .catch(error => console.error(error))
+      }, [player?.tgId, message])
+
+    const handleChangeMessage = (e) => {
+        setMessage(e.target.value)
+    }
+
     const renderDropModalConent = () => <div id={Styles.modal}>
         <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
         <button id={Styles.modalButton} onClick={handleDropPlayer}>Да, удалить</button>
@@ -88,6 +103,16 @@ const PlayerInfo = () => {
     const renderStatusModalConent = () => <div id={Styles.modal}>
         <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
         <button id={Styles.modalButton} onClick={handlChangeStatus}>Да, изменить</button>
+    </div>
+
+    const renderSendMessage = () => <div id={Styles.sendMessageContainer}>
+        <FloatingLabelInput
+            style={inputStyle}
+            onChange={handleChangeMessage}
+            label='Cообщение игроку (то бота)'
+            value={message}
+        />
+        <button id={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</button>
     </div>
 
     const renderPlayRow = (number, player, result, to, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
@@ -144,11 +169,11 @@ const PlayerInfo = () => {
             : null
         }
         {_player.isJudge
-            ? <button id={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</button>
-            : null
-        }
-        {_player.isJudge
-            ? <button id={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</button>
+            ? <> 
+                <button id={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</button>
+                <button id={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</button>
+                {renderSendMessage()}
+            </>
             : null
         }
         <Modal {...modalData} onClose={handleCloseModal} />
@@ -156,3 +181,12 @@ const PlayerInfo = () => {
 }
 
 export default PlayerInfo
+
+const inputStyle = {
+    '--Input-minHeight': '48px',
+    'width': '100%',
+    'borderRadius': '4px',
+    'borderColor': '#B4B4B4',
+    'boxShadow': 'none',
+    'fontFamily': 'Minion Pro Regular'
+}
