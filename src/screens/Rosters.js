@@ -40,7 +40,7 @@ const Rosters = () => {
                 .then(response => response.json())
                 .then(data => {
                     players.rosters = data
-                    forceUpdate()
+                    setSearchValue('')
                 })
                 .catch(error => console.error(error))
         }

@@ -250,7 +250,7 @@ const Registration = () => {
                         ? <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
                         : null
                     }
-                    {meta.isRostersShow ? <Row title='Ростера' navigateTo='rosters' /> : null}
+                    {meta.isRostersShow || player.isJudge ? <Row title='Ростера' navigateTo='rosters' /> : null}
                     {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Wild Khan 2025', round: meta.round}} /> : null}
                     <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' />
                     {/* {player.reg && meta.round === 5 && !player.sport_voted
