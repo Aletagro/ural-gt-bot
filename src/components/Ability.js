@@ -28,7 +28,7 @@ const Ability = ({ability, abilityKeywordsName, abilityIdName, isRegimentOfRenow
             onClick(ability)
         } else {
             const abilityText = `${ability.name}
-Phase: ${ability.phaseDetails}${ability.cpCost && !isRegimentOfRenown ? `\nCP Cost: ${ability.cpCost}` : ''}${castingValue ? `\nCasting Value: ${castingValue}` : ''}\n${ability.declare ? `\nDeclare: ${ability.declare}` : ''}${ability.effect ? `\nEffect: ${ability.effect}` : ''}
+Phase: ${ability.phaseDetails}${ability.cpCost && !isRegimentOfRenown ? `\nCP Cost: ${ability.cpCost}` : ''}${castingValue ? `\nCasting Value: ${castingValue}` : ''}\n${ability.declare ? `\nDeclare: ${ability.declare}` : ''}\n${ability.usedBy ? `\nUsed By: ${ability.usedBy}` : ''}${ability.effect ? `\nEffect: ${ability.effect}` : ''}
 ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), ', ')}` : ''}
 `
             navigator.clipboard.writeText(abilityText)
@@ -49,11 +49,12 @@ ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), 
                     </div>
                     : null
                 }
-                {ability.points ? <b id={Styles.points}>{ability.points} pts</b> : null}
+                {ability.points ? <b id={Styles.points}>{ability.points}{Constants.noBreakSpace}pts</b> : null}
             </div>
             <div id={Styles.container}>
                 <h4 id={Styles.name}>{ability.name}</h4>
                 {ability.declare ? <p id={Styles.text}><b>Declare:</b> {replaceAsterisks(ability.declare)}</p> : null}
+                {ability.usedBy ? <p id={Styles.text}><b>Used By:</b> {replaceAsterisks(ability.usedBy)}</p> : null}
                 <p id={Styles.text}><b>Effect:</b> {replaceAsterisks(ability.effect)}</p>
                 {ability.altText ? <p id={Styles.text}>{replaceAsterisks(ability.altText)}</p> : null}
                 {keywordsLength

@@ -236,7 +236,6 @@ const Registration = () => {
             ? <div id={Styles.loaderContainer}>
                 <CircularProgress variant="soft"/>
             </div>
-            // : true
             : player.reg || player.isJudge
                 ? <div id='column' className='Chapter'>
                     {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}

@@ -2,11 +2,13 @@ import React, {useState, useEffect, useReducer, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {players, meta} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
+import Checkbox from '../components/Checkbox'
 import Constants from '../Constants'
 
-import find from 'lodash/find'
 import min from 'lodash/min'
 import max from 'lodash/max'
+import find from 'lodash/find'
+import isNull from 'lodash/isNull'
 
 import Styles from './styles/Play.module.css'
 
@@ -31,7 +33,9 @@ const Play = () => {
     const [secondPlayer, setSecondPlayer] = useState()
     const [isFinished, setIsFinished] = useState(false)
     const [info, setInfo] = useState()
+    const [minorWin, setMinorWin] = useState(null)
     const battleplan = Constants.tournamentBattleplans[meta.round - 1]
+    const disableButton = !firstPlayer || !secondPlayer || (firstPlayer === secondPlayer ? isNull(minorWin) : false)
 
     useEffect(() => {
         fetch(`https://aoscom.online/rounds/play/?tg_id=${user?.id}&cur_round=${meta.round}`)
@@ -80,7 +84,7 @@ const Play = () => {
     }
 
     const handleSendResult = useCallback(async () => {
-        await fetch(`https://aoscom.online/rounds/play/?cur_round=${info?.round}&cur_table=${info?.table}&vp_first=${firstPlayer}&vp_second=${secondPlayer}`, {
+        await fetch(`https://aoscom.online/rounds/play/?cur_round=${info?.round}&cur_table=${info?.table}&vp_first=${firstPlayer}&vp_second=${secondPlayer}&minor_win=${minorWin || 0}`, {
             method: 'PUT'
         })
             .then(response => response.json())
@@ -88,7 +92,7 @@ const Play = () => {
                 setIsFinished(true)
             })
             .catch(error => console.error(error))
-    }, [firstPlayer, secondPlayer, info?.round, info?.table])
+    }, [firstPlayer, secondPlayer, info?.round, info?.table, minorWin])
 
     const handleJudgeCall = () => {
         fetch(`https://aoscom.online/messages/judges_call?tg_id=${user?.id}`)
@@ -96,8 +100,8 @@ const Play = () => {
             .catch(error => console.error(error))
     }
 
-    const handleClickTactics = () => {
-        navigate('/tactics')
+    const handleClickCheckbox = (value) => () => {
+        setMinorWin(value)
     }
 
     if (isFinished) {
@@ -138,6 +142,26 @@ const Play = () => {
                 </button>
             </div>
         </div>
+        {firstPlayer && firstPlayer === secondPlayer
+            ? <div>
+                <p id={Styles.checkboxTitle}>Кто выполнил больше тактик</p>
+                <div>
+                    <div id={Styles.checkboxRow} onClick={handleClickCheckbox(1)}>
+                        <Checkbox onClick={handleClickCheckbox(1)} checked={minorWin === 1} />
+                        <p id={Styles.checkboxText}>{info?.firstPlayer?.surname}</p>
+                    </div>
+                    <div id={Styles.checkboxRow} onClick={handleClickCheckbox(0)}>
+                        <Checkbox onClick={handleClickCheckbox(0)} checked={minorWin === 0} />
+                        <p id={Styles.checkboxText}>Равное количество</p>
+                    </div>
+                    <div id={Styles.checkboxRow} onClick={handleClickCheckbox(2)}>
+                        <Checkbox onClick={handleClickCheckbox(2)} checked={minorWin === 2} />
+                        <p id={Styles.checkboxText}>{info?.secondPlayer?.surname}</p>
+                    </div>
+                </div>
+            </div>
+            : null
+        }
         {battleplan
             ? <button
                 id={Styles.rosterButton}
@@ -147,11 +171,10 @@ const Play = () => {
             </button>
             : null
         }
-        <button id={Styles.rosterButton} onClick={handleClickTactics}>Тактики</button>
         <button
-            id={firstPlayer && secondPlayer ? Styles.button : Styles.disableButton}
+            id={disableButton ? Styles.disableButton : Styles.button}
             onClick={handleSendResult}
-            disabled={!firstPlayer || !secondPlayer}
+            disabled={disableButton}
         >
             Отправить Результаты
         </button>
