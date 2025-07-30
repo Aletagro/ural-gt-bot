@@ -22,7 +22,7 @@ const Units = () => {
     if (units) {
         _units = unitsSortesByType(units)
     } else {
-        const isLegendaryArmies = includes(Constants.legendaryArmies, allegiance.id)
+        const isLegendaryArmies = includes(Constants.legendaryArmies, allegiance?.id)
         const warscrollIds = map(filter(dataBase.data.warscroll_faction_keyword, (item) => item.factionKeywordId === allegiance.id), item => item.warscrollId)
         _units = unitsSortesByType(filter(map(warscrollIds, warscrollId => find(dataBase.data.warscroll, scroll => scroll.id === warscrollId)), unit => !unit.isSpearhead && (isLegendaryArmies ? true : !unit.isLegends)))
     }
@@ -38,7 +38,7 @@ const Units = () => {
         rightText={unit?.points ? `${unit?.points} pts` : undefined}
         image={unit?.rowImage}
         navigateTo='warscroll'
-        state={{unit, allegianceId: allegiance.id}}
+        state={{unit, allegianceId: allegiance?.id}}
     />
 
     const renderUnitsType = (type) => <Accordion
