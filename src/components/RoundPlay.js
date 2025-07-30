@@ -1,6 +1,7 @@
 import React, {useState, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import FloatingLabelInput from './FloatingLabelInput'
+import Checkbox from './Checkbox'
 import {rounds, player, players} from '../utilities/appState'
 
 import get from 'lodash/get'
@@ -23,8 +24,11 @@ const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
     const navigate = useNavigate()
     const playerOne = find(players.data, ['id', play[0]])
     const playerTwo = find(players.data, ['id', play[1]])
-    const [firstValue, setFirstValue] = useState(get(playerOne, `game_${rounds.selected}_tp`) || 0)
-    const [secondValue, setSecondValue] = useState(get(playerTwo, `game_${rounds.selected}_tp`) || 0)
+    const firstPlayerScore = get(playerOne, `game_${rounds.selected}_tp`) || 0
+    const secondPlayerScore = get(playerTwo, `game_${rounds.selected}_tp`) || 0
+    const [firstValue, setFirstValue] = useState(0)
+    const [secondValue, setSecondValue] = useState(0)
+    const [minorWin, setMinorWin] = useState(null)
 
     const handleClickPlayer = (_player) => () => {
         navigate('/playerInfo', {state: {player: _player, title: `${_player?.surname} ${_player?.name}`}})
@@ -40,7 +44,7 @@ const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
 
     const handleChangeResult = useCallback(async () => {
         setIsChangeResultBlockShow(false)
-        await fetch(`https://aoscom.online/rounds/play/?cur_round=${round}&cur_table=${table}&vp_first=${firstValue}&vp_second=${secondValue}`, {
+        await fetch(`https://aoscom.online/rounds/play/?cur_round=${round}&cur_table=${table}&vp_first=${firstValue}&vp_second=${secondValue}&minor_win=${minorWin || 0}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -48,7 +52,11 @@ const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
             }
         })
             .catch(error => console.error(error))
-    }, [round, table, firstValue, secondValue])
+    }, [round, table, firstValue, secondValue, minorWin])
+
+    const handleClickCheckbox = (value) => () => {
+        setMinorWin(value)
+    }
 
     const renderChangeResultBlock = () => {
         return <div id={Styles.changeContainer}>
@@ -64,6 +72,26 @@ const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
                 label={playerTwo.surname}
                 value={secondValue}
             />
+            {firstValue && firstValue === secondValue
+                ? <div>
+                    <p id={Styles.checkboxTitle}>Кто выполнил больше тактик</p>
+                    <div>
+                        <div id={Styles.checkboxRow} onClick={handleClickCheckbox(1)}>
+                            <Checkbox onClick={handleClickCheckbox(1)} checked={minorWin === 1} />
+                            <p id={Styles.checkboxText}>{playerOne?.surname}</p>
+                        </div>
+                        <div id={Styles.checkboxRow} onClick={handleClickCheckbox(0)}>
+                            <Checkbox onClick={handleClickCheckbox(0)} checked={minorWin === 0} />
+                            <p id={Styles.checkboxText}>Равное количество</p>
+                        </div>
+                        <div id={Styles.checkboxRow} onClick={handleClickCheckbox(2)}>
+                            <Checkbox onClick={handleClickCheckbox(2)} checked={minorWin === 2} />
+                            <p id={Styles.checkboxText}>{playerTwo?.surname}</p>
+                        </div>
+                    </div>
+                </div>
+                : null
+            }
             <button id={Styles.changeButton} onClick={handleChangeResult}>Изменить результаты</button>
         </div>
     }
@@ -81,7 +109,7 @@ const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
                 <p>{`${playerOne.surname} ${playerOne.name}`}</p>
             </button>
             <p id={Styles.smallColumn} onClick={handelShowChangeResultBlock}>
-                {firstValue} - {secondValue}
+                {firstPlayerScore} - {secondPlayerScore}
             </p>
             <button id={Styles.сolumn} onClick={handleClickPlayer(playerTwo)}>
                 <p>{`${playerTwo.surname} ${playerTwo.name}`}</p>

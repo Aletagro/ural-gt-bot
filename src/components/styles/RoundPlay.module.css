@@ -28,3 +28,17 @@
   padding: 12px;
   width: 100%;
 }
+#checkboxRow {
+  display: flex;
+  padding-bottom: 12px;
+  align-items: center;
+}
+#checkboxText {
+  font-size: 16px;
+  margin-left: 4px;
+  padding-top: 4px;
+}
+#checkboxTitle {
+  font-size: 20px;
+  padding-bottom: 4px;
+}
