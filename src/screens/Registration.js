@@ -87,6 +87,22 @@ const Registration = () => {
             .catch(error => console.error(error))
       }, [name, surname, city, user?.id])
 
+    const handleGetPlayers = useCallback(async (withReg) => {
+        await fetch('https://aoscom.online/players/')
+            .then(response => response.json())
+            .then(data => {
+                players.data = data
+                if (withReg) {
+                    if (size(players.data) < PLAYERS_LIMIT) {
+                        handleRegUser()
+                        player.reg = true
+                    }
+                    forceUpdate()
+                }
+            })
+            .catch(error => console.error(error))
+      }, [handleRegUser])
+
     const handleDrop = useCallback(async () => {
         handleCloseModal()
         await fetch(`https://aoscom.online/players/?tg_id=${user?.id}`, {
@@ -130,14 +146,9 @@ const Registration = () => {
 
     useEffect(() => {
         if (!players.data.length) {
-            fetch('https://aoscom.online/players/')
-                .then(response => response.json())
-                .then(data => {
-                    players.data = data
-                })
-                .catch(error => console.error(error))
+            handleGetPlayers()
         }
-    }, [])
+    }, [handleGetPlayers])
 
     useEffect(() => {
         fetch('https://aoscom.online/tournament-meta/')
@@ -173,9 +184,7 @@ const Registration = () => {
     }
 
     const handleClickButton = () => {
-        handleRegUser()
-        player.reg = true
-        forceUpdate()
+        handleGetPlayers(true)
     }
 
     const handleJudgeCall = () => {
