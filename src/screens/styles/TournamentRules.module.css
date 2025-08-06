@@ -13,3 +13,14 @@
   color: blue;
   display: inline;
 }
+#button {
+  background: rgb(46, 46, 49);
+  color: white;
+  border-width: 0px;
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 16px;
+  font-family: 'Minion Pro Bold';
+  margin-top: 8px;
+  margin-bottom: 8px;
+}

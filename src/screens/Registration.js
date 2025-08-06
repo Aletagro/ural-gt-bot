@@ -285,7 +285,7 @@ const Registration = () => {
                     }
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
-                    {/* <Row title='Регламент Moscow GT 2025' navigateTo='tournamentRules' /> */}
+                    {player.isJudge ? <Row title='Регламент Moscow GT 2025' navigateTo='tournamentRules' /> : null}
                     <Row title='Подсказка во время игры' navigateTo='help' />
                     {meta.isRoundActive ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     {meta.round ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}

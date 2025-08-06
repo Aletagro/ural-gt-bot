@@ -3,6 +3,7 @@ import {Route, Routes} from 'react-router-dom'
 import Registration from './screens/Registration'
 import RosterScreen from './screens/RosterScreen'
 import TournamentRules from './screens/TournamentRules'
+import AppendixRules from './screens/AppendixRules'
 import Players from './screens/Players'
 import PlayerInfo from './screens/PlayerInfo'
 import Rosters from './screens/Rosters'
@@ -66,6 +67,7 @@ function App() {
       <Route index element={<Registration />} />
       <Route path={'roster'} element={<RosterScreen />} />
       <Route path={'tournamentRules'} element={<TournamentRules />} />
+      <Route path={'appendixRules'} element={<AppendixRules />} />
       <Route path={'players'} element={<Players />} />
       <Route path={'playerInfo'} element={<PlayerInfo />} />
       <Route path={'rosters'} element={<Rosters />} />
