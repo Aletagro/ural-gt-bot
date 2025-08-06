@@ -58,7 +58,7 @@ const cities = [
     'Новый Уренгой'
 ]
 
-const PLAYERS_LIMIT = 100
+const PLAYERS_LIMIT = 120
 
 const Registration = () => {
     // eslint-disable-next-line
