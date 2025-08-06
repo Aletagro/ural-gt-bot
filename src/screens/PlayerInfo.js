@@ -1,4 +1,4 @@
-import React, {useReducer, useState, useCallback} from 'react'
+import React, {useReducer, useState, useCallback, useEffect} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import Roster from '../components/Roster'
 import RosterEasy from '../components/RosterEasy'
@@ -10,8 +10,12 @@ import {players, player as _player, rosterViewType} from '../utilities/appState'
 import map from 'lodash/map'
 import get from 'lodash/get'
 import find from 'lodash/find'
+import size from 'lodash/size'
 
 import Styles from './styles/PlayerInfo.module.css'
+
+const FOLDER_ID = process.env.REACT_APP_FOLDER_ID
+const API_KEY = process.env.REACT_APP_API_KEY
 
 const PlayerInfo = () => {
     const navigate = useNavigate()
@@ -24,6 +28,26 @@ const PlayerInfo = () => {
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(player?.status))
     const [message, setMessage] = useState('')
+    const [photos, setPhotos] = useState([])
+
+    const loadPhotos = useCallback(async () => {
+        const response = await fetch(
+            `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents&key=${API_KEY}`
+        )
+        const data = await response.json()
+        const folder = find(data?.files, ['name', `${player.surname} ${player.name}`])
+        if (folder?.id) {
+            const responsePhotos = await fetch(
+                `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents&key=${API_KEY}`
+            )
+            const photosData = await responsePhotos.json()
+            setPhotos(photosData?.files)
+        }
+    }, [player.surname, player.name])
+
+    useEffect(() => {
+        loadPhotos()
+    }, [loadPhotos]) 
 
     const handleClickAllegiance = () => {
         navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: roster.allegianceId}})
@@ -133,6 +157,18 @@ const PlayerInfo = () => {
             </button>
             : null
     }
+
+    const renderPhotos = (photo) => {
+        const src = `https://www.googleapis.com/drive/v3/files/${photo.id}?alt=media&key=${API_KEY}`
+        return <img 
+            key={photo.id}
+            src={src}
+            alt={photo.name}
+            width={360}
+            height={196}
+            loading="lazy"
+        />
+    }
     
     return <div id='column' className='Chapter'>
         {isPlayerDrop ? <p id={Styles.isPlayerDrop}>Игрок удалён с турнира</p> : null}
@@ -165,6 +201,15 @@ const PlayerInfo = () => {
                     : <Roster roster={roster} info={rosterInfo} />
                 }
                 <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
+            </>
+            : null
+        }
+        {size(photos)
+            ? <>
+                <p id={Styles.title}><b>Фото Армии</b></p>
+                <div style={{display: 'flex', overflowX: 'auto', gap: '12px'}}>
+                    {map(photos, renderPhotos)}
+                </div>
             </>
             : null
         }
