@@ -59,8 +59,6 @@ const cities = [
 ]
 
 const PLAYERS_LIMIT = 120
-const FOLDER_ID = process.env.REACT_APP_FOLDER_ID
-const API_KEY = process.env.REACT_APP_API_KEY
 
 const Registration = () => {
     // eslint-disable-next-line
@@ -254,7 +252,7 @@ const Registration = () => {
             <button id={Styles.regButton} onClick={handleRetry}>Зарегистрироваться</button>
         </>
     }
-    console.log({processEnv: process.env, API_KEY, FOLDER_ID})
+
     return <>
         <HeaderImage src={Image} alt='Core Documents' isUral />
         {fetching.main
