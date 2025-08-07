@@ -1,11 +1,15 @@
 import React, {useReducer, useState, useCallback, useEffect} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
+import {ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import Constants from '../Constants'
 import Roster from '../components/Roster'
 import RosterEasy from '../components/RosterEasy'
 import Checkbox from '../components/Checkbox'
 import Modal from '../components/Modal'
+import PhotoGallery from '../components/PhotoGallery'
 import FloatingLabelInput from '../components/FloatingLabelInput'
-import {players, player as _player, rosterViewType} from '../utilities/appState'
+import {players, player as _player, rosterViewType, googleDrive} from '../utilities/appState'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -31,17 +35,24 @@ const PlayerInfo = () => {
     const [photos, setPhotos] = useState([])
 
     const loadPhotos = useCallback(async () => {
-        const response = await fetch(
-            `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents&key=${API_KEY}`
-        )
-        const data = await response.json()
-        const folder = find(data?.files, ['name', `${player.surname} ${player.name}`])
-        if (folder?.id) {
-            const responsePhotos = await fetch(
-                `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents&key=${API_KEY}`
+        if (!size(googleDrive.folders)) {
+            const response = await fetch(
+                `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents&key=${API_KEY}&pageSize=150`
             )
-            const photosData = await responsePhotos.json()
-            setPhotos(photosData?.files)
+            const data = await response.json()
+            googleDrive.folders = data?.files
+        }
+        const playerName = `${player.surname} ${player.name}`
+        const folder = find(googleDrive.folders, ['name', playerName])
+        if (folder?.id) {
+            if (!googleDrive.players[playerName]) {
+                const responsePhotos = await fetch(
+                    `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents&key=${API_KEY}`
+                )
+                const photosData = await responsePhotos.json()
+                googleDrive.players[playerName] = photosData?.files
+            }
+            setPhotos(googleDrive.players[playerName])
         }
     }, [player.surname, player.name])
 
@@ -106,18 +117,38 @@ const PlayerInfo = () => {
             .catch(error => console.error(error))
       }, [player?.tgId, isPlayerActive])
 
-    const handleSendMessage = useCallback(async () => {
-        setMessage('')
-        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${player?.tgId}&message=${message}`)
+    const handleSendMessage = useCallback(async (_message, customMessage) => {
+        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${player?.tgId}&message=${customMessage ? _message : message}`)
             .then(() => {
                 forceUpdate()
             })
             .catch(error => console.error(error))
+        setMessage('')
       }, [player?.tgId, message])
 
     const handleChangeMessage = (e) => {
         setMessage(e.target.value)
     }
+
+    const handleClickPhotovalidation = useCallback(async () => {
+        await fetch(`https://aoscom.online/players/something/?id=${player?.id}&column=paint_checked&value=${_player.paint_checked ? 0 : 1}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                toast.success('Значение фотовалидия изменено', Constants.toastParams)
+                handleSendMessage(_player.paint_checked ? 'Фотовалидация вашего ростера отклонена' : 'Вы успешно прошли фотовалидацию ростера', true)
+                _player.paint_checked = !_player.paint_checked
+                forceUpdate()
+            })
+            .catch(error => {
+                console.error(error)
+                toast.success('Возникла ошибка', Constants.toastParams)
+            })
+      }, [player, handleSendMessage])
 
     const renderDropModalConent = () => <div id={Styles.modal}>
         <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
@@ -157,18 +188,6 @@ const PlayerInfo = () => {
             </button>
             : null
     }
-
-    const renderPhotos = (photo) => {
-        const src = `https://www.googleapis.com/drive/v3/files/${photo.id}?alt=media&key=${API_KEY}`
-        return <img 
-            key={photo.id}
-            src={src}
-            alt={photo.name}
-            width={360}
-            height={196}
-            loading="lazy"
-        />
-    }
     
     return <div id='column' className='Chapter'>
         {isPlayerDrop ? <p id={Styles.isPlayerDrop}>Игрок удалён с турнира</p> : null}
@@ -205,16 +224,12 @@ const PlayerInfo = () => {
             : null
         }
         {size(photos)
-            ? <>
-                <p id={Styles.title}><b>Фото Армии</b></p>
-                <div style={{display: 'flex', overflowX: 'auto', gap: '12px'}}>
-                    {map(photos, renderPhotos)}
-                </div>
-            </>
+            ? <PhotoGallery photos={photos} />
             : null
         }
         {_player.isJudge
             ? <> 
+                <button id={Styles.rulesButton} onClick={handleClickPhotovalidation}>{_player.paint_checked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}</button>
                 <button id={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</button>
                 <button id={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</button>
                 {renderSendMessage()}
@@ -222,6 +237,7 @@ const PlayerInfo = () => {
             : null
         }
         <Modal {...modalData} onClose={handleCloseModal} />
+        <ToastContainer />
     </div>
 }
 

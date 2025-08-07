@@ -20,10 +20,11 @@ const Rosters = () => {
     useDebounce(() => {
         if (searchValue) {
             const _rosters = filter(players.rosters, (player) => {
-                const rosterInfo = JSON.parse(player.roster_stat)
+                const rosterInfo = JSON.parse(player.roster_stat) || {}
                 return includes(lowerCase(`${player.surname} ${player.name}`), lowerCase(searchValue)) ||
                     includes(lowerCase(rosterInfo?.allegiance), lowerCase(searchValue)) ||
-                    includes(lowerCase(rosterInfo.grandAlliance), lowerCase(searchValue))
+                    includes(lowerCase(rosterInfo.grandAlliance), lowerCase(searchValue)) ||
+                    includes(lowerCase(player.city), lowerCase(searchValue))
             })
             search.rosters = sortByName(_rosters)
 

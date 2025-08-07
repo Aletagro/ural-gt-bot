@@ -117,3 +117,8 @@ export const lists = {
     count: 0,
     data: []
 }
+
+export const googleDrive = {
+    folders: [],
+    players: {}
+}

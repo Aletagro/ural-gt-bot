@@ -3,7 +3,7 @@ import {useLocation} from 'react-router-dom'
 
 import Styles from './styles/TournamentRules.module.css'
 
-const TournamentRules = () => {
+const AppendixRules = () => {
     const {index} = useLocation().state
 
     const renderСhessСlock = () => <>
@@ -40,4 +40,4 @@ const TournamentRules = () => {
     </div>
 }
 
-export default TournamentRules
+export default AppendixRules

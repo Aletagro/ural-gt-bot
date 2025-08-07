@@ -34,7 +34,7 @@ const Army = () => {
         } else {
             publicationId = publications[0]?.id
         }
-        const ruleSectionId = find(dataBase.data.rule_section, item => item.publicationId === publicationId && item.displayOrder === 1)?.id
+        const ruleSectionId = find(dataBase.data.rule_section, item => item.publicationId === publicationId && replaceQuotation(item.name) === replaceQuotation(allegiance.name))?.id
         const ruleContainerId = find(dataBase.data.rule_container, item => item.ruleSectionId === ruleSectionId)?.id
         const ruleContainerComponentId = find(dataBase.data.rule_container_component, item => item.ruleContainerId === ruleContainerId && item.contentType === 'bullets')?.id
         rosterOptions = filter(dataBase.data.bullet_point, item => item.ruleContainerComponentId === ruleContainerComponentId)

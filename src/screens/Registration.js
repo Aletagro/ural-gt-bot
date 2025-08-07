@@ -283,6 +283,7 @@ const Registration = () => {
                         ? <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} />
                         :null
                     }
+                    {player.isJudge || meta.rostersBeingAccepted ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
                     {player.isJudge ? <Row title='Регламент Moscow GT 2025' navigateTo='tournamentRules' /> : null}

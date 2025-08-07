@@ -72,7 +72,9 @@ export const getErrors = (roster) => {
     let hasRequiredGeneral = false
     let isRequiredGeneralIsGeneral = false
     let jawsCount = 0
-            let krulsCount = 0
+    let krulsCount = 0
+    let mightyLordCount = 0
+    let isMightyLordGeneral = false
     forEach(roster.regiments, (regiment, index) => {
         if (index === roster.generalRegimentIndex && regiment.units.length > 5) {
             errors.push("In General's Regiment you have more than 4 units")
@@ -102,6 +104,12 @@ export const getErrors = (roster) => {
                 hasRequiredGeneral = true
                 if (index === roster.generalRegimentIndex) {
                     isRequiredGeneralIsGeneral = true
+                }
+            }
+            if (unit.id === '53b0c49a-b6ca-4e71-b97f-9d397e6b8bb9' || unit.id === '6f1cebd9-3584-4bd1-b9f7-3b19ced3708e') {
+                mightyLordCount += 1
+                if (roster.generalRegimentIndex === index) {
+                    isMightyLordGeneral = true
                 }
             }
         })
@@ -158,6 +166,15 @@ export const getErrors = (roster) => {
     })
     if (jawsCount !== krulsCount) {
         errors.push('For every regiment led by a Kruleboyz Hero you must also include regiment led by a Ironjawz Hero')
+    }
+    // Gorechosen Champions могут иметь только одного майти лорда
+    if (mightyLordCount && roster.allegianceId === 'a5b5e8cd-458f-47bc-b6ea-15c71311ecd5') {
+        if (mightyLordCount > 1) {
+            errors.push('Gorechosen Champions can only have one Mighty Lord of Khorne')
+        }
+        if (!isMightyLordGeneral) {
+            errors.push('Mighty Lord of Khorne must be your general')
+        }
     }
     return errors
 }
