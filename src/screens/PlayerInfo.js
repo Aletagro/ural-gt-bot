@@ -18,7 +18,6 @@ const FOLDER_ID = process.env.REACT_APP_FOLDER_ID
 const API_KEY = process.env.REACT_APP_API_KEY
 
 const PlayerInfo = () => {
-    console.log({processEnv: process.env, API_KEY, FOLDER_ID})
     const navigate = useNavigate()
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
