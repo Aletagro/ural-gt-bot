@@ -158,6 +158,8 @@ const Registration = () => {
                 meta.isRoundActive = data.isRoundActive
                 meta.rostersBeingAccepted = data.rostersBeingAccepted
                 meta.isRostersShow = data.isRostersShow
+                meta.isTournamentRulesShow = data.isTournamentRulesShow
+                meta.isPlayersListShow = data.isPlayersListShow
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -273,8 +275,7 @@ const Registration = () => {
                     }
                     {meta.isRostersShow || player.isJudge ? <Row title='Ростера' navigateTo='rosters' /> : null}
                     {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Moscow GT 2025', round: meta.round}} /> : null}
-                    {player.isJudge ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
-                    {/* <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> */}
+                    {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
                     {player.reg && meta.round === 5 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
                         : null
@@ -286,7 +287,7 @@ const Registration = () => {
                     {player.isJudge || meta.rostersBeingAccepted ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
-                    {player.isJudge ? <Row title='Регламент Moscow GT 2025' navigateTo='tournamentRules' /> : null}
+                    {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Moscow GT 2025' navigateTo='tournamentRules' /> : null}
                     <Row title='Подсказка во время игры' navigateTo='help' />
                     {meta.isRoundActive ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     {meta.round ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}

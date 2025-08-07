@@ -68,6 +68,8 @@ const Admin = () => {
                 meta.isRoundActive = data.isRoundActive
                 meta.rostersBeingAccepted = data.rostersBeingAccepted
                 meta.isRostersShow = data.isRostersShow
+                meta.isTournamentRulesShow = data.isTournamentRulesShow
+                meta.isPlayersListShow = data.isPlayersListShow
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -118,7 +120,7 @@ const Admin = () => {
 
 
     const handleStartRound = useCallback(async () => {
-        await fetch(`https://aoscom.online/parings/update_parings/?next_round=${meta.round}`, {
+        await fetch(`https://aoscom.online/parings/update_parings/?next_round=${meta.round === 0 ? 1 : meta.round}`, {
             method: 'PUT',
             body: JSON.stringify(pairings),
             headers: {
@@ -178,10 +180,41 @@ const Admin = () => {
             .catch(error => console.error(error))
     }, [handleGetMeta])
 
+    const handleChangeTournamentRulesShow = useCallback(async () => {
+        await fetch('https://aoscom.online/tournament-meta/any_state', {
+            method: 'PUT',
+            body: JSON.stringify({...meta, isTournamentRulesShow: !meta.isTournamentRulesShow}),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                handleGetMeta()
+            })
+            .catch(error => console.error(error))
+    }, [handleGetMeta])
+
+    const handleChangePlayersListShow = useCallback(async () => {
+        await fetch('https://aoscom.online/tournament-meta/any_state', {
+            method: 'PUT',
+            body: JSON.stringify({...meta, isPlayersListShow: !meta.isPlayersListShow}),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                handleGetMeta()
+            })
+            .catch(error => console.error(error))
+    }, [handleGetMeta])
+
     const handleSendMessage = useCallback(async () => {
         setMessage('')
         await fetch(`https://aoscom.online/messages/send_mas_message/?message=${message}`)
             .then(() => {
+                toast.success('Сообщение всем игрокам отправлено', Constants.toastParams)
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -239,6 +272,8 @@ const Admin = () => {
             : null
         }
         <button id={Styles.button} onClick={handleChangeRostersShow}>{meta.isRostersShow ? 'Скрыть ростера' : 'Открыть ростера для всех'}</button>
+        <button id={Styles.button} onClick={handleChangeTournamentRulesShow}>{meta.isTournamentRulesShow ? 'Скрыть регламент' : 'Открыть регламент для всех'}</button>
+        <button id={Styles.button} onClick={handleChangePlayersListShow}>{meta.isPlayersListShow ? 'Скрыть список участников' : 'Открыть список участников для всех'}</button>
         <button id={meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</button>
         {isEmpty(pairings)
             ? null

@@ -120,6 +120,7 @@ const PlayerInfo = () => {
     const handleSendMessage = useCallback(async (_message, customMessage) => {
         await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${player?.tgId}&message=${customMessage ? _message : message}`)
             .then(() => {
+                toast.success('Сообщение игроку отправлено', Constants.toastParams)
                 forceUpdate()
             })
             .catch(error => console.error(error))
