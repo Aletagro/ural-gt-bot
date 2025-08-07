@@ -445,9 +445,7 @@ const Constants = {
         "Tribes of the Snow Peaks",
         "Legion of the First Prince",
         "Gorechosen Champions",
-        "The Baleful Lords",
-        "The Great-Grand Gnawhorde",
-        "Thanquol's Mutated Menagerie"
+        "The Baleful Lords"
     ],
     deathFaction: [
         "Flesh-eater Courts",

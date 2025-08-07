@@ -1,6 +1,10 @@
 #text {
   padding-bottom: 8px;
 }
+#link {
+  padding-bottom: 8px;
+  word-break: break-all;
+}
 #battleplan {
   background: lightblue;
   border: none;
