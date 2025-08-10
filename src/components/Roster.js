@@ -11,6 +11,7 @@ import map from 'lodash/map'
 import find from 'lodash/find'
 import size from 'lodash/size'
 import filter from 'lodash/filter'
+import forEach from 'lodash/forEach'
 
 import Styles from './styles/Roster.module.css'
 
@@ -19,11 +20,13 @@ const dataBase = require('../dataBase.json')
 const Roster = ({roster, info}) => {
     const navigate = useNavigate()
     const [modalData, setModalData] = useState({visible: false, title: '', text: ''})
-    let otherEnhancement = null
-    const otherEnhancementsGroup = find(dataBase.data.ability_group, (item) => item.factionId === roster.allegianceId && item.abilityGroupType === 'otherEnhancements')
-    if (otherEnhancementsGroup) {
-        const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
-        otherEnhancement = {name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities}
+    let otherEnhancements = []
+    const otherEnhancementsGroups = filter(dataBase.data.ability_group, (item) => item.factionId === roster.allegianceId && item.abilityGroupType === 'otherEnhancements')
+    if (size(otherEnhancementsGroups)) {
+        forEach(otherEnhancementsGroups, otherEnhancementsGroup => {
+            const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
+            otherEnhancements.push({name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities})
+        })
     }
 
     const handleClickAllegiance = () => {
@@ -85,7 +88,7 @@ const Roster = ({roster, info}) => {
         alliganceId={roster.allegianceId}
         index={index}
         isGeneral={index === roster.generalRegimentIndex}
-        otherEnhancement={otherEnhancement}
+        otherEnhancements={otherEnhancements}
         onOpenModal={handleOpenModal}
         isInfo
     />
@@ -104,7 +107,7 @@ const Roster = ({roster, info}) => {
     const renderRegimentOfRenown = () => <UnitRow
         unit={roster.regimentOfRenown}
         onClick={handleClickRegimentOfRenown}
-        otherEnhancement={otherEnhancement}
+        otherEnhancements={otherEnhancements}
         alliganceId={roster.alliganceId}
         isRegimentsOfRenown
         withoutMargin
@@ -119,7 +122,7 @@ const Roster = ({roster, info}) => {
                 key={unit.id}
                 unit={{..._unit, ...unit}}
                 onClick={handleClickAuxiliaryUnit}
-                otherEnhancement={otherEnhancement}
+                otherEnhancements={otherEnhancements}
                 onOpenModal={handleOpenModal}
                 unitIndex={index}
                 isRoRUnitWithKeyword
@@ -142,7 +145,7 @@ const Roster = ({roster, info}) => {
         unitIndex={index}
         alliganceId={roster.alliganceId}
         onOpenModal={handleOpenModal}
-        otherEnhancement={otherEnhancement}
+        otherEnhancements={otherEnhancements}
         withoutMargin
         isAuxiliary
         isInfo

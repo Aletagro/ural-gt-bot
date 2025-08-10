@@ -3,19 +3,21 @@ import React from 'react'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import size from 'lodash/size'
-import find from 'lodash/find'
 import filter from 'lodash/filter'
+import forEach from 'lodash/forEach'
 
 import Styles from './styles/Roster.module.css'
 
 const dataBase = require('../dataBase.json')
 
 const RosterEasy = ({roster, info}) => {
-    let otherEnhancement = null
-    const otherEnhancementsGroup = find(dataBase.data.ability_group, (item) => item.factionId === roster.allegianceId && item.abilityGroupType === 'otherEnhancements')
-    if (otherEnhancementsGroup) {
-        const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
-        otherEnhancement = {name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities}
+    let otherEnhancements = []
+    const otherEnhancementsGroups = filter(dataBase.data.ability_group, (item) => item.factionId === roster.allegianceId && item.abilityGroupType === 'otherEnhancements')
+    if (size(otherEnhancementsGroups)) {
+        forEach(otherEnhancementsGroups, otherEnhancementsGroup => {
+            const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
+            otherEnhancements.push({name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities})
+        })
     }
 
     const renderWeapon = ([key, value]) => value
@@ -34,7 +36,9 @@ const RosterEasy = ({roster, info}) => {
         {unit.heroicTrait ? <p>&#8226; {unit.heroicTrait}</p> : null}
         {unit.weaponOptions ? renderWeaponOptions(unit.weaponOptions) : null}
         {unit.marksOfChaos ? <p>&#8226; Mark Of Chaos: {unit.marksOfChaos}</p> : null}
-        {unit[otherEnhancement?.name] ? <p>&#8226; {otherEnhancement?.name}: {unit[otherEnhancement?.name]}</p> : null}
+        {map(otherEnhancements, (otherEnhancement) =>
+            unit[otherEnhancement?.name] ? <p key={otherEnhancement.id}>&#8226; {otherEnhancement?.name}: {unit[otherEnhancement?.name]}</p> : null
+        )}
         {unit.otherWarscrollOption ? <p>&#8226; {unit.otherWarscrollOption}</p> : null}
     </div>
 

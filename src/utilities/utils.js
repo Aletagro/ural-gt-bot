@@ -14,6 +14,7 @@ import forEach from 'lodash/forEach'
 import replace from 'lodash/replace'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
+import startsWith from 'lodash/startsWith'
 
 const dataBase = require('../dataBase.json')
 
@@ -67,7 +68,7 @@ export const getErrors = (roster) => {
     const uniqueUnits = []
     let heroicTraitsCount = 0
     let atrefactsCount = 0
-    let otherEnhancementCount = 0
+    let otherEnhancementCounts = size(roster.otherEnhancements) ? Array(size(roster.otherEnhancements)).fill(0) : []
     let hasWarmasterInRegiments = []
     let hasRequiredGeneral = false
     let isRequiredGeneralIsGeneral = false
@@ -75,6 +76,7 @@ export const getErrors = (roster) => {
     let krulsCount = 0
     let mightyLordCount = 0
     let isMightyLordGeneral = false
+    const unitsNames = []
     forEach(roster.regiments, (regiment, index) => {
         if (index === roster.generalRegimentIndex && regiment.units.length > 5) {
             errors.push("In General's Regiment you have more than 4 units")
@@ -82,6 +84,9 @@ export const getErrors = (roster) => {
             errors.push(`In Regiment ${index + 1} you have more than 3 units`)
         }
         regiment.units.forEach(unit => {
+            if (!includes(unitsNames, unit.name)) {
+                unitsNames.push(unit.name)
+            }
             if (includes(unit.referenceKeywords, 'Unique')) {
                 uniqueUnits.push(unit.name)
             }
@@ -91,9 +96,11 @@ export const getErrors = (roster) => {
             if (unit.artefact) {
                 atrefactsCount += 1
             }
-            if (unit[roster.otherEnhancement]) {
-                otherEnhancementCount += 1
-            }
+            forEach(roster.otherEnhancements, (otherEnhancement, index) => {
+                if (unit[otherEnhancement]) {
+                    otherEnhancementCounts[index] += 1
+                }
+            })
             if (unit.points * 2 > roster.pointsLimit) {
                 errors.push(`${unit.name} cost more than half the army`)
             }
@@ -139,9 +146,11 @@ export const getErrors = (roster) => {
     if (atrefactsCount > 1) {
         errors.push(`You have ${atrefactsCount} Atrefacts`)
     }
-    if (otherEnhancementCount > (roster.otherEnhancement === 'First Circle Titles' ? 3 : 1)) {
-        errors.push(`You have ${otherEnhancementCount} ${roster.otherEnhancement}`)
-    }
+    forEach(roster.otherEnhancements, (otherEnhancement, index) => {
+        if (otherEnhancementCounts[index] > (otherEnhancement === 'First Circle Titles' ? 3 : 1)) {
+            errors.push(`You have ${otherEnhancementCounts[index]} ${otherEnhancement}`)
+        }
+    })
     if (hasWarmasterInRegiments.length && !includes(hasWarmasterInRegiments, roster.generalRegimentIndex) && !roster.requiredGeneral) {
         errors.push("You have a Warmaster hero, but he isn't your general")
     }
@@ -154,8 +163,19 @@ export const getErrors = (roster) => {
         }
     }
     forEach(roster.auxiliaryUnits, unit => {
+        if (!includes(unitsNames, unit.name)) {
+            unitsNames.push(unit.name)
+        }
         if (includes(unit.referenceKeywords, 'Unique')) {
             uniqueUnits.push(unit.name)
+        }
+    })
+    forEach(unitsNames, unitsName => {
+        if (startsWith(unitsName, 'Scourge of Ghyran ')) {
+            const nameWithoutPrefix = unitsName.slice('Scourge of Ghyran '.length)
+            if (includes(unitsNames, nameWithoutPrefix)) {
+                errors.push(`You can't have ${nameWithoutPrefix} and ${unitsName} in your army at the same time`)
+            }
         }
     })
     const duplicateUniqueUnits = filter(uniqueUnits, (unit, index, units) => {
@@ -506,7 +526,7 @@ export const cleanBuilder = () => {
     roster.note = ''
     roster.listName = ''
     roster.withoutBattleFormation = false
-    roster.otherEnhancement = undefined
+    roster.otherEnhancements = []
 }
 
 export const getStringAfterDash = (text) => {

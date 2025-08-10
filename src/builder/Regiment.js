@@ -15,7 +15,7 @@ const emptyRegiment = {
     heroicTrait: ''
 }
 
-const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicTraits, otherEnhancement, isInfo, onOpenModal, isGeneral}) => {
+const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicTraits, otherEnhancements, isInfo, onOpenModal, isGeneral}) => {
     const navigate = useNavigate()
 
     const handleDeleteRegiment = () => {
@@ -86,7 +86,7 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
         roster.generalRegimentIndex = index
         forceUpdate()
     }
-       
+
     const renderUnit = (unit, _index) => <UnitRow
         key={_index}
         unit={unit}
@@ -98,7 +98,7 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
         onCopy={handleCopy}
         artefacts={artefacts}
         heroicTraits={heroicTraits}
-        otherEnhancement={otherEnhancement}
+        otherEnhancements={otherEnhancements}
         isGeneral={regiment.heroId && _index === 0 && roster.generalRegimentIndex === index}
         alliganceId={alliganceId}
         onOpenModal={onOpenModal}

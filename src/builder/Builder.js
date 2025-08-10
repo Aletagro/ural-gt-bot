@@ -17,6 +17,7 @@ import size from 'lodash/size'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
 import flatten from 'lodash/flatten'
+import forEach from 'lodash/forEach'
 
 import Styles from './styles/Builder.module.css'
 
@@ -62,12 +63,15 @@ const Builder = () => {
     const heroicTraitsGroups = dataBase.data.ability_group.filter(group => group.factionId === _alliganceId && group.abilityGroupType === 'heroicTraits')
     const heroicTraits = flatten(map(heroicTraitsGroups, heroicTraitsGroup => dataBase.data.ability.filter(ability => ability.abilityGroupId === heroicTraitsGroup?.id)))
     const battleFormations = dataBase.data.battle_formation.filter(formation => formation.factionId === _alliganceId)
-    const otherEnhancementsGroup = find(dataBase.data.ability_group, (item) => item.factionId === _alliganceId && item.abilityGroupType === 'otherEnhancements')
-    let otherEnhancement = null
-    if (otherEnhancementsGroup) {
-        const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
-        otherEnhancement = {name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities}
-        roster.otherEnhancement = otherEnhancement.name
+    const otherEnhancementsGroups = filter(dataBase.data.ability_group, (item) => item.factionId === _alliganceId && item.abilityGroupType === 'otherEnhancements')
+    let otherEnhancements = []
+    if (size(otherEnhancementsGroups)) {
+        roster.otherEnhancements = []
+        forEach(otherEnhancementsGroups, otherEnhancementsGroup => {
+            const abilities = filter(dataBase.data.ability, ['abilityGroupId', otherEnhancementsGroup.id])
+            otherEnhancements.push({name: otherEnhancementsGroup?.name, id: otherEnhancementsGroup?.id, abilities})
+            roster.otherEnhancements.push(otherEnhancementsGroup?.name)
+        })
     }
     if (spellsLores.length === 1 && !roster.spellsLore) {
         roster.spellsLore = spellsLores[0].name
@@ -206,7 +210,7 @@ const Builder = () => {
         forceUpdate={forceUpdate}
         artefacts={artefacts}
         heroicTraits={heroicTraits}
-        otherEnhancement={otherEnhancement}
+        otherEnhancements={otherEnhancements}
     />
 
     const renderAuxiliaryUnit = (unit, index) => <UnitRow
@@ -221,7 +225,7 @@ const Builder = () => {
         alliganceId={_alliganceId}
         withoutMargin
         isAuxiliary
-        otherEnhancement={otherEnhancement}
+        otherEnhancements={otherEnhancements}
     />
 
     const renderRegimentOfRenown = () => <UnitRow

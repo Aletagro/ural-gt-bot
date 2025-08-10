@@ -8,6 +8,7 @@ import {replaceAsterisks, getInfo, replaceQuotation, cleanBuilder} from '../util
 
 import map from 'lodash/map'
 import find from 'lodash/find'
+import size from 'lodash/size'
 import filter from 'lodash/filter'
 import forEach from 'lodash/forEach'
 import includes from 'lodash/includes'
@@ -60,12 +61,14 @@ const Army = () => {
     })
 
     // otherEnhancements
-    const otherEnhancement = find(dataBase.data.ability_group, (item) => item.factionId === _allegiance.id && item.abilityGroupType === 'otherEnhancements')
-    if (otherEnhancement) {
-        const enhancements = filter(dataBase.data.ability, (item) => item.abilityGroupId === otherEnhancement.id)
-        if (enhancements.length > 0) {
-            items.push({title: otherEnhancement.name, withoutTitle: true, restrictionText: otherEnhancement.restrictionText, abilities: enhancements})
-        }
+    const otherEnhancements = filter(dataBase.data.ability_group, (item) => item.factionId === _allegiance.id && item.abilityGroupType === 'otherEnhancements')
+    if (size(otherEnhancements)) {
+        forEach(otherEnhancements, otherEnhancement => {
+            const enhancements = filter(dataBase.data.ability, (item) => item.abilityGroupId === otherEnhancement.id)
+            if (enhancements.length > 0) {
+                items.push({title: otherEnhancement.name, withoutTitle: true, restrictionText: otherEnhancement.restrictionText, abilities: enhancements})
+            }
+        })
     }
 
     let armyOfRenown

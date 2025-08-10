@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import Styles from './styles/PhotoGallery.module.css'
 
 import map from 'lodash/map'
 import size from 'lodash/size'
+
+import Styles from './styles/PhotoGallery.module.css'
 
 const API_KEY = process.env.REACT_APP_API_KEY
 
@@ -46,7 +47,7 @@ const PhotoGallery = ({photos}) => {
         ? `https://www.googleapis.com/drive/v3/files/${currentPhoto.id}?alt=media&key=${API_KEY}`
         : ''
 
-    return <>
+    return <div id={Styles.container}>
         {size(photos)
             ? <>
                 <p id={Styles.title}>
@@ -169,7 +170,7 @@ const PhotoGallery = ({photos}) => {
                 </div>
             </div>
         }
-    </>
+    </div>
 }
 
 export default PhotoGallery

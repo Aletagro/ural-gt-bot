@@ -26,7 +26,7 @@ export const roster = {
         all: 0
     },
     tactics: [],
-    otherEnhancement: undefined
+    otherEnhancements: []
 }
 
 export const search = {
