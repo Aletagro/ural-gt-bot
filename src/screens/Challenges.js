@@ -1,5 +1,6 @@
 import React, {useEffect, useState, useReducer, useCallback} from 'react'
-import {player, players, search} from '../utilities/appState'
+import {useNavigate} from 'react-router-dom'
+import {player, players, search, meta} from '../utilities/appState'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import useDebounce from '../utilities/useDebounce'
@@ -17,6 +18,7 @@ import Styles from './styles/Challenges.module.css'
 const tg = window.Telegram.WebApp
 
 const Challenges = () => {
+    const navigate = useNavigate()
     const [showPLayers, setShowPLayers] = useState(false)
     const [searchValue, setSearchValue] = useState(search.playersValue)
     const [playersList, setPlayersList] = useState([])
@@ -158,6 +160,12 @@ const Challenges = () => {
         setModalData({visible: true, title: `Вы уверен, что отказываетесь от челленджа с игроком: ${_player.surname} ${_player.name}?`, Content: renderDeclineChallengeModalConent(_player)})
     }
 
+    const handleNavigateToPlayerInfo = (_player) => () => {
+        if (meta.round || meta.isRostersShow || player.isJudge) {
+            navigate('/playerInfo', {state: {player: _player, title: `${_player.surname} ${_player.name}`}})
+        }
+    }
+
     const renderChallengeModalConent = (_player) => () => <div>
         <button id={Styles.modalButton} onClick={handleClickCreateChallenge(_player)}>Да, я сокрушу его!</button>
         <button id={Styles.modalButton} onClick={handleCloseModal}>Не, не, не! Этого воина я опасаюсь!</button>
@@ -179,9 +187,9 @@ const Challenges = () => {
         <p id={Styles.сolumn}>Второй Игрок</p>
     </div>
 
-    const renderPlayer = (_player, city) => <div id={Styles.playerContainer}>
-        <p id={Styles.title}>{_player}</p>
-        {city ? <p id={Styles.subtitle}>{city}</p> : null}
+    const renderPlayer = (_player) => <div id={Styles.playerContainer} onClick={handleNavigateToPlayerInfo(_player)}>
+        <p id={Styles.title}>{_player.surname} {_player.name}</p>
+        {_player.city ? <p id={Styles.subtitle}>{_player.city}</p> : null}
     </div>
 
     const renderSearchPlayer = (_player, index) => <div key={_player.id} onClick={handleClickPlayer(_player)} id={Styles.searchPlayerContainer} style={{'background': `${index % 2 ? '#ECECEC' : ''}`}}>
@@ -191,8 +199,8 @@ const Challenges = () => {
 
     const renderChallenge = (сhallenge, index) => <div key={index} id={Styles.row} style={{'background': `${index % 2 ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{index + 1}</p>
-        {renderPlayer(сhallenge.firstPlayer, сhallenge.firstPlayerCity)}
-        {renderPlayer(сhallenge.secondPlayer, сhallenge.secondPlayerCity)}
+        {renderPlayer(сhallenge.player1)}
+        {renderPlayer(сhallenge.player2)}
     </div>
 
     const renderPlayerChallenge = (_player, index) => <div key={_player.id} id={Styles.playerChallenge} style={{'background': `${index % 2 ? '' : '#ECECEC'}`}}>
@@ -207,7 +215,7 @@ const Challenges = () => {
     </div>
     
     return <div id='column' className='Chapter'>
-        {player.info?.challenge_status === 'accepted'
+        {player.info?.challenge_status === 'accepted' || !player.info?.id
             ? null
             : <>
                 {isPlayerChallengesGet

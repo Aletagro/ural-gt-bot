@@ -26,8 +26,8 @@ const PlayerInfo = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const {player} = useLocation().state
-    const rosterInfo = JSON.parse(player.roster_stat)
-    const roster = JSON.parse(player.roster)
+    const rosterInfo = player.roster_stat ? JSON.parse(player.roster_stat) : {}
+    const roster = player.roster ? JSON.parse(player.roster) : undefined
     const [modalData, setModalData] = useState({visible: false, title: ''})
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(player?.status))
@@ -224,7 +224,7 @@ const PlayerInfo = () => {
             </>
             : null
         }
-        {size(photos)
+        {size(photos) && _player.isJudge
             ? <PhotoGallery photos={photos} />
             : null
         }
