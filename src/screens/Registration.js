@@ -160,6 +160,7 @@ const Registration = () => {
                 meta.isRostersShow = data.isRostersShow
                 meta.isTournamentRulesShow = data.isTournamentRulesShow
                 meta.isPlayersListShow = data.isPlayersListShow
+                meta.isChallengesOpen = data.isChallengesOpen
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -285,6 +286,7 @@ const Registration = () => {
                         :null
                     }
                     {player.isJudge || meta.rostersBeingAccepted ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
+                    {player.isJudge || meta.isChallengesOpen || includes(Constants.testersIds, user?.id) ? <Row title='Челленджи' navigateTo='challenges' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
                     {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Moscow GT 2025' navigateTo='tournamentRules' /> : null}

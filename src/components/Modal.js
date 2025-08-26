@@ -34,7 +34,7 @@ const CustomModal = ({title, text, visible, ability, onClose, Content}) => {
                 ? <div id={Styles.abilityContainer}>
                     <Ability ability={ability} />
                 </div>
-                : <>
+                : <div id={Styles.abilityContainer}>
                     <DialogTitle>{title}</DialogTitle>
                     <DialogContent>
                         {Content
@@ -42,7 +42,7 @@ const CustomModal = ({title, text, visible, ability, onClose, Content}) => {
                             : <p id={Styles.text}>{text}</p>
                         }
                     </DialogContent>
-                </>
+                </div>
             }
         </ModalDialog>
         </Modal>

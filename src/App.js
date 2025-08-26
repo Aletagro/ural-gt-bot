@@ -5,6 +5,7 @@ import RosterScreen from './screens/RosterScreen'
 import TournamentRules from './screens/TournamentRules'
 import AppendixRules from './screens/AppendixRules'
 import Photovalidation from './screens/Photovalidation'
+import Challenges from './screens/Challenges'
 import Players from './screens/Players'
 import PlayerInfo from './screens/PlayerInfo'
 import Rosters from './screens/Rosters'
@@ -70,6 +71,7 @@ function App() {
       <Route path={'tournamentRules'} element={<TournamentRules />} />
       <Route path={'appendixRules'} element={<AppendixRules />} />
       <Route path={'photovalidation'} element={<Photovalidation />} />
+      <Route path={'challenges'} element={<Challenges />} />
       <Route path={'players'} element={<Players />} />
       <Route path={'playerInfo'} element={<PlayerInfo />} />
       <Route path={'rosters'} element={<Rosters />} />

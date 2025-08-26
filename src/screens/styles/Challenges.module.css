@@ -1,0 +1,90 @@
+#row {
+    display: flex;
+    padding: 16px 0px;
+}
+#сolumn {
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+#smallColumn {
+    display: flex;
+    min-width: 8%;
+    justify-content: center;
+    align-items: center;
+}
+#playerContainer {
+    flex: 1;
+    padding-left: 4px;
+    align-items: center;
+    text-align: start;
+    padding-right: 4px;
+}
+#title {
+    font-size: 14px;
+}
+#subtitle {
+    padding-top: 2px;
+    color: darkgray;
+    font-size: 12px;
+}
+#button {
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 16px 12px;
+    font-size: 16px;
+    font-family: 'Minion Pro Bold';
+    margin-bottom: 16px;
+}
+#input {
+    margin-bottom: 16px;
+    margin-top: 2px;
+    height: 40px;
+    padding: 8px 8px;
+    border-radius: 8px;
+    width: 100%;
+}
+#searchPlayerContainer {
+    padding: 8px;
+}
+#listTitle {
+    font-size: 18px;
+    font-family: 'Minion Pro Bold';
+    text-align: center;
+    padding-top: 16px;
+    padding-bottom: 12px
+}
+#modalButton {
+    background: rgb(46, 46, 49);
+    color: white; 
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    margin-top: 12px;
+}
+#playerChallengesContainer {
+    padding-bottom: 16px;
+}
+#playerChallenge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px;
+}
+#playerChallengeTitleContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+#playerChallengeButton {
+    background: rgb(46, 46, 49);
+    color: white;
+    border-width: 0px;
+    border-radius: 4px;
+    padding: 6px;
+    margin-left: 4px;
+    font-size: 12px;
+}

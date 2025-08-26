@@ -84,7 +84,8 @@ export const player = {
 
 export const players = {
     data: [],
-    rosters: []
+    rosters: [],
+    сhallenges: []
 }
 
 export const rostersStuck = {
