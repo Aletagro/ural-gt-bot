@@ -26,14 +26,17 @@ const Challenges = () => {
     const user = tg.initDataUnsafe?.user
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
+
     useDebounce(() => {
         if (searchValue) {
             const _players = filter(players.data, (_player) => {
                 const rosterInfo = JSON.parse(_player.roster_stat) || {}
-                return includes(lowerCase(`${_player.surname} ${_player.name}`), lowerCase(searchValue)) ||
+                return (includes(lowerCase(`${_player.surname} ${_player.name}`), lowerCase(searchValue)) ||
                     includes(lowerCase(rosterInfo?.allegiance), lowerCase(searchValue)) ||
                     includes(lowerCase(rosterInfo.grandAlliance), lowerCase(searchValue)) ||
-                    includes(lowerCase(_player.city), lowerCase(searchValue))
+                    includes(lowerCase(_player.city), lowerCase(searchValue)))
+                    && _player.challenge_status !== 'accepted'
+                    && _player.id !== player.info?.id
             })
             setPlayersList(_players)
         } else {
@@ -42,16 +45,20 @@ const Challenges = () => {
       }, [searchValue], 300
     )
 
+    const handleGetChallenges = useCallback(async () => {
+        await fetch('https://aoscom.online/challenges/')
+            .then(response => response.json())
+            .then(data => {
+                players.сhallenges = data
+            })
+            .catch(error => console.error(error))
+    }, [])
+
     useEffect(() => {
         if (!size(players.сhallenges)) {
-            fetch('https://aoscom.online/challenges/')
-                .then(response => response.json())
-                .then(data => {
-                    players.сhallenges = data
-                })
-                .catch(error => console.error(error))
+            handleGetChallenges()
         }
-    }, [])
+    }, [handleGetChallenges])
 
     const handleMakeChallenge = () => {
         setShowPLayers(true)
@@ -79,6 +86,16 @@ const Challenges = () => {
             })
             .catch(error => console.error(error))
     }, [user?.id])
+
+    const handleGetPlayerChallenges = useCallback(async () => {
+        await fetch(`https://aoscom.online/challenges/challenges_for_player/?player_id=${player?.info?.id}`)
+            .then(response => response.json())
+            .then(data => {
+                setPlayerChallenges(data)
+                setIsPlayerChallengesGet(true)
+            })
+            .catch(error => console.error(error))
+    }, [])
 
     const handleCreateChallenge = useCallback(async (_player) => {
         await fetch(`https://aoscom.online/challenges/issue_a_challenge/?tg_id=${user?.id}&opp_id=${_player?.id}`, {
@@ -112,21 +129,11 @@ const Challenges = () => {
             .then(response => response.json())
             .then(data => {
                 players.сhallenges = filter(players.сhallenges, сhallenge => сhallenge.id !== _player?.id)
-                forceUpdate()
+                handleGetPlayerChallenges()
                 toast.success('Челлендж отменён', Constants.toastParams)
             })
             .catch(error => console.error(error))
-    }, [user?.id])
-
-    const handleGetChallenges = useCallback(async () => {
-        await fetch(`https://aoscom.online/challenges/challenges_for_player/?player_id=${player?.info?.id}`)
-            .then(response => response.json())
-            .then(data => {
-                setPlayerChallenges(data)
-                setIsPlayerChallengesGet(true)
-            })
-            .catch(error => console.error(error))
-    }, [])
+    }, [user?.id, handleGetPlayerChallenges])
 
     const handleClickCreateChallenge = (_player) => () => {
         handleCloseModal()
@@ -200,7 +207,7 @@ const Challenges = () => {
     </div>
     
     return <div id='column' className='Chapter'>
-        {player.info?.challenge_status
+        {player.info?.challenge_status === 'accepted'
             ? null
             : <>
                 {isPlayerChallengesGet
@@ -209,7 +216,7 @@ const Challenges = () => {
                             {map(playerChallenges, renderPlayerChallenge)}
                         </div>
                         : <p>Вам еще никто не бросил челлендж, возможно, что вас просто боятся!</p>
-                    : <button id={Styles.button} onClick={handleGetChallenges}>Посмотреть кто бросил вам Челлендж</button>
+                    : <button id={Styles.button} onClick={handleGetPlayerChallenges}>Посмотреть кто бросил вам Челлендж</button>
                 }
                 {player.info?.challenge_status === 'sent'
                     ? null
