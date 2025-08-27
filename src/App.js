@@ -1,5 +1,6 @@
 import {useEffect} from 'react'
 import {Route, Routes} from 'react-router-dom'
+import useSwipeBack from './utilities/useSwipeBack'
 import Registration from './screens/Registration'
 import RosterScreen from './screens/RosterScreen'
 import TournamentRules from './screens/TournamentRules'
@@ -53,6 +54,8 @@ import './App.css'
 const tg = window.Telegram.WebApp
 
 function App() {
+  useSwipeBack()
+
   useEffect(() => {
     tg.ready()
     if (!tg.isExpanded) {
