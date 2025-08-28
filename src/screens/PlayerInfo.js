@@ -33,6 +33,7 @@ const PlayerInfo = () => {
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(player?.status))
     const [message, setMessage] = useState('')
     const [photos, setPhotos] = useState([])
+    const [paintChecked, setPaintChecked] = useState(player.paint_checked)
 
     const loadPhotos = useCallback(async () => {
         if (!size(googleDrive.folders)) {
@@ -132,7 +133,7 @@ const PlayerInfo = () => {
     }
 
     const handleClickPhotovalidation = useCallback(async () => {
-        await fetch(`https://aoscom.online/players/something/?id=${player?.id}&column=paint_checked&value=${_player.paint_checked ? 0 : 1}`, {
+        await fetch(`https://aoscom.online/players/something/?id=${player?.id}&column=paint_checked&value=${paintChecked ? 0 : 1}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -141,15 +142,15 @@ const PlayerInfo = () => {
         })
             .then(() => {
                 toast.success('Значение фотовалидия изменено', Constants.toastParams)
-                handleSendMessage(_player.paint_checked ? 'Фотовалидация вашего ростера отклонена' : 'Вы успешно прошли фотовалидацию ростера', true)
-                _player.paint_checked = !_player.paint_checked
+                handleSendMessage(paintChecked ? 'Фотовалидация вашего ростера отклонена' : 'Вы успешно прошли фотовалидацию ростера', true)
+                setPaintChecked(!paintChecked)
                 forceUpdate()
             })
             .catch(error => {
                 console.error(error)
                 toast.success('Возникла ошибка', Constants.toastParams)
             })
-      }, [player, handleSendMessage])
+      }, [player, handleSendMessage, paintChecked])
 
     const renderDropModalConent = () => <div id={Styles.modal}>
         <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
@@ -230,7 +231,7 @@ const PlayerInfo = () => {
         }
         {_player.isJudge
             ? <> 
-                <button id={Styles.rulesButton} onClick={handleClickPhotovalidation}>{_player.paint_checked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}</button>
+                <button id={Styles.rulesButton} onClick={handleClickPhotovalidation}>{paintChecked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}</button>
                 <button id={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</button>
                 <button id={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</button>
                 {renderSendMessage()}

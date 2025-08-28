@@ -18,7 +18,7 @@ const ChooseEnhancement = () => {
     if (type === 'battleFormation') {
         const formationsRules = data.map(formation => dataBase.data.battle_formation_rule.filter((item) => item.battleFormationId === formation?.id))
         _data = data.map((formation, index) => {
-            return {name: formation?.name, id: formation?.id, abilities: formationsRules[index]}
+            return {name: formation?.name, id: formation?.id, points:formation?.points, abilities: formationsRules[index]}
         })
     }
     if (type === 'spellsLore' || type === 'prayersLore') {
@@ -104,16 +104,18 @@ const ChooseEnhancement = () => {
                 roster.points.all += pointsDiff
                 roster.points.manifestations = block.points
             }
-        }
-        if (type === 'spellsLore' && block.points !== roster.points.spellsLore) {
+        } else if (type === 'spellsLore' && block.points !== roster.points.spellsLore) {
             const pointsDiff = block.points - (roster.points.spellsLore || 0)
             roster.points.all += pointsDiff
             roster.points.spellsLore = block.points
-        }
-        if (type === 'factionTerrain' && block.points !== roster.points.terrain) {
+        } else if (type === 'factionTerrain' && block.points !== roster.points.terrain) {
             const pointsDiff = block.points - (roster.points.terrain || 0)
             roster.points.all += pointsDiff
             roster.points.terrain = block.points
+        } else if (type === 'battleFormation' && block.points !== roster.points.battleFormation) {
+            const pointsDiff = block.points - (roster.points.battleFormation || 0)
+            roster.points.all += pointsDiff
+            roster.points.battleFormation = block.points
         }
         navigate(-1)
     }
@@ -134,6 +136,9 @@ const ChooseEnhancement = () => {
             } else if (type === 'factionTerrain' && roster.points.terrain) {
                 roster.points.all -= roster.points.terrain
                 roster.points.terrain = 0
+            } else if (type === 'battleFormation' && roster.points.battleFormation) {
+                roster.points.all -= roster.points.battleFormation
+                roster.points.battleFormation = 0
             }
         } else if (isRoRUnitWithKeyword) {
             const enhancementPoints = roster.regimentsOfRenownUnits[unitIndex][`${type}-points`]

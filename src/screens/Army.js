@@ -30,8 +30,8 @@ const Army = () => {
             item => item.factionKeywordId === _allegiance.parentFactionKeywordId && includes(item.name, 'Army of Renown')
         )
         let publicationId
-        if (publications.length > 1) {
-            publicationId = find(publications, item => includes(item.name, replaceQuotation(_allegiance.name.split(" ")[0])))?.id
+        if (size(publications) > 1) {
+            publicationId = find(publications, item => includes(item.name, replaceQuotation(_allegiance.name)))?.id
         } else {
             publicationId = publications[0]?.id
         }

@@ -42,14 +42,16 @@ ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), 
         <button id={Styles.ability} onClick={handlleClick} style={{border: `1px solid ${borderColor}`}}>
             <div id={Styles.header} style={{background: borderColor}}>
                 <b id={Styles.headerText}>{ability.phaseDetails}</b>
-                {ability.cpCost && !isRegimentOfRenown ? <b id={Styles.cpCost}>{ability.cpCost}&nbsp;CP</b> : null}
-                {castingValue
-                    ? <div id={Styles.castingValueContainer}>
-                        <p id={Styles.castingValue}>{isRegimentOfRenown ? ability.cpCost : ability.castingValue}</p>
-                    </div>
-                    : null
-                }
-                {ability.points ? <b id={Styles.points}>{ability.points}{Constants.noBreakSpace}pts</b> : null}
+                <div>
+                    {ability.cpCost && !isRegimentOfRenown ? <b id={Styles.cpCost}>{ability.cpCost}&nbsp;CP</b> : null}
+                    {castingValue
+                        ? <div id={Styles.castingValueContainer}>
+                            <p id={Styles.castingValue}>{isRegimentOfRenown ? ability.cpCost : ability.castingValue}</p>
+                        </div>
+                        : null
+                    }
+                    {ability.points ? <b id={Styles.points}>{ability.points}{Constants.noBreakSpace}pts</b> : null}
+                </div>
             </div>
             <div id={Styles.container}>
                 <h4 id={Styles.name}>{ability.name}</h4>

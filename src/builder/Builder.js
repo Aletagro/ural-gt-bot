@@ -90,10 +90,11 @@ const Builder = () => {
     if (!battleFormations.length) {
         roster.withoutBattleFormation = true
     }
-    let requiredGeneralIds = filter(dataBase.data.roster_faction_keyword_required_general_warscroll, ['factionKeywordId', _alliganceId])
+    const requiredGeneralIds = filter(dataBase.data.roster_faction_keyword_required_general_warscroll, ['factionKeywordId', _alliganceId])
     if (size(requiredGeneralIds) === 1) {
         roster.requiredGeneral = find(dataBase.data.warscroll, ['id', requiredGeneralIds[0].warscrollId])
     }
+    roster.requiredUnitsIds = map(filter(dataBase.data.roster_faction_keyword_required_warscroll, ['factionKeywordId', _alliganceId]), 'warscrollId')
     if (!roster.grandAlliance) {
         setRosterGrandAlliance(roster.allegiance)
     }
