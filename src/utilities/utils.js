@@ -79,6 +79,8 @@ export const getErrors = (roster) => {
     let isMightyLordGeneral = false
     const unitsNames = []
     let requiredUnitsIds = []
+    let hasBrokkGrungsson = false
+    let heroIroncladsCount = 0
     forEach(roster.regiments, (regiment, index) => {
         if (index === roster.generalRegimentIndex && regiment.units.length > 5) {
             errors.push("In General's Regiment you have more than 4 units")
@@ -120,6 +122,12 @@ export const getErrors = (roster) => {
                 if (roster.generalRegimentIndex === index) {
                     isMightyLordGeneral = true
                 }
+            }
+            if (unit.id === '816d2c52-aacc-4f1d-bf50-320665911b97') {
+                heroIroncladsCount += 1
+            }
+            if (unit.id === '8ac98757-e26f-44a3-a880-afa9856b5abc') {
+                hasBrokkGrungsson = true
             }
             if (includes(roster.requiredUnitsIds, unit.id)) {
                 requiredUnitsIds.push(unit.id)
@@ -177,6 +185,12 @@ export const getErrors = (roster) => {
         if (includes(roster.requiredUnitsIds, unit.id)) {
             requiredUnitsIds.push(unit.id)
         }
+        if (unit.id === '816d2c52-aacc-4f1d-bf50-320665911b97') {
+            heroIroncladsCount += 1
+        }
+        if (unit.id === '8ac98757-e26f-44a3-a880-afa9856b5abc') {
+            hasBrokkGrungsson = true
+        }
     })
     forEach(unitsNames, unitsName => {
         if (startsWith(unitsName, 'Scourge of Ghyran ')) {
@@ -213,6 +227,15 @@ export const getErrors = (roster) => {
                 errors.push(`You must be included ${unitName} in your roster`)
             }
         })
+    }
+    // В АоРе The Magnate's Crew нельзя иметь Брокка и геройский Айронклад одновременно. И всего один геройскйи Айронклад
+    if (roster.allegianceId === '09e28194-8a37-4c3b-aaa5-8aa38bcfd9ac') {
+        if (heroIroncladsCount > 1) {
+            errors.push('You can only have 1 Arkanaut Ironclad (Hero) in your army')
+        }
+        if (heroIroncladsCount && hasBrokkGrungsson) {
+            errors.push('You cannot include Brokk Grungsson and Arkanaut Ironclad (Hero) in the same army')
+        }
     }
     return errors
 }

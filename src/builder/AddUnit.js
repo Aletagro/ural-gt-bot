@@ -154,6 +154,13 @@ const AddUnit = () => {
         units = unitsSortesByType(units)
     } else {
         units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && (showLegends ?  true : !unit.isLegends) && unit.referenceKeywords.includes('Hero') && !unit.requiredPrimaryHeroWarscrollId)
+        // У АоРа The Magnate's Crew героем может быть Айронклад
+        if (alliganceId === '09e28194-8a37-4c3b-aaa5-8aa38bcfd9ac') {
+            const heroIronclad = find(dataBase.data.warscroll, ['id', '816d2c52-aacc-4f1d-bf50-320665911b97'])
+            if (heroIronclad) {
+                units.push(heroIronclad)
+            }
+        }
         hasPotentialLegends = setHasPonentialLegends(units)
         if (hasPotentialLegends && hidePotentialLegends) {
             units = filterPonentialLegends(units)
