@@ -2,6 +2,7 @@ import React, {useState, useReducer} from 'react'
 import useDebounce from '../utilities/useDebounce'
 import {sortByName} from '../utilities/utils'
 import {search} from '../utilities/appState'
+import Constants from '../Constants'
 import Row from '../components/Row'
 import Accordion from '../components/Accordion'
 import Ability from '../components/Ability'
@@ -10,6 +11,7 @@ import map from 'lodash/map'
 import size from 'lodash/size'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
+import uniqBy from 'lodash/uniqBy'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
@@ -29,8 +31,15 @@ const Search = () => {
             const ruleTitles = filter(dataBase.data.rule_container, (rule) => includes(lowerCase(rule.title), lowerCase(value)))
             const inTexts = filter(dataBase.data.rule_container_component, (rule) => rule.contentType === 'text' && includes(lowerCase(rule.textContent), lowerCase(value)))
             const inTextRule = map(inTexts, rule => find(dataBase.data.rule_container, ['id', rule.ruleContainerId]))
-            const rules = filter(sortByName([...ruleTitles, ...inTextRule], 'title'), ['isHiddenFromSearch', false])
-            search.Rules = rules.splice(0, 40)
+            const rules = uniqBy(filter(sortByName([...ruleTitles, ...inTextRule], 'title'), ['isHiddenFromSearch', false]), 'id')
+            const onlyСurrentRules = filter(rules, rule => {
+                const ruleSection = find(dataBase.data.rule_section, ['id', rule.ruleSectionId])
+                if (ruleSection) {
+                    return !includes(Constants.hideChaptersIds, ruleSection.publicationId)
+                }
+                return true
+            })
+            search.Rules = onlyСurrentRules.splice(0, 40)
             const allegiances = filter(dataBase.data.faction_keyword, (faction) => includes(lowerCase(faction.name), lowerCase(value)) && faction.name !== 'Orruk Warclans')
             search.Allegiances = sortByName(allegiances.splice(0, 20))
             const battleFormation = filter(dataBase.data.battle_formation_rule, (rule) => includes(lowerCase(rule.name), lowerCase(value)))

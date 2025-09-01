@@ -21,7 +21,7 @@ const Ability = ({ability, abilityKeywordsName, abilityIdName, isRegimentOfRenow
     const keywordsLength = keywords.length
     const borderColor = Constants.abilitiesTypes[ability.phase]
     // У абилок, которые привязаны к Regiment Of Renown сложность каста приходит в cpCost
-    const castingValue = ability.castingValue || (isRegimentOfRenown && ability.cpCost)
+    const castingValue = ability.castingValue || ability.cost || (isRegimentOfRenown && ability.cpCost)
 
     const handlleClick = () => {
         if (onClick) {
@@ -46,7 +46,7 @@ ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), 
                     {ability.cpCost && !isRegimentOfRenown ? <b id={Styles.cpCost}>{ability.cpCost}&nbsp;CP</b> : null}
                     {castingValue
                         ? <div id={Styles.castingValueContainer}>
-                            <p id={Styles.castingValue}>{isRegimentOfRenown ? ability.cpCost : ability.castingValue}</p>
+                            <p id={Styles.castingValue}>{isRegimentOfRenown ? ability.cpCost : (ability.castingValue || ability.cost)}</p>
                         </div>
                         : null
                     }

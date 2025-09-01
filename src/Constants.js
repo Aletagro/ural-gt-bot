@@ -82,6 +82,12 @@ const Constants = {
     ],
     coreDocumentsId: 'e918110c-418e-4a50-90bc-484581a0fa5c',
     ghbId: '3e05b549-40a4-43e5-b0f7-5ef6d1ffdbd2',
+    hideChaptersIds: [
+        '27931b97-5750-4600-bac4-a09dada60dcd', // Spearhead Battlepack: Sand and Bone
+        '308aceba-6694-4d60-a98a-233a4d7e9702', // Spearhead Battlepack: Fire and Jade
+        '75294bc3-bb11-4c35-8425-b41d741c62bb', // General's Handbook 2024-25: Advanced Rules
+        '318c212e-cbcd-4b44-a44d-318f3ae180a0', // General's Handbook 2024-25: Matched Play Battlepack"
+    ],
     rulesImage: 'https://dhss9aar8ocw.cloudfront.net/09a5c1fd-a186-4517-8a6f-0a107374eb45',
     manifestationsPublicationId: '38c85d13-0436-48ac-adb3-1c9319b16d13',
     regimentsOfRenownImage: 'https://dhss9aar8ocw.cloudfront.net/39478fae-cf03-40ee-a130-6fef03492c44',
