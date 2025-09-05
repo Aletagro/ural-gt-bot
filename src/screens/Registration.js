@@ -141,6 +141,14 @@ const Registration = () => {
                     forceUpdate()
                 })
                 .catch(error => console.error(error))
+            // запрос ростеров юзера из основного приложения
+            // fetch(`https://aoscom.online/rosters_db/rosters_by_user?tg_id=${530569849}`)
+            fetch(`https://aoscom.online/rosters_db/rosters_by_user?tg_id=${user?.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    player.mainRosters = data?.rosters
+                })
+                .catch(error => console.error(error))
         }
     }, [user?.id])
 

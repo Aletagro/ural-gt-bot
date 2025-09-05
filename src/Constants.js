@@ -455,7 +455,11 @@ const Constants = {
     ],
     deathFaction: [
         "Flesh-eater Courts",
+        "The Equinox Feast",
+        "The Knights of New Summercourt",
         "Nighthaunt",
+        "The Eternal Nightmare",
+        "The Clattering Procession",
         "Ossiarch Bonereapers",
         "Soulblight Gravelords",
         "Knights of the Crimson Keep",
@@ -478,6 +482,27 @@ const Constants = {
         "Trugg's Troggherd",
         "Da King's Gitz",
         "Droggz's Gitmob"
+    ],
+    orderFaction: [
+        'Cities of Sigmar',
+        'Daughters of Khaine',
+        'The Croneseer’s Pariahs',
+        'Fyreslayers',
+        'Lofnir Drothkeepers',
+        'Idoneth Deepkin',
+        'Wardens of the Chorrileum',
+        'The First Phalanx of Ionrach',
+        'Kharadron Overlords',
+        'Grundstok Expeditionary Force',
+        "The Magnate's Crew",
+        'Pioneer Outpost',
+        'Lumineth Realm-lords',
+        'Stormcast Eternals',
+        'Draconith Skywing',
+        'Ruination Brotherhood',
+        'Heroes of the First-Forged',
+        'Sylvaneth',
+        'The Evergreen Hunt'
     ],
     tournamentBattleplans: [
         {

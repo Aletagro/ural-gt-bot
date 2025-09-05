@@ -1,3 +1,46 @@
 #title {
     padding: 8px 0px;
 }
+#buttonContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 16px;
+}
+#listContainer {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+}
+#button {
+    display: block;
+    padding: 0;
+    border: none;
+    text-align: start;
+}
+#image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 4px;
+}
+#textContainer {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    padding-left: 8px;
+    padding-bottom: 4px;
+    color: white;
+    background: #00000030;
+    width: 100%;
+}
+#text {
+    color: white;
+    font-size: 16px;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    line-height: 1.5;
+    max-height: 3em;
+}
+
