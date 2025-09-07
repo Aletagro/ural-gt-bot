@@ -123,8 +123,8 @@ const Registration = () => {
     useEffect(() => {
         if (!player.isRequested) {
             player.isRequested = true
-            fetch(`https://aoscom.online/players/player/?tg_id=${530569849}`)
-            // fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
+            // fetch(`https://aoscom.online/players/player/?tg_id=${530569849}`)
+            fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.tgId) {
