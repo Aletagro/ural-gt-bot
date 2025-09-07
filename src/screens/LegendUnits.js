@@ -1,6 +1,6 @@
 import React from 'react'
 import {useLocation} from 'react-router-dom'
-import {unitsSortesByType} from '../utilities/utils'
+import {unitsSortesByType, getUnitsRowRightText} from '../utilities/utils'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Accordion from '../components/Accordion'
@@ -14,7 +14,7 @@ const LegendUnits = () => {
     const renderRow = (unit) => <Row
         key={unit?.id}
         title={unit?.name}
-        rightText={unit?.points ? `${unit?.points} pts` : undefined}
+        rightText={getUnitsRowRightText(unit)}
         image={unit?.rowImage}
         navigateTo='warscroll'
         state={{unit}}

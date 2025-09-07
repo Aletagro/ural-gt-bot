@@ -27,6 +27,15 @@ const Units = () => {
         _units = unitsSortesByType(filter(map(warscrollIds, warscrollId => find(dataBase.data.warscroll, scroll => scroll.id === warscrollId)), unit => !unit.isSpearhead && (isLegendaryArmies ? true : !unit.isLegends)))
     }
 
+    const getRightText = (unit) => {
+        const isManifestation = includes(unit.referenceKeywords, 'Manifestation')
+        if (isManifestation) {
+            const manifestationInfo = find(dataBase.data.lore_ability, ability => ability.linkedWarscrollId === unit.id)
+            return `${manifestationInfo.castingValue}+/${unit.control}`
+        }
+        return unit?.points ? `${unit?.points} pts` : undefined
+    }
+
     const handleChangeExpand = useCallback((e) => {
         isCollapseUnitsTypes[e.nativeEvent.target?.innerText] = !isCollapseUnitsTypes[e.nativeEvent.target?.innerText]
         forceUpdate()
@@ -35,7 +44,7 @@ const Units = () => {
     const renderRow = (unit) => <Row
         key={unit?.id}
         title={unit?.name}
-        rightText={unit?.points ? `${unit?.points} pts` : undefined}
+        rightText={getRightText(unit)}
         image={unit?.rowImage}
         navigateTo='warscroll'
         state={{unit, allegianceId: allegiance?.id}}

@@ -1,6 +1,6 @@
 import React from 'react';
 import Constants from '../Constants'
-import {sortByName} from '../utilities/utils'
+import {sortByName, getUnitsRowRightText} from '../utilities/utils'
 import Row from '../components/Row'
 import Accordion from '../components/Accordion'
 
@@ -18,6 +18,7 @@ const Manifestations = () => {
     const renderUnit = (unit) => <Row
         key={unit.id}
         title={unit.name}
+        rightText={getUnitsRowRightText(unit)}
         image={unit?.rowImage}
         navigateTo='warscroll'
         state={{unit}}

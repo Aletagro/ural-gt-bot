@@ -1,6 +1,6 @@
 import React from 'react';
 import {useLocation} from 'react-router-dom'
-import {sortByName, replaceAsterisks} from '../utilities/utils'
+import {sortByName, replaceAsterisks, getUnitsRowRightText} from '../utilities/utils'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Ability from '../components/Ability'
@@ -31,7 +31,7 @@ const RegimentOfRenown = () => {
     const renderWarscroll = (unit) => <Row
         key={unit.id}
         title={unit.name}
-        rightText={unit?.points ? `${unit?.points} pts` : undefined}
+        rightText={getUnitsRowRightText(unit)}
         image={unit?.rowImage}
         navigateTo='warscroll'
         state={{unit}}

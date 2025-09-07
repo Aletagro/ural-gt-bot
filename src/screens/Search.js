@@ -1,6 +1,6 @@
 import React, {useState, useReducer} from 'react'
 import useDebounce from '../utilities/useDebounce'
-import {sortByName} from '../utilities/utils'
+import {sortByName, getUnitsRowRightText} from '../utilities/utils'
 import {search} from '../utilities/appState'
 import Constants from '../Constants'
 import Row from '../components/Row'
@@ -77,7 +77,7 @@ const Search = () => {
     const renderWarscroll = (unit) => <Row
         key={unit.id}
         title={unit.name}
-        rightText={unit?.points ? `${unit?.points} pts` : undefined}
+        rightText={getUnitsRowRightText(unit)}
         image={unit?.rowImage}
         navigateTo='warscroll'
         state={{unit}}
