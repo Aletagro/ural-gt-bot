@@ -302,7 +302,7 @@ const Admin = () => {
                 <button id={isChangeButtonDisabled ? Styles.disableButton : Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
                     Запарить выбранных игроков друг на друга
                 </button>
-                <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button>
+                {/* <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button> */}
             </>
         }
         <button id={!meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleFinishRound} disabled={!meta.isRoundActive}>Закончить раунд</button>
