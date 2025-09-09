@@ -70,9 +70,9 @@ const Registration = () => {
     const [modalData, setModalData] = useState({visible: false, title: ''})
 
     const isDisableButton = !name || !surname || !city
-    // if (includes(Constants.judgesIds, user?.id)) {
+    if (includes(Constants.judgesIds, user?.id)) {
         player.isJudge = true
-    // }
+    }
 
     const handleRegUser = useCallback(async () => {
         await fetch('https://aoscom.online/players/reg', {
