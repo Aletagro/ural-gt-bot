@@ -106,7 +106,7 @@ const Players = () => {
                     ? <img id={Styles.rosterIcon} src={General} alt="" />
                     : null
                 }
-                {paintChecked
+                {player.isJudge && paintChecked
                     ? <img id={Styles.rosterIcon} src={PaintChecked} alt="" />
                     : null
                 }

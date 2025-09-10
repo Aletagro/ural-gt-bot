@@ -71,6 +71,7 @@ const Admin = () => {
                 meta.isTournamentRulesShow = data.isTournamentRulesShow
                 meta.isPlayersListShow = data.isPlayersListShow
                 meta.isChallengesOpen = data.isChallengesOpen
+                meta.isRegOpen = data.isRegOpen
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -226,6 +227,21 @@ const Admin = () => {
             .catch(error => console.error(error))
     }, [handleGetMeta])
 
+    const handleChangeRegOpen = useCallback(async () => {
+        await fetch('https://aoscom.online/tournament-meta/any_state', {
+            method: 'PUT',
+            body: JSON.stringify({...meta, isRegOpen: !meta.isRegOpen}),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                handleGetMeta()
+            })
+            .catch(error => console.error(error))
+    }, [handleGetMeta])
+
     const handleSendMessage = useCallback(async () => {
         setMessage('')
         await fetch(`https://aoscom.online/messages/send_mas_message/?message=${message}`)
@@ -291,6 +307,7 @@ const Admin = () => {
         <button id={Styles.button} onClick={handleChangeTournamentRulesShow}>{meta.isTournamentRulesShow ? 'Скрыть регламент' : 'Открыть регламент для всех'}</button>
         <button id={Styles.button} onClick={handleChangePlayersListShow}>{meta.isPlayersListShow ? 'Скрыть список участников' : 'Открыть список участников для всех'}</button>
         <button id={Styles.button} onClick={handleChangeChallengesOpen}>{meta.isChallengesOpen ? 'Закрыть челленджи' : 'Открыть челленджи'}</button>
+        <button id={Styles.button} onClick={handleChangeRegOpen}>{meta.isRegOpen ? 'Закрыть регистрацию' : 'Открыть регистрацию'}</button>
         <button id={meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</button>
         {isEmpty(pairings)
             ? null
@@ -302,7 +319,7 @@ const Admin = () => {
                 <button id={isChangeButtonDisabled ? Styles.disableButton : Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
                     Запарить выбранных игроков друг на друга
                 </button>
-                {/* <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button> */}
+                <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button>
             </>
         }
         <button id={!meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleFinishRound} disabled={!meta.isRoundActive}>Закончить раунд</button>

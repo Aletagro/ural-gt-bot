@@ -53,6 +53,7 @@ const RosterEasy = ({roster, info}) => {
         <p>Regiment {index + 1}</p>
         {roster.generalRegimentIndex === index ? <p>General's regiment</p> : null}
         {map(regiment.units, renderUnit)}
+        <br/>
     </div>
 
     return <div id={Styles.container}>

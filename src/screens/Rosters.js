@@ -29,7 +29,7 @@ const Rosters = () => {
             search.rosters = sortByName(_rosters)
 
         } else {
-            search.rosters = players.rosters
+            search.rosters = sortByName(players.rosters, 'surname')
         }
         forceUpdate()
       }, [searchValue], 300

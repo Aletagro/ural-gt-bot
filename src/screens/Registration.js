@@ -169,6 +169,7 @@ const Registration = () => {
                 meta.isTournamentRulesShow = data.isTournamentRulesShow
                 meta.isPlayersListShow = data.isPlayersListShow
                 meta.isChallengesOpen = data.isChallengesOpen
+                meta.isRegOpen = data.isRegOpen
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -266,11 +267,11 @@ const Registration = () => {
 
     return <>
         <HeaderImage src={Image} alt='Core Documents' isUral />
-        {fetching.main
+        {fetching.main && meta.isRegOpen
             ? <div id={Styles.loaderContainer}>
                 <CircularProgress variant="soft"/>
             </div>
-            : player.reg || player.isJudge
+            : player.reg || player.isJudge || !meta.isRegOpen
                 ? <div id='column' className='Chapter'>
                     {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
@@ -278,7 +279,7 @@ const Registration = () => {
                         ? <Row title='Ваш ростер' navigateTo='roster' state={{isInfo: true}} />
                         : null
                     }
-                    {meta.rostersBeingAccepted
+                    {meta.rostersBeingAccepted && player.reg
                         ? <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
                         : null
                     }
@@ -293,14 +294,14 @@ const Registration = () => {
                         ? <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} />
                         :null
                     }
-                    {player.isJudge || meta.rostersBeingAccepted ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
+                    {player.isJudge || (meta.rostersBeingAccepted && player.reg) ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
                     {player.isJudge || meta.isChallengesOpen || includes(Constants.testersIds, user?.id) ? <Row title='Челленджи' navigateTo='challenges' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
                     {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Moscow GT 2025' navigateTo='tournamentRules' /> : null}
                     <Row title='Подсказка во время игры' navigateTo='help' />
-                    {meta.isRoundActive ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
-                    {meta.round ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}
+                    {meta.isRoundActive && player.reg ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
+                    {meta.round || !player.reg ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}
                     <ToastContainer />
                 </div>
                 : size(players.data) >= PLAYERS_LIMIT
