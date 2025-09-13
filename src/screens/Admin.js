@@ -124,7 +124,7 @@ const Admin = () => {
 
 
     const handleStartRound = useCallback(async () => {
-        await fetch(`https://aoscom.online/parings/update_parings/?next_round=${meta.round === 0 ? 1 : meta.round}`, {
+        await fetch(`https://aoscom.online/parings/update_parings/?next_round=${meta.round + 1}`, {
             method: 'PUT',
             body: JSON.stringify(pairings),
             headers: {
