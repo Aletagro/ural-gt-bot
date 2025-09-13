@@ -77,18 +77,18 @@ const Admin = () => {
             .catch(error => console.error(error))
     }, [])
 
-    const handleFinishRoundMeta = useCallback(async () => {
+    const handleChangeRoundActiveMeta = useCallback(async () => {
         await fetch('https://aoscom.online/tournament-meta/any_state', {
             method: 'PUT',
-            body: JSON.stringify({...meta, isRoundActive: false}),
+            body: JSON.stringify({...meta, isRoundActive: !meta.isRoundActive}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
             }
         })
             .then(() => {
+                toast.success(meta.isRoundActive ? 'Раунд окончен' : 'Раунд начался', Constants.toastParams)
                 handleGetMeta()
-                toast.success('Раунд окончен', Constants.toastParams)
             })
             .catch(error => console.error(error))
     }, [handleGetMeta])
@@ -100,10 +100,12 @@ const Admin = () => {
             .catch(error => console.error(error))
     }, [])
 
-    const handleFinishRound = useCallback(async () => {
-        handleFinishRoundMeta()
-        handleSetOppPower()
-    }, [handleFinishRoundMeta, handleSetOppPower])
+    const handleChangeRoundActive = useCallback(async () => {
+        handleChangeRoundActiveMeta()
+        if (meta.isRoundActive) {
+            handleSetOppPower()
+        }
+    }, [handleChangeRoundActiveMeta, handleSetOppPower])
 
     const handleStartRoundMeta = useCallback(async () => {
         await fetch('https://aoscom.online/tournament-meta/any_state', {
@@ -322,7 +324,7 @@ const Admin = () => {
                 <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button>
             </>
         }
-        <button id={!meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleFinishRound} disabled={!meta.isRoundActive}>Закончить раунд</button>
+        <button id={Styles.button} onClick={handleChangeRoundActive}>{meta.isRoundActive ? 'Закончить раунд' : 'Начать раунд'}</button>
         {renderSendMessage()}
         <ToastContainer />
     </div>
