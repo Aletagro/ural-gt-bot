@@ -153,8 +153,8 @@ ${roster.points.all}/${roster.pointsLimit} Pts
             if (unit.hasOwnProperty(key)) {
                 acc[key] = unit[key];
             }
-            return acc;
-        }, {});
+            return acc
+        }, {})
     }
 
     const getShortUnits = (units = [], keys) => {

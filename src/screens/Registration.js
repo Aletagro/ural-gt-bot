@@ -9,7 +9,7 @@ import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Modal from '../components/Modal'
-import Image from '../images/MGT.png'
+import Image from '../images/IceHammer.png'
 
 import size from 'lodash/size'
 import includes from 'lodash/includes'
@@ -35,30 +35,20 @@ const cities = [
     'Казань',
     'Москва',
     'Санкт-Петербург',
-    'Чебоксары',
-    'Самара',
-    'Тверь',
-    'Тула',
     'Краснодар',
-    'Орёл',
     'Тюмень',
-    'Тула',
-    'Зеленоград',
     'Ханты-Мансийск',
-    'Череповец',
     'Томск',
-    'Воронеж',
-    'Коломна',
-    'Ярославль',
     'Новочеркасск',
     'Улан-Удэ',
-    'Минск',
     'Ижевск',
-    'Волгоград',
-    'Новый Уренгой'
+    'Новый Уренгой',
+    'Кемерово',
+    'Омск',
+    'Барнаул'
 ]
 
-const PLAYERS_LIMIT = 120
+const PLAYERS_LIMIT = 80
 
 const Registration = () => {
     // eslint-disable-next-line
@@ -211,13 +201,18 @@ const Registration = () => {
         forceUpdate()
     }
 
+    const handleClickGuest = () => {
+        player.isGuest = true
+        forceUpdate()
+    }
+
     const renderModalConent = () => <div id={Styles.modal}>
         <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
         <button id={Styles.modalButton} onClick={handleDrop}>Да</button>
     </div>
 
     const renderRegForm = () => <div>
-        <h2 id={Styles.title}>Регистрация на Moscow GT 2025</h2>
+        <h2 id={Styles.title}>Регистрация на IceHammer 2025</h2>
         <FloatingLabelInput
             style={inputStyle}
             onChange={handleChangeName}
@@ -249,6 +244,11 @@ const Registration = () => {
                 Зарегистрироваться
             </button>
         </div>
+        <div id={Styles.buttonContainer}>
+            <button id={Styles.regButton} onClick={handleClickGuest}>
+                Войти как гость
+            </button>
+        </div>
     </div>
 
     const renderPlayersLimitStub = () => <div>
@@ -271,7 +271,7 @@ const Registration = () => {
             ? <div id={Styles.loaderContainer}>
                 <CircularProgress variant="soft"/>
             </div>
-            : player.reg || player.isJudge || !meta.isRegOpen
+            : player.reg || player.isJudge || !meta.isRegOpen || player.isGuest
                 ? <div id='column' className='Chapter'>
                     {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
@@ -284,9 +284,9 @@ const Registration = () => {
                         : null
                     }
                     {meta.isRostersShow || player.isJudge ? <Row title='Ростера' navigateTo='rosters' /> : null}
-                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Moscow GT 2025', round: meta.round}} /> : null}
+                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'IceHammer 2025', round: meta.round}} /> : null}
                     {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
-                    {player.reg && meta.round === 5 && !player.sport_voted
+                    {player.reg && meta.round === 6 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
                         : null
                     }
@@ -295,10 +295,10 @@ const Registration = () => {
                         :null
                     }
                     {player.isJudge || (meta.rostersBeingAccepted && player.reg) ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
-                    {player.isJudge || meta.isChallengesOpen || includes(Constants.testersIds, user?.id) ? <Row title='Челленджи' navigateTo='challenges' /> : null}
+                    {player.isJudge || meta.isChallengesOpen ? <Row title='Челленджи' navigateTo='challenges' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
-                    {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Moscow GT 2025' navigateTo='tournamentRules' /> : null}
+                    {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент IceHammer 2025' navigateTo='tournamentRules' /> : null}
                     <Row title='Подсказка во время игры' navigateTo='help' />
                     {meta.isRoundActive && player.reg ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     {meta.round || !player.reg ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}

@@ -11,6 +11,7 @@ import Styles from './styles/Roster.module.css'
 const dataBase = require('../dataBase.json')
 
 const RosterEasy = ({roster, info}) => {
+    const points = roster.points || {}
     let otherEnhancements = []
     const otherEnhancementsGroups = filter(dataBase.data.ability_group, (item) => item.factionId === roster.allegianceId && item.abilityGroupType === 'otherEnhancements')
     if (size(otherEnhancementsGroups)) {
@@ -59,15 +60,15 @@ const RosterEasy = ({roster, info}) => {
     return <div id={Styles.container}>
         <p>Grand Alliance: {roster.grandAlliance}</p>
         <p>Faction: {roster.allegiance}</p>
-        <p>Battle Formation: {roster.battleFormation}</p>
+        <p>Battle Formation: {roster.battleFormation}{points.battleFormation ? ` (${points.battleFormation} points)` : null}</p>
         <p>Battle Tactics Cards: {get(roster, 'tactics[0]', '')}{size(roster.tactics) === 2 ? ` and ${get(roster, 'tactics[1]', '')}` : ''}</p>
         <p>Drops: {info.drops}</p>
         {size(roster.auxiliaryUnits) ? <p>Auxiliaries: {size(roster.auxiliaryUnits)}</p> : null}
         <br/>
-        {roster.spellsLore ? <p>Spell Lore: {roster.spellsLore}</p> : null}
-        {roster.prayersLore ? <p>Prayer Lore: {roster.prayersLore}</p> : null}
-        {roster.manifestationLore ? <p>Manifestation Lore: {roster.manifestationLore}</p> : null}
-        {roster.factionTerrain ? <p>Faction Terrain: {roster.factionTerrain}</p> : null}
+        {roster.spellsLore ? <p>Spell Lore: {roster.spellsLore}{points.spellsLore ? ` (${points.spellsLore} points)` : null}</p> : null}
+        {roster.prayersLore ? <p>Prayer Lore: {roster.prayersLore}{points.prayersLore ? ` (${points.prayersLore} points)` : null}</p> : null}
+        {roster.manifestationLore ? <p>Manifestation Lore: {roster.manifestationLore}{points.manifestations ? ` (${points.manifestations} points)` : null}</p> : null}
+        {roster.factionTerrain ? <p>Faction Terrain: {roster.factionTerrain}{points.terrain ? ` (${points.terrain} points)` : null}</p> : null}
         <hr/>
         {map(roster.regiments, renderRegiment)}
         <hr/>
@@ -89,7 +90,7 @@ const RosterEasy = ({roster, info}) => {
             : null
         }
         <p>Wounds: {info.wounds}</p>
-        <p>{roster.points?.all}/{roster.pointsLimit} Pts</p>
+        <p>{points.all}/{roster.pointsLimit} Pts</p>
     </div>
 }
 

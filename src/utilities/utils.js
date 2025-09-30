@@ -12,6 +12,7 @@ import split from 'lodash/split'
 import filter from 'lodash/filter'
 import indexOf from 'lodash/indexOf'
 import forEach from 'lodash/forEach'
+import isEmpty from 'lodash/isEmpty'
 import replace from 'lodash/replace'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
@@ -81,6 +82,8 @@ export const getErrors = (roster) => {
     let requiredUnitsIds = []
     let hasBrokkGrungsson = false
     let heroIroncladsCount = 0
+    let heroBlackCoach = 0
+    let heroSoGBlackCoach = 0
     forEach(roster.regiments, (regiment, index) => {
         if (index === roster.generalRegimentIndex && regiment.units.length > 5) {
             errors.push("In General's Regiment you have more than 4 units")
@@ -128,6 +131,12 @@ export const getErrors = (roster) => {
             }
             if (unit.id === '8ac98757-e26f-44a3-a880-afa9856b5abc') {
                 hasBrokkGrungsson = true
+            }
+            if (unit.id === 'b6fbb49e-b0c7-417a-8a80-bb95dc344e4f') {
+                heroBlackCoach += 1
+            }
+            if (unit.id === '5bedefb3-4a40-4b3a-9c9d-4e86d97d9c6f') {
+                heroSoGBlackCoach += 1
             }
             if (includes(roster.requiredUnitsIds, unit.id)) {
                 requiredUnitsIds.push(unit.id)
@@ -191,6 +200,12 @@ export const getErrors = (roster) => {
         if (unit.id === '8ac98757-e26f-44a3-a880-afa9856b5abc') {
             hasBrokkGrungsson = true
         }
+        if (unit.id === 'b6fbb49e-b0c7-417a-8a80-bb95dc344e4f') {
+            heroBlackCoach += 1
+        }
+        if (unit.id === '5bedefb3-4a40-4b3a-9c9d-4e86d97d9c6f') {
+            heroSoGBlackCoach += 1
+        }
     })
     forEach(unitsNames, unitsName => {
         if (startsWith(unitsName, 'Scourge of Ghyran ')) {
@@ -235,6 +250,15 @@ export const getErrors = (roster) => {
         }
         if (heroIroncladsCount && hasBrokkGrungsson) {
             errors.push('You cannot include Brokk Grungsson and Arkanaut Ironclad (Hero) in the same army')
+        }
+    }
+    // В АоРе The Clattering Procession можно иметь только одну геройскую Black Coach
+    if (roster.allegianceId === '6f6c097c-91af-4684-a487-2e7402fdb990') {
+        if (heroBlackCoach > 1) {
+            errors.push('You can only have 1 Black Coach (Hero) in your army')
+        }
+        if (heroSoGBlackCoach > 1) {
+            errors.push('You can only have 1 Scourge of Ghyran Black Coach (Hero) in your army')
         }
     }
     return errors
@@ -908,4 +932,24 @@ export const getUnitsRowRightText = (unit) => {
         }
     }
     return unit?.points ? `${unit?.points} pts` : undefined
+}
+
+export const checkForOnlyOneUnit = (options, unit) => {
+    let onlyOne = false
+    forEach(options, option => {
+        if (option.requiredWarscrollId && option.requiredWarscrollId === unit.id) {
+            onlyOne = true
+        }
+    })
+    return {...unit, onlyOne}
+}
+
+export const checkForOnlyOneInRegiment = (regiment, alliganceId) => {
+    const regimentOptions = dataBase.data.warscroll_regiment_option.filter(({warscrollId, requiredRosterFactionKeywordId}) => warscrollId === regiment.heroId && (requiredRosterFactionKeywordId ? requiredRosterFactionKeywordId === alliganceId : true))
+    const regimentOptionsOne = regimentOptions.filter(option => option.childQuantity === 'one' || option.childQuantity === 'zeroToOne')
+    if (isEmpty(regimentOptionsOne)) {
+        return regiment
+    }
+    const units = map(regiment.units, unit => checkForOnlyOneUnit(regimentOptionsOne, unit))
+    return {...regiment, units}
 }

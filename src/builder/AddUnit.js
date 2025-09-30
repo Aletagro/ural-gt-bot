@@ -117,10 +117,10 @@ const AddUnit = () => {
                     } else {
                         // находим кейворды обязательных опций
                         const requiredKeywordId = dataBase.data.warscroll_regiment_option_required_keyword.find(keyword => keyword.warscrollRegimentOptionId === option.id)?.keywordId
-                        const warscrollIds =  dataBase.data.warscroll_keyword.filter(warscrollKeyword => warscrollKeyword.keywordId === requiredKeywordId)
+                        const warscrollIds = dataBase.data.warscroll_keyword.filter(warscrollKeyword => warscrollKeyword.keywordId === requiredKeywordId)
                         // находим кейворды исключающих опций
                         const excludedKeywordId = dataBase.data.warscroll_regiment_option_excluded_keyword.find(keyword => keyword.warscrollRegimentOptionId === option.id)?.keywordId
-                        const excludedKeyword =  dataBase.data.keyword.find(keyword => keyword.id === excludedKeywordId)?.name
+                        const excludedKeyword = dataBase.data.keyword.find(keyword => keyword.id === excludedKeywordId)?.name
                         const warscrolls = warscrollIds.map(({warscrollId}) => {
                             const _warscroll = allUnits.find(warscroll => warscroll.id === warscrollId &&
                                 !unitsInRegimentIds.find(id => id === warscroll.id) &&
@@ -159,6 +159,17 @@ const AddUnit = () => {
             const heroIronclad = find(dataBase.data.warscroll, ['id', '816d2c52-aacc-4f1d-bf50-320665911b97'])
             if (heroIronclad) {
                 units.push(heroIronclad)
+            }
+        }
+        // У АоРа The Clattering Procession героем может быть Black Coach
+        if (alliganceId === '6f6c097c-91af-4684-a487-2e7402fdb990') {
+            const heroBlackCoach = find(dataBase.data.warscroll, ['id', 'b6fbb49e-b0c7-417a-8a80-bb95dc344e4f'])
+            if (heroBlackCoach) {
+                units.push(heroBlackCoach)
+            }
+            const heroSoGBlackCoach = find(dataBase.data.warscroll, ['id', '5bedefb3-4a40-4b3a-9c9d-4e86d97d9c6f'])
+            if (heroSoGBlackCoach) {
+                units.push(heroSoGBlackCoach)
             }
         }
         hasPotentialLegends = setHasPonentialLegends(units)

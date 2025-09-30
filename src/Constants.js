@@ -506,28 +506,36 @@ const Constants = {
     ],
     tournamentBattleplans: [
         {
-            "id": "bcb1e9cb-fc58-4ebc-b8b1-5419dec6d91b",
-            "title": "Linked Ley Lines"
+            "id": "0958926a-1faa-4ee0-a349-5d92fddb3b1d",
+            "title": "Roiling Roots"
         },
         {
             "id": "667bd7d9-206b-4479-bb55-20c0214dd95f",
             "title": "Surge of Slaughter"
         },
         {
-            "id": "d87f219f-f8e9-4ce9-933f-2f64b4201019",
-            "title": "Lifecycle"
+            "id": "bcb1e9cb-fc58-4ebc-b8b1-5419dec6d91b",
+            "title": "Linked Ley Lines"
         },
         {
-            "id": "74282134-76f5-47cf-8c1b-c8e79053b465",
-            "title": "Creeping Corruption"
+            "id": "20f6d702-b151-4871-b0f6-6bcebcb929d8",
+            "title": "Noxious Nexus"
         },
         {
             "id": "a0cd43c2-f489-42e6-bac2-dfdfa294ba8a",
             "title": "Bountiful Equinox"
-        }
+        },
+        {
+            "id": "d87f219f-f8e9-4ce9-933f-2f64b4201019",
+            "title": "Lifecycle"
+        },
+        {
+            "id": "c03fa51c-d43f-4078-8f5a-197155b0cded",
+            "title": "Grasp of Thorns"
+        },
     ],
     myTgId: 530569849,
-    judgesIds: [306287992, 530569849, 615996874],
+    judgesIds: [200821933, 530569849],
     testersIds: [210233387, 200821933]
 }
 
