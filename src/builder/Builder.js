@@ -325,7 +325,7 @@ const Builder = () => {
         {battleFormations.length
             ? <button id={roster.battleFormation ? Styles.secondAddButton : Styles.addButton} onClick={handleChooseEnhancement('Battle Formation', 'battleFormation', battleFormations)}>
                 {roster.battleFormation
-                    ? `Battle Formation : ${roster.battleFormation}${roster.points?.battleFormation ? ` (${roster.points?.battleFormation}${Constants.noBreakSpace}pts)` : null}`
+                    ? `Battle Formation : ${roster.battleFormation}${Boolean(roster.points?.battleFormation) ? ` (${roster.points?.battleFormation}${Constants.noBreakSpace}pts)` : ''}`
                     : 'Choose Battle Formation'
                 }
             </button>
