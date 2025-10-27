@@ -93,6 +93,12 @@ const Registration = () => {
             .catch(error => console.error(error))
       }, [handleRegUser])
 
+    const handleSendMessage = useCallback(async () => {
+        const message = `${player.info.surname} ${player.info.name} отказался от участия в турнире`
+        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${200821933}&message=${message}`)
+            .catch(error => console.error(error))
+      }, [])
+
     const handleDrop = useCallback(async () => {
         handleCloseModal()
         await fetch(`https://aoscom.online/players/?tg_id=${user?.id}`, {
@@ -106,9 +112,10 @@ const Registration = () => {
                 player.isDrop = true
                 player.reg = false
                 forceUpdate()
+                handleSendMessage()
             })
             .catch(error => console.error(error))
-      }, [user?.id])
+      }, [user?.id, handleSendMessage])
 
     useEffect(() => {
         if (!player.isRequested) {

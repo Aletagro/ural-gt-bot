@@ -34,6 +34,9 @@ const Header = () => {
         } else if (pathname === '/rosters') {
             search.rostersValue = ''
             search.rosters = []
+        } else if (pathname === '/players' || pathname === '/challenges') {
+            search.playersValue = ''
+            search.players = []
         } else if (pathname === '/units') {
             forEach(Constants.defaultIsCollapseUnitsTypes, clearCollapseUnitsType)
         } else if (pathname === '/regimentOfRenownList') {

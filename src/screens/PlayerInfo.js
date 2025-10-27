@@ -166,7 +166,7 @@ const PlayerInfo = () => {
         <FloatingLabelInput
             style={inputStyle}
             onChange={handleChangeMessage}
-            label='Cообщение игроку (то бота)'
+            label='Cообщение игроку (от бота)'
             value={message}
         />
         <button id={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</button>
