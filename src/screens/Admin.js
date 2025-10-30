@@ -72,6 +72,7 @@ const Admin = () => {
                 meta.isPlayersListShow = data.isPlayersListShow
                 meta.isChallengesOpen = data.isChallengesOpen
                 meta.isRegOpen = data.isRegOpen
+                meta.battleplan = data.battleplan
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -258,6 +259,25 @@ const Admin = () => {
         setMessage(e.target.value)
     }
 
+    const handleSetBattleplan = useCallback(async (battleplan) => {
+        await fetch('https://aoscom.online/tournament-meta/any_state', {
+            method: 'PUT',
+            body: JSON.stringify({...meta, battleplan}),
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
+            .then(() => {
+                handleGetMeta()
+            })
+            .catch(error => console.error(error))
+    }, [handleGetMeta])
+
+    const handleClickBattleplan = (battleplan) => () => {
+        handleSetBattleplan(battleplan)
+    }
+
     const renderPlayer = (player, table, isFirst) => {
         const playerArmy = JSON.parse(player?.roster_stat)?.allegiance
         const isChecked = find(playersForChange, p => p[1] === player?.id)
@@ -298,6 +318,15 @@ const Admin = () => {
         <button id={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</button>
     </div>
 
+    const renderBattleplan = (battleplan) =>
+        <div
+            key={battleplan.id}
+            id={meta.battleplan === battleplan.title ? Styles.activeBattleplan : Styles.battleplan}
+            onClick={handleClickBattleplan(battleplan.title)}
+        >
+            {battleplan.title}
+        </div>
+
     return <div id='column' className='Chapter'>
         <b id={Styles.text}>Состояние турнира</b>
         <p id={Styles.text}>Статус: {setTournamentStatus(meta.isRoundActive, meta.round)}</p>
@@ -326,6 +355,11 @@ const Admin = () => {
         }
         <button id={Styles.button} onClick={handleChangeRoundActive}>{meta.isRoundActive ? 'Закончить раунд' : 'Начать раунд'}</button>
         {renderSendMessage()}
+        <hr/>
+        <b id={Styles.text}>Установить активную миссию</b>
+        <div id={Styles.battleplansContainer}>
+            {map(Constants.tournamentBattleplans, renderBattleplan)}
+        </div>
         <ToastContainer />
     </div>
 }

@@ -167,6 +167,7 @@ const Registration = () => {
                 meta.isPlayersListShow = data.isPlayersListShow
                 meta.isChallengesOpen = data.isChallengesOpen
                 meta.isRegOpen = data.isRegOpen
+                meta.battleplan = data.battleplan
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -292,7 +293,8 @@ const Registration = () => {
                     }
                     {meta.isRostersShow || player.isJudge ? <Row title='Ростера' navigateTo='rosters' /> : null}
                     {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'IceHammer 2025', round: meta.round}} /> : null}
-                    {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
+                    {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='icePlayers' /> : null}
+                    {/* {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null} */}
                     {player.reg && meta.round === 6 && !player.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
                         : null

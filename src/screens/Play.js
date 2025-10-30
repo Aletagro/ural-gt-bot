@@ -34,7 +34,7 @@ const Play = () => {
     const [isFinished, setIsFinished] = useState(false)
     const [info, setInfo] = useState()
     const [minorWin, setMinorWin] = useState(null)
-    const battleplan = Constants.tournamentBattleplans[meta.round - 1]
+    const battleplan = find(Constants.tournamentBattleplans, ['title', meta.battleplan])
     const disableButton = !firstPlayer || !secondPlayer || (firstPlayer === secondPlayer ? isNull(minorWin) : false)
 
     useEffect(() => {

@@ -49,3 +49,26 @@
     font-family: 'Minion Pro Bold';
     margin-left: 16px;
 }
+
+#battleplansContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+    width: 100%;
+}
+
+#battleplan {
+    background: rgb(46, 46, 49);
+    color: white;
+    border-radius: 4px;
+    padding: 6px;
+    text-align: center;
+}
+
+#activeBattleplan {
+    background: rgb(201, 200, 199);
+    color: black;
+    border-radius: 4px;
+    padding: 6px;
+    text-align: center;
+}

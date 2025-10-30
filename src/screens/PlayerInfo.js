@@ -27,7 +27,12 @@ const PlayerInfo = () => {
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const {player} = useLocation().state
     const rosterInfo = player.roster_stat ? JSON.parse(player.roster_stat) : {}
-    const roster = player.roster ? JSON.parse(player.roster) : undefined
+    let roster = player.roster
+        ? player.roster
+        : find(players?.data, ['id', player.id])?.roster
+    if (roster) {
+        roster = JSON.parse(roster)
+    }
     const [modalData, setModalData] = useState({visible: false, title: ''})
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(player?.status))

@@ -34,7 +34,7 @@ const Header = () => {
         } else if (pathname === '/rosters') {
             search.rostersValue = ''
             search.rosters = []
-        } else if (pathname === '/players' || pathname === '/challenges') {
+        } else if (pathname === '/players' || pathname === '/icePlayers' || pathname === '/challenges') {
             search.playersValue = ''
             search.players = []
         } else if (pathname === '/units') {

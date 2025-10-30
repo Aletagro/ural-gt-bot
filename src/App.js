@@ -8,6 +8,7 @@ import AppendixRules from './screens/AppendixRules'
 import Photovalidation from './screens/Photovalidation'
 import Challenges from './screens/Challenges'
 import Players from './screens/Players'
+import IcePlayers from './screens/IcePlayers'
 import PlayerInfo from './screens/PlayerInfo'
 import Rosters from './screens/Rosters'
 import Rounds from './screens/Rounds'
@@ -76,6 +77,7 @@ function App() {
       <Route path={'photovalidation'} element={<Photovalidation />} />
       <Route path={'challenges'} element={<Challenges />} />
       <Route path={'players'} element={<Players />} />
+      <Route path={'icePlayers'} element={<IcePlayers />} />
       <Route path={'playerInfo'} element={<PlayerInfo />} />
       <Route path={'rosters'} element={<Rosters />} />
       <Route path={'rounds'} element={<Rounds />} />
