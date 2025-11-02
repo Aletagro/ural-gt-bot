@@ -21,7 +21,7 @@ const lastColumnValues = {
 const Players = () => {
     const navigate = useNavigate()
     const [searchValue, setSearchValue] = useState(search.playersValue)
-    const [lastColumn, setLastColumn] = useState('ИО')
+    const [lastColumn, setLastColumn] = useState('ТО')
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
@@ -65,11 +65,11 @@ const Players = () => {
     }
 
     const handleChangeLastColumn = () => {
-        const newValue = lastColumn === 'ИО'
+        const newValue = lastColumn === 'ТО'
             ? 'Paint'
             : lastColumn === 'Paint'
                 ? 'Sport'
-                : 'ИО'
+                : 'ТО'
         setLastColumn(newValue)
     }
 
@@ -103,7 +103,7 @@ const Players = () => {
     const renderPlayer = (player, index) => {
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
-            {renderRow(player.place, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.final_formula, player[lastColumnValues[lastColumn]], index % 2, player.roster, player.paint_checked)}
+            {renderRow(player.place, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.final_formula, player[lastColumnValues[lastColumn]] || player.tp_sum, index % 2, player.roster, player.paint_checked)}
         </button>
     }
 
