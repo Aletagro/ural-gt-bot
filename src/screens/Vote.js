@@ -40,7 +40,7 @@ const Vote = () => {
     }
 
     if (!isPaint) {
-        opponents = map([1, 2, 3, 4, 5], getOpponent)
+        opponents = map([1, 2, 3, 4, 5, 6], getOpponent)
     }
 
     const handleChangeResult = (index) => (e) => {
