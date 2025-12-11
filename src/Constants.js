@@ -533,9 +533,13 @@ const Constants = {
             "id": "c03fa51c-d43f-4078-8f5a-197155b0cded",
             "title": "Grasp of Thorns"
         },
+        {
+            "id": "6b661b8d-a068-44bd-8ca2-b22375aa54a9",
+            "title": "Cyclic Shifts"
+        },
     ],
     myTgId: 530569849,
-    judgesIds: [200821933, 530569849, 589760439],
+    judgesIds: [530569849],
     testersIds: [210233387, 200821933]
 }
 

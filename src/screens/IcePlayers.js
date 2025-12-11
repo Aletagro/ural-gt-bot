@@ -103,7 +103,7 @@ const Players = () => {
     const renderPlayer = (player, index) => {
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
-            {renderRow(player.place, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.final_formula, player[lastColumnValues[lastColumn]] || player.tp_sum, index % 2, player.roster, player.paint_checked)}
+            {renderRow(player.place, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.final_formula, player[lastColumnValues[lastColumn]] || (player[lastColumnValues[lastColumn]] === 0 ? 0 : player.tp_sum), index % 2, player.roster, player.paint_checked)}
         </button>
     }
 

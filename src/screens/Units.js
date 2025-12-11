@@ -31,7 +31,9 @@ const Units = () => {
         const isManifestation = includes(unit.referenceKeywords, 'Manifestation')
         if (isManifestation) {
             const manifestationInfo = find(dataBase.data.lore_ability, ability => ability.linkedWarscrollId === unit.id)
-            return `${manifestationInfo.castingValue}+/${unit.control}`
+            if (manifestationInfo) {
+                return `${manifestationInfo.castingValue}+/${unit.control}`
+            }
         }
         return unit?.points ? `${unit?.points} pts` : undefined
     }
