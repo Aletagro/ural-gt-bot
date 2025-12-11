@@ -28,7 +28,7 @@ const TournamentRules = () => {
         <button key={battleplan.id} id={Styles.battleplan} onClick={handleClickBattleplan(battleplan)}>{battleplan?.title}</button>
 
     return <div id='column' className='Chapter'>
-        <p id={Styles.text}>Формат турнира: 2000 очков, Battlepack из General Handbook 2025: Pitched Battles 2025-26. Турнир проходит в шесть раундов по швейцарской системе.</p>
+        <p id={Styles.text}>Формат турнира: 2000 очков, Battlepack из General Handbook 2025: Pitched Battles 2025-26. Турнир проходит в пять раундов по швейцарской системе.</p>
         <p id={Styles.text}>Место проведения турнира: г. Екатеринбург.</p>
         <p id={Styles.text}>Заморозка правил (выходящие книги, FAQ и так далее): 8 марта 2026 включительно. К турниру допускаются все армии, на которые будут обновления в официальном приложении к этому времени.</p>
         <p id={Styles.text}>Взнос на турнир составит 4 000 рублей</p>
