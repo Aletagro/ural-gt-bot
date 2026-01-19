@@ -67,7 +67,7 @@ const Constants = {
             abilityKeywordsName: 'lore_ability_keyword',
             abilityIdName: 'loreAbilityId',
             includesTexts: ['Lore of', 'Spell Lore', 'Arcane'],
-            excludedTexts: ['Lore of the Abyss', 'Lore of Virulence']excludedTexts: ['Lore of the Abyss']
+            excludedTexts: ['Lore of the Abyss', 'Lore of Virulence']
         },
         {
             title: 'Prayer Lores',
