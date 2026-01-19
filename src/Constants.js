@@ -67,7 +67,7 @@ const Constants = {
             abilityKeywordsName: 'lore_ability_keyword',
             abilityIdName: 'loreAbilityId',
             includesTexts: ['Lore of', 'Spell Lore', 'Arcane'],
-            excludedTexts: ['Lore of the Abyss']
+            excludedTexts: ['Lore of the Abyss', 'Lore of Virulence']excludedTexts: ['Lore of the Abyss']
         },
         {
             title: 'Prayer Lores',
@@ -77,7 +77,7 @@ const Constants = {
             abilityGroupType: undefined,
             abilityKeywordsName: 'lore_ability_keyword',
             abilityIdName: 'loreAbilityId',
-            includesTexts: ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Bendictions', 'Gifts']
+            includesTexts: ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Bendictions', 'Gifts', 'Lore of Virulence']
         }
     ],
     coreDocumentsId: 'e918110c-418e-4a50-90bc-484581a0fa5c',

@@ -64,6 +64,9 @@ const AddUnit = () => {
     if (isRegimentsOfRenown) {
         const regimentsOfRenownKeywords = dataBase.data.ability_group_regiment_of_renown_permitted_faction_keyword.filter(keyword => keyword.factionKeywordId === alliganceId)
         units = regimentsOfRenownKeywords.map(keyword => dataBase.data.ability_group.find(group => group.id === keyword.abilityGroupId))
+        if (!showLegends) {
+            units = filter(units, unit => !unit.isLegends)
+        }
     } else if (isAuxiliary) {
         units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && (showLegends ?  true : !unit.isLegends) && unit.points)
         units = unitsSortesByType(units)
