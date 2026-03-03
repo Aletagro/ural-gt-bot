@@ -309,7 +309,7 @@ const Registration = () => {
                         ? <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} />
                         :null
                     }
-                    {player.isJudge || (meta.rostersBeingAccepted && player.reg) ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
+                    {/* {player.isJudge || (meta.rostersBeingAccepted && player.reg) ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null} */}
                     {player.isJudge || meta.isChallengesOpen ? <Row title='Челленджи' navigateTo='challenges' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />

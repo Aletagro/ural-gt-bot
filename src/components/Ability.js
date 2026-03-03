@@ -2,7 +2,7 @@ import React from 'react'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
-import {replaceAsterisks} from '../utilities/utils'
+import {replaceAsterisks, removeAsterisks} from '../utilities/utils'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -41,7 +41,7 @@ ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), 
     return <>
         <button id={Styles.ability} onClick={handlleClick} style={{border: `1px solid ${borderColor}`}}>
             <div id={Styles.header} style={{background: borderColor}}>
-                <b id={Styles.headerText}>{ability.phaseDetails}</b>
+                <b id={Styles.headerText}>{removeAsterisks(ability.phaseDetails)}</b>
                 <div>
                     {ability.cpCost && !isRegimentOfRenown ? <b id={Styles.cpCost}>{ability.cpCost}&nbsp;CP</b> : null}
                     {castingValue

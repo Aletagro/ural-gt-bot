@@ -1,6 +1,6 @@
-import React, {useCallback, useReducer} from 'react';
+import React, {useCallback, useReducer} from 'react'
 import {useLocation} from 'react-router-dom'
-import {unitsSortesByType} from '../utilities/utils'
+import {unitsSortesByType, getUnitsRowRightText} from '../utilities/utils'
 import {isCollapseUnitsTypes} from '../utilities/appState'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
@@ -27,17 +27,6 @@ const Units = () => {
         _units = unitsSortesByType(filter(map(warscrollIds, warscrollId => find(dataBase.data.warscroll, scroll => scroll.id === warscrollId)), unit => !unit.isSpearhead && (isLegendaryArmies ? true : !unit.isLegends)))
     }
 
-    const getRightText = (unit) => {
-        const isManifestation = includes(unit.referenceKeywords, 'Manifestation')
-        if (isManifestation) {
-            const manifestationInfo = find(dataBase.data.lore_ability, ability => ability.linkedWarscrollId === unit.id)
-            if (manifestationInfo) {
-                return `${manifestationInfo.castingValue}+/${unit.control}`
-            }
-        }
-        return unit?.points ? `${unit?.points} pts` : undefined
-    }
-
     const handleChangeExpand = useCallback((e) => {
         isCollapseUnitsTypes[e.nativeEvent.target?.innerText] = !isCollapseUnitsTypes[e.nativeEvent.target?.innerText]
         forceUpdate()
@@ -46,7 +35,7 @@ const Units = () => {
     const renderRow = (unit) => <Row
         key={unit?.id}
         title={unit?.name}
-        rightText={getRightText(unit)}
+        rightText={getUnitsRowRightText(unit)}
         image={unit?.rowImage}
         navigateTo='warscroll'
         state={{unit, allegianceId: allegiance?.id}}

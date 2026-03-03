@@ -4,6 +4,7 @@ import {roster} from '../utilities/appState'
 import Ability from '../components/Ability'
 import RowImage from '../components/RowImage'
 
+import map from 'lodash/map'
 import find from 'lodash/find'
 
 import Styles from './styles/ChooseEnhancement.module.css'
@@ -38,7 +39,13 @@ const ChooseEnhancement = () => {
     }
     if (type === 'manifestationLore') {
         const lores = data.map(lore => dataBase.data.lore_ability.filter((item) => item.loreId === lore?.id))
-        const units = lores.map(lore => lore.map(spell => dataBase.data.warscroll.find(warscroll => warscroll.id === spell.linkedWarscrollId)))
+        const units = map(lores, lore => {
+            const warscrollIds = map(lore, spell => {
+                const warscrollId = find(dataBase.data.lore_ability_linked_warscroll, ['loreAbilityId', spell.id])?.warscrollId
+                return warscrollId
+            })
+            return map(warscrollIds, id => find(dataBase.data.warscroll, ['id', id]))
+        })
         _data = data.map((lore, index) => {
             return {name: lore?.name, id: lore?.id, points: lore?.points || 0, abilities: units[index]}
         })
