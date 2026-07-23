@@ -4,7 +4,7 @@ import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Constants from '../Constants'
 import {roster, navigationState} from '../utilities/appState'
-import {replaceAsterisks, getInfo, replaceQuotation, cleanBuilder} from '../utilities/utils'
+import {replaceAsterisks, getInfo, replaceQuotation, cleanBuilder, isScourgeOfGhyran} from '../utilities/utils'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -35,7 +35,7 @@ const Army = () => {
         } else {
             publicationId = publications[0]?.id
         }
-        const ruleSectionId = find(dataBase.data.rule_section, item => item.publicationId === publicationId && replaceQuotation(item.name) === replaceQuotation(allegiance.name))?.id
+        const ruleSectionId = find(dataBase.data.rule_section, item => item.publicationId === publicationId && includes(replaceQuotation(item.name), replaceQuotation(allegiance.name)))?.id
         const ruleContainerId = find(dataBase.data.rule_container, item => item.ruleSectionId === ruleSectionId)?.id
         const ruleContainerComponentId = find(dataBase.data.rule_container_component, item => item.ruleContainerId === ruleContainerId && item.contentType === 'bullets')?.id
         rosterOptions = filter(dataBase.data.bullet_point, item => item.ruleContainerComponentId === ruleContainerComponentId)
@@ -65,7 +65,7 @@ const Army = () => {
     if (size(otherEnhancements)) {
         forEach(otherEnhancements, otherEnhancement => {
             const enhancements = filter(dataBase.data.ability, (item) => item.abilityGroupId === otherEnhancement.id)
-            if (enhancements.length > 0) {
+            if (enhancements.length > 0 && !isScourgeOfGhyran(otherEnhancement.id, false, true)) {
                 items.push({title: otherEnhancement.name, withoutTitle: true, restrictionText: otherEnhancement.restrictionText, abilities: enhancements})
             }
         })

@@ -73,6 +73,7 @@ const Admin = () => {
                 meta.isChallengesOpen = data.isChallengesOpen
                 meta.isRegOpen = data.isRegOpen
                 meta.battleplan = data.battleplan
+                meta.playersLimit = data.playersLimit
                 forceUpdate()
             })
             .catch(error => console.error(error))

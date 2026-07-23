@@ -3,11 +3,13 @@ import {useNavigate} from 'react-router-dom'
 import {roster} from '../utilities/appState'
 import {getStringAfterDash} from '../utilities/utils'
 import Checkbox from '../components/Checkbox'
+import Constants from '../Constants'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
 import size from 'lodash/size'
 import filter from 'lodash/filter'
+import includes from 'lodash/includes'
 
 import Styles from './styles/BuilderChooseTacticsCard.module.css'
 
@@ -17,7 +19,7 @@ const BuilderChooseTacticsCard = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const navigate = useNavigate()
-    const tacticsCard = filter(dataBase.data.rule_container, container => container.ruleSectionId === '1f192d19-eda7-4669-a0d2-65b9465dba03' && container.containerType === 'standard')
+    const tacticsCard = filter(dataBase.data.rule_container, container => container.ruleSectionId === Constants.tacticsCardPublicationId && includes(container.title, 'Battle Tactics Card'))
 
     const handleGoBack = () => {
         navigate(-1)

@@ -4,7 +4,7 @@ import Modal from '@mui/joy/Modal'
 import ModalDialog from '@mui/joy/ModalDialog'
 import Constants from '../Constants'
 import {roster} from '../utilities/appState'
-import {getWoundsCount, getInfo, setRosterGrandAlliance} from '../utilities/utils'
+import {getWoundsCount, getInfo, setRosterGrandAlliance, isScourgeOfGhyran} from '../utilities/utils'
 import Regiment from './Regiment'
 import UnitRow from './UnitRow'
 import Row from '../components/Row'
@@ -26,7 +26,7 @@ const dataBase = require('../dataBase.json')
 
 const spellsIncludesTexts = ['Lore of', 'Spell Lore', 'Arcane']
 const spellsExcludedTexts = ['Lore of the Abyss', 'Lore of Virulence']
-const preyersIncludesTexts = ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Bendictions', 'Gifts', 'Lore of Virulence']
+const preyersIncludesTexts = ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Benedictions', 'Gifts', 'Lore of Virulence', 'Lore of the Spirit-Song', 'Proclamations']
 const pointsLimits = ['1000', '1500', '2000', '2500', '3000']
 
 const emptyRegiment = {
@@ -45,7 +45,7 @@ const Builder = () => {
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const warscrollIds = dataBase.data.warscroll_faction_keyword.filter((item) => item.factionKeywordId === _alliganceId).map(item => item.warscrollId)
     const factionTerrains = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && !unit.isLegends && unit?.referenceKeywords?.includes('Terrain'))
-    const lores = dataBase.data.lore.filter(lore => lore.factionId === _alliganceId)
+    const lores = dataBase.data.lore.filter(lore => lore.factionId === _alliganceId && !isScourgeOfGhyran(lore.publicationId))
     const spellsLores = []
     const preyersLores = []
     const manifestationsLores = dataBase.data.lore.filter(lore => lore.factionId === null)
@@ -60,11 +60,15 @@ const Builder = () => {
         }
     })
     const artefactsGroups = dataBase.data.ability_group.filter(group => group.factionId === _alliganceId && group.abilityGroupType === 'artefactsOfPower')
-    const artefacts = flatten(map(artefactsGroups, artefactsGroup => dataBase.data.ability.filter(ability => ability.abilityGroupId === artefactsGroup?.id)))
+    const artefacts = flatten(map(artefactsGroups, artefactsGroup => dataBase.data.ability.filter(ability => ability.abilityGroupId === artefactsGroup?.id && !isScourgeOfGhyran(ability.abilityGroupId, false, true))))
     const heroicTraitsGroups = dataBase.data.ability_group.filter(group => group.factionId === _alliganceId && group.abilityGroupType === 'heroicTraits')
-    const heroicTraits = flatten(map(heroicTraitsGroups, heroicTraitsGroup => dataBase.data.ability.filter(ability => ability.abilityGroupId === heroicTraitsGroup?.id)))
-    const battleFormations = dataBase.data.battle_formation.filter(formation => formation.factionId === _alliganceId)
-    const otherEnhancementsGroups = filter(dataBase.data.ability_group, (item) => item.factionId === _alliganceId && item.abilityGroupType === 'otherEnhancements')
+    const heroicTraits = flatten(map(heroicTraitsGroups, heroicTraitsGroup => dataBase.data.ability.filter(ability => ability.abilityGroupId === heroicTraitsGroup?.id && !isScourgeOfGhyran(ability.abilityGroupId, false, true))))
+    const battleFormations = dataBase.data.battle_formation.filter(formation => formation.factionId === _alliganceId && !isScourgeOfGhyran(formation.publicationId))
+    const otherEnhancementsGroups = filter(dataBase.data.ability_group, (item) =>
+        item.factionId === _alliganceId &&
+        item.abilityGroupType === 'otherEnhancements' &&
+        !isScourgeOfGhyran(item.id, false, true)
+    )
     let otherEnhancements = []
     if (size(otherEnhancementsGroups)) {
         roster.otherEnhancements = []

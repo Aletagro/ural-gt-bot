@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom'
 import {roster, builderFilters} from '../utilities/appState'
-import {unitsSortesByType, sortByName} from '../utilities/utils'
+import {unitsSortesByType, sortByName, isScourgeOfGhyran} from '../utilities/utils'
 import UnitRow from './UnitRow'
 import Checkbox from '../components/Checkbox'
 import Accordion from '../components/Accordion'
@@ -72,7 +72,13 @@ const AddUnit = () => {
         units = unitsSortesByType(units)
     } else if (heroId) {
         // определяем всех юнитов фракции
-        const allUnits = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && (showLegends ?  true : !unit.isLegends) && !includes(unit.referenceKeywords, 'Faction Terrain') && !includes(unit.referenceKeywords, 'Manifestation'))
+        const allUnits = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit =>
+            !unit.isSpearhead &&
+            (showLegends ?  true : !unit.isLegends) &&
+            (showLegends ?  true : !isScourgeOfGhyran(unit.id, true)) &&
+            !includes(unit.referenceKeywords, 'Faction Terrain') &&
+            !includes(unit.referenceKeywords, 'Manifestation')
+        )
         // определяем кейворды всех юнитов фракции
         const allUnitsKeywordsIds = allUnits.map(unit => dataBase.data.warscroll_keyword.filter(keyword => keyword.warscrollId === unit.id))
         // определяем опция реджимента героя
@@ -156,7 +162,13 @@ const AddUnit = () => {
         }
         units = unitsSortesByType(units)
     } else {
-        units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit => !unit.isSpearhead && (showLegends ?  true : !unit.isLegends) && unit.referenceKeywords.includes('Hero') && !unit.requiredPrimaryHeroWarscrollId)
+        units = warscrollIds.map(warscrollId => dataBase.data.warscroll.find(scroll => scroll.id === warscrollId)).filter(unit =>
+            !unit.isSpearhead &&
+            (showLegends ?  true : !unit.isLegends) &&
+            (showLegends ?  true : !isScourgeOfGhyran(unit.id, true)) &&
+            unit.referenceKeywords.includes('Hero') &&
+            !unit.requiredPrimaryHeroWarscrollId
+        )
         // У АоРа The Magnate's Crew героем может быть Айронклад
         if (alliganceId === '09e28194-8a37-4c3b-aaa5-8aa38bcfd9ac') {
             const heroIronclad = find(dataBase.data.warscroll, ['id', '816d2c52-aacc-4f1d-bf50-320665911b97'])

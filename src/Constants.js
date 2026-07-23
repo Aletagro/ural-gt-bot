@@ -77,11 +77,14 @@ const Constants = {
             abilityGroupType: undefined,
             abilityKeywordsName: 'lore_ability_keyword',
             abilityIdName: 'loreAbilityId',
-            includesTexts: ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Bendictions', 'Gifts', 'Lore of Virulence']
+            includesTexts: ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Benedictions', 'Gifts', 'Lore of Virulence', 'Proclamations', 'Proclamations']
         }
     ],
     coreDocumentsId: 'e918110c-418e-4a50-90bc-484581a0fa5c',
-    ghbId: '3e05b549-40a4-43e5-b0f7-5ef6d1ffdbd2',
+    ghbId: 'cf456401-f84b-4278-a63d-a4de52dde29f',
+    ghb25_26Id: '3e05b549-40a4-43e5-b0f7-5ef6d1ffdbd2',
+    sogPublicationId: '292d6e8e-a50d-4a5c-bd5f-70f85110c7f0',
+    tacticsCardPublicationId: '03e7448e-15e4-498c-b5c8-971ec5224757',
     hideChaptersIds: [
         '27931b97-5750-4600-bac4-a09dada60dcd', // Spearhead Battlepack: Sand and Bone
         '308aceba-6694-4d60-a98a-233a4d7e9702', // Spearhead Battlepack: Fire and Jade
@@ -242,7 +245,6 @@ const Constants = {
         {modificator: 2, title: 'Crit on 5+'},
         {modificator: 1, title: 'Crit on 6+'}
     ],
-    battleplansRuleSectionId: '4870769b-c759-4fa2-bc85-da79ab5d6957',
     tacticsIds: {
         Universal: 'b14bc337-1f07-47ab-853c-e7484b6b6661',
         Order: 'b2e81319-fd3c-4ee4-aae6-f3547efee8b6',
@@ -442,29 +444,44 @@ const Constants = {
         "Blades of Khorne",
         "Disciples of Tzeentch",
         "Hedonites of Slaanesh",
+        "Helsmiths of Hashut",
         "Maggotkin of Nurgle",
         "Skaven",
-        "Slaves to Darkness",
+        "Slaves to Darkness"
+    ],
+    chaosAoRs: [
         "The Great-Grand Gnawhorde",
         "Thanquol's Mutated Menagerie",
         "The Swords of Chaos",
         "Tribes of the Snow Peaks",
         "Legion of the First Prince",
         "Gorechosen Champions",
-        "The Baleful Lords"
+        "The Baleful Lords",
+        "Taar's Grand Forgehost",
+        "Ziggurat Stampede",
+        "Cycle of Corruption",
+        "The Gardeners of Nurgle",
+        "Change-Cult Uprising",
+        "The Oracles of Fate",
+        "Court of the Godlings",
+        "Decadent Host"
     ],
     deathFaction: [
         "Flesh-eater Courts",
+        "Nighthaunt",
+        "Ossiarch Bonereapers",
+        "Soulblight Gravelords"
+    ],
+    deathAoRs: [
         "The Equinox Feast",
         "The Knights of New Summercourt",
-        "Nighthaunt",
         "The Eternal Nightmare",
         "The Clattering Procession",
-        "Ossiarch Bonereapers",
-        "Soulblight Gravelords",
         "Knights of the Crimson Keep",
         "Scions of Nulahmia",
-        "Barrow Legion"
+        "Barrow Legion",
+        "The Null Myriad",
+        "The Lance of Ossia"
     ],
     destructionFaction: [
         "Bonesplitterz",
@@ -472,7 +489,9 @@ const Constants = {
         "Ironjawz",
         "Kruleboyz",
         "Ogor Mawtribes",
-        "Sons of Behemat",
+        "Sons of Behemat"
+    ],
+    destructionAoRs: [
         "The Roving Maw",
         "Krazogg’s Grunta Stampede",
         "Zoggrok's Ironmongerz",
@@ -486,60 +505,87 @@ const Constants = {
     orderFaction: [
         'Cities of Sigmar',
         'Daughters of Khaine',
-        'The Croneseer’s Pariahs',
         'Fyreslayers',
-        'Lofnir Drothkeepers',
         'Idoneth Deepkin',
+        'Kharadron Overlords',
+        'Lumineth Realm-lords',
+        'Seraphon',
+        'Stormcast Eternals',
+        'Sylvaneth'
+    ],
+    orderAoRs: [
+        'The Croneseer’s Pariahs',
+        'Zainthar Kai',
+        'Champions of the Arena',
+        'Lofnir Drothkeepers',
         'Wardens of the Chorrileum',
         'The First Phalanx of Ionrach',
-        'Kharadron Overlords',
         'Grundstok Expeditionary Force',
         "The Magnate's Crew",
         'Pioneer Outpost',
-        'Lumineth Realm-lords',
-        'Stormcast Eternals',
         'Draconith Skywing',
         'Ruination Brotherhood',
         'Heroes of the First-Forged',
-        'Sylvaneth',
-        'The Evergreen Hunt'
+        'The Evergreen Hunt',
+        'Lords of the Clan',
+        'Soulpod Guardians',
+        'Vanari Paragons',
+        'Aelementiri Conclave',
+        'The Iron March',
+        'Allies of the Free Cities'
     ],
     tournamentBattleplans: [
         {
-            "id": "0958926a-1faa-4ee0-a349-5d92fddb3b1d",
-            "title": "Roiling Roots"
+            "id": "3954f6d2-275b-4286-b1b4-a0f1af2cda16",
+            "title": "Into the Fire"
         },
         {
-            "id": "667bd7d9-206b-4479-bb55-20c0214dd95f",
-            "title": "Surge of Slaughter"
+            "id": "c702ab9c-5a67-4a49-ac8e-5d984d534453",
+            "title": "Bloodstained Coasts"
         },
         {
-            "id": "bcb1e9cb-fc58-4ebc-b8b1-5419dec6d91b",
-            "title": "Linked Ley Lines"
+            "id": "6daa5cea-a553-4308-8fd3-19494803d736",
+            "title": "Avalanche of Ash"
         },
         {
-            "id": "20f6d702-b151-4871-b0f6-6bcebcb929d8",
-            "title": "Noxious Nexus"
+            "id": "70cf4f09-d74b-4686-9482-2c2cea08e549",
+            "title": "Caverns of Slaughter"
         },
         {
-            "id": "a0cd43c2-f489-42e6-bac2-dfdfa294ba8a",
-            "title": "Bountiful Equinox"
+            "id": "00be1371-eb41-4b1b-9edb-2bda06497a99",
+            "title": "Curse of the Gnaw"
         },
         {
-            "id": "d87f219f-f8e9-4ce9-933f-2f64b4201019",
-            "title": "Lifecycle"
+            "id": "1fd64722-4d14-49ff-9a3c-b80e33173cca",
+            "title": "Seize the Embers"
         },
         {
-            "id": "c03fa51c-d43f-4078-8f5a-197155b0cded",
-            "title": "Grasp of Thorns"
+            "id": "c9b27617-d66f-4887-b432-73545c903a9b",
+            "title": "Escape From the Coast"
         },
         {
-            "id": "6b661b8d-a068-44bd-8ca2-b22375aa54a9",
-            "title": "Cyclic Shifts"
+            "id": "96248d4e-e89e-4333-9884-c99091684eb5",
+            "title": "What's Yours is Ours"
         },
+        {
+            "id": "cb20b08d-aa41-4ec3-adf4-2815abf1583a",
+            "title": "Hidden Under Ash-Clouds"
+        },
+        {
+            "id": "c470e454-1694-4da1-97bb-f6f78c8cb1ea",
+            "title": "Warped Ruins"
+        },
+        {
+            "id": "455f35ca-8686-487d-9340-30acbdefaa5c",
+            "title": "Treacherous Ground"
+        },
+        {
+            "id": "1cbe21d2-d779-43d4-82c4-f1241294f64c",
+            "title": "Power of the Realms"
+        }
     ],
     myTgId: 530569849,
-    judgesIds: [530569849],
+    judgesIds: [530569849, 306287992],
     testersIds: [210233387, 200821933]
 }
 

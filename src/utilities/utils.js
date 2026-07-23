@@ -432,6 +432,7 @@ export const getNewRound = (battleplan) => {
 }
 
 export const getInfo = (screen, allegiance) => {
+    const isAbility = screen.ruleName === 'ability'
     let abilitiesGroup = dataBase.data[screen.groupName].filter((item) => 
         item.factionId === allegiance.id &&
         item.abilityGroupType === screen.abilityGroupType &&
@@ -442,7 +443,8 @@ export const getInfo = (screen, allegiance) => {
         (screen.excludedTexts
             ? isEmpty(filter(screen.excludedTexts, text => item.name.includes(text)))
             : true
-        )
+        ) &&
+        !isScourgeOfGhyran(isAbility ? item.id : item.publicationId, false, isAbility)
     )
     if (screen.abilityGroupType === 'battleTraits') {
         abilitiesGroup = size(abilitiesGroup) === 1 ? abilitiesGroup : filter(abilitiesGroup, item => item.restrictionText)
@@ -601,11 +603,11 @@ export const getStringAfterDash = (text) => {
 
 export const setRosterGrandAlliance = (allegiance) => {
     let grandAlliance = 'Order'
-    if (includes(Constants.chaosFaction, allegiance)) {
+    if (includes([...Constants.chaosFaction, ...Constants.chaosAoRs], allegiance)) {
         grandAlliance = 'Chaos'
-    } else if (includes(Constants.deathFaction, allegiance)) {
+    } else if (includes([...Constants.deathFaction, ...Constants.deathAoRs], allegiance)) {
         grandAlliance = 'Death'
-    } else if (includes(Constants.destructionFaction, allegiance)) {
+    } else if (includes([...Constants.destructionFaction, ...Constants.destructionAoRs], allegiance)) {
         grandAlliance = 'Destruction'
     }
     roster.grandAlliance = grandAlliance
@@ -953,4 +955,15 @@ export const checkForOnlyOneInRegiment = (regiment, alliganceId) => {
     }
     const units = map(regiment.units, unit => checkForOnlyOneUnit(regimentOptionsOne, unit))
     return {...regiment, units}
+}
+
+export const isScourgeOfGhyran = (id, isWarscroll, isAbility) => {
+    let publicationId = id
+    if (isWarscroll) {
+        publicationId = find(dataBase.data.warscroll_publication, ['warscrollId', id])?.publicationId
+    } else if (isAbility) {
+        publicationId = find(dataBase.data.ability_group_publication, ['abilityGroupId', id])?.publicationId
+    }
+    const publicationGroupId = find(dataBase.data.publication_publication_group, ['publicationId', publicationId])?.publicationGroupId
+    return Constants.sogPublicationId === publicationGroupId
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState, useCallback} from 'react'
+import React, {useEffect, useReducer, useState, useCallback, useMemo} from 'react'
 import Autocomplete from '@mui/joy/Autocomplete'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -9,10 +9,11 @@ import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Modal from '../components/Modal'
-import Image from '../images/UGT.png'
+import Image from '../images/MGT.png'
 
 import size from 'lodash/size'
 import includes from 'lodash/includes'
+import findIndex from 'lodash/findIndex'
 
 import Styles from './styles/Registration.module.css'
 
@@ -51,24 +52,43 @@ const cities = [
     'Сургут',
     'Кемерево',
     'Нижний Тагил',
-    'Самара'
+    'Самара',
+    'Тула',
+    'Воронеж',
+    'Чебоксары'
 ]
-
-const PLAYERS_LIMIT = 64
 
 const Registration = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
+    // const user = {
+    //     id: 530569849
+    // }
     const user = tg.initDataUnsafe?.user
     const [name, setName] = useState(user?.first_name || '')
     const [surname, setSurname] = useState(user?.last_name || '')
     const [city, setCity] = useState('')
     const [modalData, setModalData] = useState({visible: false, title: ''})
+    const isPlayerInWaitingList = useMemo(() => {
+        const playersPositionInData = findIndex(players.data, ['tgId', user?.id])
+        return player.reg && playersPositionInData + 1 > meta.playersLimit
+    // eslint-disable-next-line
+    }, [user?.id, player.reg, players.data, meta.playersLimit])
 
     const isDisableButton = !name || !surname || !city
     if (includes(Constants.judgesIds, user?.id)) {
         player.isJudge = true
     }
+
+    const handleGetPlayers = useCallback(async () => {
+        await fetch('https://aoscom.online/players/')
+            .then(response => response.json())
+            .then(data => {
+                players.data = data
+                forceUpdate()
+            })
+            .catch(error => console.error(error))
+      }, [])
 
     const handleRegUser = useCallback(async () => {
         await fetch('https://aoscom.online/players/reg', {
@@ -79,25 +99,11 @@ const Registration = () => {
                 'Accept': "application/json, text/javascript, /; q=0.01"
             }
         })
-            .then(response => response.json())
-            .catch(error => console.error(error))
-      }, [name, surname, city, user?.id])
-
-    const handleGetPlayers = useCallback(async (withReg) => {
-        await fetch('https://aoscom.online/players/')
-            .then(response => response.json())
-            .then(data => {
-                players.data = data
-                if (withReg) {
-                    if (size(players.data) < PLAYERS_LIMIT) {
-                        handleRegUser()
-                        player.reg = true
-                    }
-                    forceUpdate()
-                }
+            .then(() => {
+                handleGetPlayers()
             })
             .catch(error => console.error(error))
-      }, [handleRegUser])
+      }, [name, surname, city, user?.id, handleGetPlayers])
 
     const handleSendMessage = useCallback(async () => {
         const message = `${player.info.surname} ${player.info.name} отказался от участия в турнире`
@@ -126,7 +132,6 @@ const Registration = () => {
     useEffect(() => {
         if (!player.isRequested) {
             player.isRequested = true
-            // fetch(`https://aoscom.online/players/player/?tg_id=${530569849}`)
             fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
                 .then(response => response.json())
                 .then(data => {
@@ -145,7 +150,6 @@ const Registration = () => {
                 })
                 .catch(error => console.error(error))
             // запрос ростеров юзера из основного приложения
-            // fetch(`https://aoscom.online/rosters_db/rosters_by_user?tg_id=${530569849}`)
             fetch(`https://aoscom.online/rosters_db/rosters_by_user?tg_id=${user?.id}`)
                 .then(response => response.json())
                 .then(data => {
@@ -156,7 +160,7 @@ const Registration = () => {
     }, [user?.id])
 
     useEffect(() => {
-        if (!players.data.length) {
+        if (!size(players.data)) {
             handleGetPlayers()
         }
     }, [handleGetPlayers])
@@ -174,6 +178,7 @@ const Registration = () => {
                 meta.isChallengesOpen = data.isChallengesOpen
                 meta.isRegOpen = data.isRegOpen
                 meta.battleplan = data.battleplan
+                meta.playersLimit = data.playersLimit
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -200,7 +205,9 @@ const Registration = () => {
     }
 
     const handleClickButton = () => {
-        handleGetPlayers(true)
+        handleRegUser()
+        player.reg = true
+        forceUpdate()
     }
 
     const handleJudgeCall = () => {
@@ -226,7 +233,7 @@ const Registration = () => {
     </div>
 
     const renderRegForm = () => <div>
-        <h2 id={Styles.title}>Регистрация на Ural GT 2026</h2>
+        <h2 id={Styles.title}>Регистрация на Moscow GT 2026</h2>
         <FloatingLabelInput
             style={inputStyle}
             onChange={handleChangeName}
@@ -265,14 +272,13 @@ const Registration = () => {
         </div>
     </div>
 
-    const renderPlayersLimitStub = () => <div>
-        <h2 id={Styles.title}>К сожалению, все места на турнире уже заняты</h2>
-        <h2 id={Styles.title}>Пожалуйста, напишите организаторам, чтобы они добавили вас в лист ожидания</h2>
+    const renderLimitWarning = () => <div id={Styles.limitWarningContainer}>
+        <h3 id={Styles.title}>Вы находитесь в листе ожидания, организаторы свяжутся с вами</h3>
     </div>
 
     if (player.isDrop) {
         return <>
-            <HeaderImage src={Image} alt='Core Documents' isUral />
+            <HeaderImage src={Image} alt='Core Documents' />
             <h2 id={Styles.title}>Вы были удалены из списка участников турнира</h2>
             <h2 id={Styles.title}>Вы сможете в любой момент подать регистрацию снова</h2>
             <button id={Styles.regButton} onClick={handleRetry}>Зарегистрироваться</button>
@@ -280,25 +286,26 @@ const Registration = () => {
     }
 
     return <>
-        <HeaderImage src={Image} alt='Core Documents' isUral />
+        <HeaderImage src={Image} alt='Core Documents' />
         {fetching.main && meta.isRegOpen
             ? <div id={Styles.loaderContainer}>
                 <CircularProgress variant="soft"/>
             </div>
             : player.reg || player.isJudge || !meta.isRegOpen || player.isGuest
                 ? <div id='column' className='Chapter'>
+                    {isPlayerInWaitingList ? renderLimitWarning() : null}
                     {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
                     {player.reg && player.roster
                         ? <Row title='Ваш ростер' navigateTo='roster' state={{isInfo: true}} />
                         : null
                     }
-                    {meta.rostersBeingAccepted && player.reg
+                    {meta.rostersBeingAccepted && player.reg && !isPlayerInWaitingList
                         ? <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
                         : null
                     }
                     {meta.isRostersShow || player.isJudge ? <Row title='Ростера' navigateTo='rosters' /> : null}
-                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Ural GT 2026', round: meta.round}} /> : null}
+                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Moscow GT 2026', round: meta.round}} /> : null}
                     {/* {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='icePlayers' /> : null} */}
                     {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
                     {player.reg && meta.round === 5 && !player.sport_voted
@@ -313,15 +320,13 @@ const Registration = () => {
                     {player.isJudge || meta.isChallengesOpen ? <Row title='Челленджи' navigateTo='challenges' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
-                    {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Ural GT 2026' navigateTo='tournamentRules' /> : null}
+                    {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Moscow GT 2026' navigateTo='tournamentRules' /> : null}
                     <Row title='Подсказка во время игры' navigateTo='help' />
                     {meta.isRoundActive && player.reg ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     {meta.round || !player.reg ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}
                     <ToastContainer />
                 </div>
-                : size(players.data) >= PLAYERS_LIMIT
-                    ? renderPlayersLimitStub()
-                    : renderRegForm()
+                : renderRegForm()
         }
         <Modal {...modalData} onClose={handleCloseModal} />
     </>

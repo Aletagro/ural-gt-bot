@@ -28,9 +28,9 @@ const RuleChapters = () => {
                 {ruleChapters && map(ruleChapters, renderRow)}
             </div>
         </>
-        : chapter.name === 'Battleplans'
+        : chapter.name === 'Battleplans 2026-27'
             ? <Battleplans id={chapter.id} />
-            : chapter.name === 'Battle Tactics 2025-26'
+            : chapter.name === 'Battle Tactics 2026-27'
                 ? <Tactics id={chapter.id} /> 
                 : <Rules info={chapter} />
 }

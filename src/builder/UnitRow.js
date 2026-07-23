@@ -12,6 +12,8 @@ import {capitalizeFirstLetter, camelCaseToWords} from '../utilities/utils'
 import map from 'lodash/map'
 import find from 'lodash/find'
 import size from 'lodash/size'
+import every from 'lodash/every'
+import filter from 'lodash/filter'
 import forEach from 'lodash/forEach'
 import includes from 'lodash/includes'
 
@@ -20,12 +22,12 @@ import Styles from './styles/UnitRow.module.css'
 const dataBase = require('../dataBase.json')
 
 const UnitRow = ({
-    unit, unitIndex, regimentIndex, isAddUnit, onClick, onDelete, onCopy,onReinforced, artefacts, withoutMargin, isInfo, onOpenModal,
+    unit, unitIndex, regimentIndex, isAddUnit, onClick, onDelete, onCopy,onReinforced, artefacts, withoutMargin,
     heroicTraits, withoutCopy, isAuxiliary, isGeneral, alliganceId, isRegimentsOfRenown, isRoRUnitWithKeyword, otherEnhancements
 }) => {
     const navigate = useNavigate()
-    const isHero = unit.referenceKeywords?.includes('Hero') 
-    const isShowEnhancements = isHero && !unit.referenceKeywords?.includes('Unique')
+    const isHero = unit?.referenceKeywords?.includes('Hero') 
+    const isShowEnhancements = isHero && !unit?.referenceKeywords?.includes('Unique')
     const optionGroups = dataBase.data.option_group.filter(group => group.warscrollId === unit.id)
     const marksOfChaos = isRoRUnitWithKeyword ? undefined : optionGroups.find(group => group.optionGroupType === 'marksOfChaos')
     const otherWarscrollOption = optionGroups.find(group => group.optionGroupType === 'otherWarscrollOption')
@@ -38,24 +40,24 @@ const UnitRow = ({
     if (isRegimentsOfRenown) {
         rowImage = find(dataBase.data.warscroll, ['id', unit.regimentOfRenownRowImageWarscrollId])?.rowImage
     }
-    let unitInfo = {}
-    if (isInfo) {
-        unitInfo = isRegimentsOfRenown
-            ? find(dataBase.data.ability_group, ['id', unit.id])
-            : find(dataBase.data.warscroll, ['id', unit.id])
-        rowImage = unitInfo?.rowImage
-    }
     let requiredOtherEnhancementKeywords = []
-    if (size(otherEnhancements) && !isInfo) {
+    let excludedOtherEnhancementKeywords = []
+    if (size(otherEnhancements)) {
         forEach(otherEnhancements, otherEnhancement => {
             const requiredKeywordId = find(dataBase.data.ability_group_required_keyword, ['abilityGroupId', otherEnhancement.id])?.keywordId
             requiredOtherEnhancementKeywords.push(find(dataBase.data.keyword, ['id', requiredKeywordId])?.name)
+            const excludedKeywords = filter(dataBase.data.ability_group_excluded_keyword, ['abilityGroupId', otherEnhancement.id])
+            excludedOtherEnhancementKeywords.push(map(excludedKeywords, excludedKeyword => find(dataBase.data.keyword, ['id', excludedKeyword.keywordId])?.name))
         })
-    } 
+    }
+    let isCogfort = false
+    if (unit.id === '0c632405-8a16-4429-8437-11e6dfdcca1c' || unit.id === '9d0a2d00-22f4-49b3-9c66-af03cefb4b93') {
+        isCogfort = true
+    }
 
     const handleClick = () => {
         if (onClick) {
-            onClick(isInfo ? unitInfo : unit)
+            onClick(unit)
         }
     }
 
@@ -124,13 +126,24 @@ const UnitRow = ({
         }
     </button>
 
+    const renderOtherEnhancement = (otherEnhancement, index) => {
+        if (
+            otherEnhancement &&
+            (requiredOtherEnhancementKeywords[index] ? includes(unit.referenceKeywords, requiredOtherEnhancementKeywords[index]) : true) &&
+            (excludedOtherEnhancementKeywords[index] ? every(excludedOtherEnhancementKeywords[index], keyword => !includes(unit.referenceKeywords, keyword)) : true) &&
+            !unit.referenceKeywords?.includes('Unique')
+        ) {
+            return renderAdditionalOption(otherEnhancement)
+        } else if (isCogfort && otherEnhancement.name === 'Ironweld Innovations') {
+            return renderAdditionalOption(otherEnhancement)
+        } else {
+            return null
+        }
+    }
+
     const renderChooseWeapon = () => <button id={Styles.chooseEnhancementButton} onClick={handleWeaponOption}>
         Weapon Options
     </button>
-
-    const renderWeapon = (count, weapon) => <p id={Styles.weapon}>{count} x {weapon}</p>
-
-    const renderWeaponOption = (weaponOption) => map(weaponOption, renderWeapon)
 
     return <div id={withoutMargin ? Styles.rorContainer : Styles.container}>
         <div className={Styles.row}>
@@ -142,61 +155,37 @@ const UnitRow = ({
                 </div>
                 <p id={Styles.price}>{unit.points || unit.regimentOfRenownPointsCost || 0} pts</p>
             </button>
-            {isAddUnit || unit.cannotBeReinforced || unit.abilityGroupType === 'regimentOfRenown' || isInfo
+            {isAddUnit || unit.cannotBeReinforced || unit.abilityGroupType === 'regimentOfRenown'
                 ? null
                 : unit.isReinforced
                     ? <button id={Styles.button} onClick={handleReinforced}><img src={Minus} alt="" /></button>
                     : <button id={Styles.button} onClick={handleReinforced}><img src={Plus} alt="" /></button>
             }
-            {isAddUnit || isHero || withoutCopy || isAuxiliary || unit.onlyOne || isInfo
+            {isAddUnit || isHero || withoutCopy || isAuxiliary || unit.onlyOne
                 ? null
                 : <button id={Styles.button} onClick={handleCopy}><img src={Copy} alt="" /></button>
             }
-            {onDelete && !isInfo ? <button id={Styles.button} onClick={handleDelete}><img src={Close} alt="" /></button> : null}
+            {onDelete ? <button id={Styles.button} onClick={handleDelete}><img src={Close} alt="" /></button> : null}
             {isAddUnit ? <button id={Styles.infoButton} onClick={handleClickInfo}><img src={Info} alt="" /></button> : null}
         </div>
-        {isInfo
-            ? <>
-                {unit.artefact && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit.artefact, 'artefact')}>
-                    {`Artefact: ${unit.artefact}`}
-                </button>}
-                {unit.heroicTrait && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit.heroicTrait, 'heroicTrait')}>
-                    {`Heroic Trait: ${unit.heroicTrait}`}
-                </button>}
-                {unit.weaponOptions
-                    ? map(unit.weaponOptions, renderWeaponOption)
-                    : null
-                }
-                {map(otherEnhancements, otherEnhancement => {
-                    if (unit[otherEnhancement?.name]) {
-                        return <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit[otherEnhancement?.name], otherEnhancement.name)}>
-                            {`${otherEnhancement?.name}: ${unit[otherEnhancement?.name]}`}
-                        </button>
-                    }
-                    return null
-                })}
-            </>
-            : isShowEnhancements && !isAddUnit
-                ? <div id={Styles.enhancementsContainer}>
-                    <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Artefacts', 'artefact')}>
-                        {unit.artefact ? `Artefact: ${unit.artefact}` : 'Сhoose Artefact'}
-                    </button>
-                    <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Heroic Traits', 'heroicTrait')}>
-                        {unit.heroicTrait ? `Heroic Trait: ${unit.heroicTrait}` : 'Сhoose Heroic Trait'}
-                    </button>
-                </div>
-                : null
+        {isShowEnhancements && !isAddUnit && !isCogfort
+            ? <div id={Styles.enhancementsContainer}>
+                <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Artefacts', 'artefact')}>
+                    {unit.artefact ? `Artefact: ${unit.artefact}` : 'Сhoose Artefact'}
+                </button>
+                <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Heroic Traits', 'heroicTrait')}>
+                    {unit.heroicTrait ? `Heroic Trait: ${unit.heroicTrait}` : 'Сhoose Heroic Trait'}
+                </button>
+            </div>
+            : null
         }
-        {(optionGroups.length > 0 || additionalOption || size(otherEnhancements)) && !isAddUnit && !isInfo
+        {(optionGroups.length > 0 || additionalOption || size(otherEnhancements)) && !isAddUnit
             ? <div id={Styles.enhancementsContainer}>
                 {weaponOptions.length > 0 ? renderChooseWeapon() : null}
                 {marksOfChaos ? renderChooseOptionButton(marksOfChaos) : null}
                 {additionalOption ? renderAdditionalOption(additionalOption) : null}
                 {otherWarscrollOption ? renderChooseOptionButton(otherWarscrollOption) : null}
-                {map(otherEnhancements, (otherEnhancement, index) => otherEnhancement && includes(unit.referenceKeywords, requiredOtherEnhancementKeywords[index]) && !unit.referenceKeywords?.includes('Unique')
-                    ? renderAdditionalOption(otherEnhancement)
-                    : null
-                )}
+                {map(otherEnhancements, renderOtherEnhancement)}
             </div>
             : null
         }
