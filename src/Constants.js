@@ -67,7 +67,7 @@ const Constants = {
             abilityKeywordsName: 'lore_ability_keyword',
             abilityIdName: 'loreAbilityId',
             includesTexts: ['Lore of', 'Spell Lore', 'Arcane'],
-            excludedTexts: ['Lore of the Abyss', 'Lore of Virulence']
+            excludedTexts: ['Lore of the Abyss', 'Lore of Virulence', 'Lore of the Spirit-Song', 'Lore of the Everwinter', "Brodd's Bellows"]
         },
         {
             title: 'Prayer Lores',
@@ -77,9 +77,10 @@ const Constants = {
             abilityGroupType: undefined,
             abilityKeywordsName: 'lore_ability_keyword',
             abilityIdName: 'loreAbilityId',
-            includesTexts: ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Benedictions', 'Gifts', 'Lore of Virulence', 'Proclamations', 'Proclamations']
+            includesTexts: ['Prayer', 'Bless', 'Rites', 'Warbeats', 'Scriptures', 'Benedictions', 'Gifts', 'Lore of Virulence', 'Lore of the Spirit-Song', 'Proclamations', 'Lore of the Everwinter', "Brodd's Bellows"]
         }
     ],
+    manifestationIncludesTexts: ['Manifestation', 'Invocations', 'Judgements', 'Lore of the Abyss', 'Manifested', 'Infernal Sorceries', 'Horrors of the Necropolis'],
     coreDocumentsId: 'e918110c-418e-4a50-90bc-484581a0fa5c',
     ghbId: 'cf456401-f84b-4278-a63d-a4de52dde29f',
     ghb25_26Id: '3e05b549-40a4-43e5-b0f7-5ef6d1ffdbd2',
@@ -493,6 +494,9 @@ const Constants = {
     ],
     destructionAoRs: [
         "The Roving Maw",
+        "Meatfist Mawtribe",
+        "Mawseeker Gollop",
+        "Beastclaw Alfrostun",
         "Krazogg’s Grunta Stampede",
         "Zoggrok's Ironmongerz",
         "Murkvast Menagerie",

@@ -5,6 +5,10 @@ import UnitRow from './UnitRow'
 import Delete from '../icons/delete.svg'
 import General from '../icons/general.svg'
 
+import sum from 'lodash/sum'
+import filter from 'lodash/filter'
+import includes from 'lodash/includes'
+
 import Styles from './styles/Regiment.module.css'
 
 const emptyRegiment = {
@@ -61,12 +65,14 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
     }
 
     const handleReinforced = (unit, unitIndex) => {
+        const enhancementsPoints = sum(filter(unit, (_, key) => includes(key, '-points'))) || 0
+        const points = unit.points - enhancementsPoints
         if (unit.isReinforced) {
-            const _points = unit.points / 2
+            const _points = points / 2
             roster.regiments[index].units[unitIndex] = {
                 ...roster.regiments[index].units[unitIndex],
                 isReinforced: false,
-                points: _points
+                points: _points + enhancementsPoints
             }
             roster.regiments[index].points = roster.regiments[index].points - _points
             roster.points.all -= _points
@@ -74,10 +80,10 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
             roster.regiments[index].units[unitIndex] = {
                 ...roster.regiments[index].units[unitIndex],
                 isReinforced: true,
-                points: unit.points * 2
+                points: points * 2 + enhancementsPoints
             }
-            roster.regiments[index].points = roster.regiments[index].points + unit.points
-            roster.points.all += unit.points
+            roster.regiments[index].points = roster.regiments[index].points + points
+            roster.points.all += points
         }
         forceUpdate()
     }

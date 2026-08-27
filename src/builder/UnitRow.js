@@ -42,8 +42,19 @@ const UnitRow = ({
     }
     let requiredOtherEnhancementKeywords = []
     let excludedOtherEnhancementKeywords = []
+    let hiddenEnhancements = []
     if (size(otherEnhancements)) {
         forEach(otherEnhancements, otherEnhancement => {
+            const requiredWarscrolls = filter(dataBase.data.ability_group_required_warscroll, ['abilityGroupId', otherEnhancement.id])
+            if (size(requiredWarscrolls)) {
+                const isShowEnhancement = Boolean(find(requiredWarscrolls, ['warscrollId', unit.id]))
+                if (!isShowEnhancement) {
+                    hiddenEnhancements.push(otherEnhancement.id)
+                }
+            }
+            if (additionalOption && additionalOption.id === otherEnhancement.id) {
+                hiddenEnhancements.push(otherEnhancement.id)
+            }
             const requiredKeywordId = find(dataBase.data.ability_group_required_keyword, ['abilityGroupId', otherEnhancement.id])?.keywordId
             requiredOtherEnhancementKeywords.push(find(dataBase.data.keyword, ['id', requiredKeywordId])?.name)
             const excludedKeywords = filter(dataBase.data.ability_group_excluded_keyword, ['abilityGroupId', otherEnhancement.id])
@@ -131,7 +142,8 @@ const UnitRow = ({
             otherEnhancement &&
             (requiredOtherEnhancementKeywords[index] ? includes(unit.referenceKeywords, requiredOtherEnhancementKeywords[index]) : true) &&
             (excludedOtherEnhancementKeywords[index] ? every(excludedOtherEnhancementKeywords[index], keyword => !includes(unit.referenceKeywords, keyword)) : true) &&
-            !unit.referenceKeywords?.includes('Unique')
+            !unit.referenceKeywords?.includes('Unique') &&
+            !includes(hiddenEnhancements, otherEnhancement.id)
         ) {
             return renderAdditionalOption(otherEnhancement)
         } else if (isCogfort && otherEnhancement.name === 'Ironweld Innovations') {

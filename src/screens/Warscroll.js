@@ -31,14 +31,10 @@ const Warscroll = () => {
     const isManifestation = includes(unit.referenceKeywords, 'Manifestation')
     let manifestationInfo = undefined
     if (isManifestation) {
-        const loreAbilityId = find(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])?.loreAbilityId
-        manifestationInfo = find(dataBase.data.lore_ability, ['id', loreAbilityId])
-        const lore = find(dataBase.data.lore , ['id', manifestationInfo?.loreId])
-        // нужно для того, чтобы правильно показывать абилку у спеллов орков и в аорах
-        if (lore?.factionId) {
-            const loreId = find(dataBase.data.lore , lore => lore.factionId === allegianceId && includes(lore.name, 'Manifestation'))?.id
-            manifestationInfo = find(dataBase.data.lore_ability, ability => ability.id === loreAbilityId && (loreId ? ability.loreId === loreId : true))
-        }
+        const loreId = find(dataBase.data.lore, lore => lore.factionId === allegianceId && find(Constants.manifestationIncludesTexts, text => includes(lore.name, text)))?.id
+        const lores = filter(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])
+        const loresInfo = map(lores, ({loreAbilityId}) => find(dataBase.data.lore_ability, ['id', loreAbilityId]))
+        manifestationInfo = find(loresInfo, ['loreId', loreId])
     }
     const characteristics = [
         {value: unit.move, title: 'Move'},

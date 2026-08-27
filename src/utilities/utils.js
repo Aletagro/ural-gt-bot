@@ -436,6 +436,7 @@ export const getInfo = (screen, allegiance) => {
     let abilitiesGroup = dataBase.data[screen.groupName].filter((item) => 
         item.factionId === allegiance.id &&
         item.abilityGroupType === screen.abilityGroupType &&
+        !item.isLegends &&
         (screen.includesTexts
             ? Boolean(screen.includesTexts.find(text => item.name.includes(text)))
             : true
