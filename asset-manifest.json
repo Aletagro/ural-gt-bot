@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/ural-gt-bot/static/css/main.9923f828.css",
-    "main.js": "/ural-gt-bot/static/js/main.2ccc963d.js",
+    "main.js": "/ural-gt-bot/static/js/main.56c750dc.js",
     "static/media/MGT.png": "/ural-gt-bot/static/media/MGT.5cb7f67a012b5e2ebfe1.png",
     "static/media/placeholder.png": "/ural-gt-bot/static/media/placeholder.816f67bc014b91894c3e.png",
     "static/media/malekith.png": "/ural-gt-bot/static/media/malekith.6e0b07f7d78ebe386dc6.png",
@@ -30,10 +30,10 @@
     "static/media/plus.svg": "/ural-gt-bot/static/media/plus.1821b69dd59c40f640858714c03302df.svg",
     "static/media/minus.svg": "/ural-gt-bot/static/media/minus.e96d94d06862f0e438941502b49deb0e.svg",
     "main.9923f828.css.map": "/ural-gt-bot/static/css/main.9923f828.css.map",
-    "main.2ccc963d.js.map": "/ural-gt-bot/static/js/main.2ccc963d.js.map"
+    "main.56c750dc.js.map": "/ural-gt-bot/static/js/main.56c750dc.js.map"
   },
   "entrypoints": [
     "static/css/main.9923f828.css",
-    "static/js/main.2ccc963d.js"
+    "static/js/main.56c750dc.js"
   ]
 }
