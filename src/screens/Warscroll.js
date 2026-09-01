@@ -10,6 +10,7 @@ import Calculator from '../icons/calculator.svg'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
+import size from 'lodash/size'
 import filter from 'lodash/filter'
 import includes from 'lodash/includes'
 import upperFirst from 'lodash/upperFirst'
@@ -42,6 +43,7 @@ const Warscroll = () => {
         {value: unit.control, title: isManifestation ? 'Banish' : 'Control'},
         {value: unit.save, title: 'Save'}
     ]
+
     if (manifestationInfo) {
         abilities = [...abilities, manifestationInfo]
         characteristics.splice(3, 0, {value: `${manifestationInfo.castingValue}+`, title: 'Cast'})
@@ -154,7 +156,7 @@ const Warscroll = () => {
 
     const renderCharacteristic = (characteristic, index) => <div key={index} id={Styles.characteristicSubContainer} style={{width: '20%'}}>
         <div id={Styles.characteristicValueContainer}>
-            <p id={characteristic.value.length > 3 ? Styles.characteristicLongValue : Styles.characteristicValue}>
+            <p id={size(characteristic?.value) > 3 ? Styles.characteristicLongValue : Styles.characteristicValue}>
                 {characteristic.value}
             </p>
         </div>

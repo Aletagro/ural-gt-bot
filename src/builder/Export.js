@@ -34,10 +34,10 @@ const Export = () => {
     const [isListPublic, setIsListPublic] = useState(true)
     const errors = getErrors(roster)
     const warnings = getWarnings(roster)
+    const [disableButton, setDisableButton] = useState(Boolean(errors.length || warnings.length))
     const wounds = getWoundsCount(roster)
     const drops = roster.regiments.length + roster.auxiliaryUnits.length + (roster.regimentOfRenown ? 1 : 0)
     const user = tg.initDataUnsafe?.user
-    const disableButton = Boolean(errors.length || warnings.length)
     const navigate = useNavigate()
     const unitsKeys =  ['id', 'name', 'points', 'modelCount', 'isReinforced', 'heroicTrait', 'artefact', 'otherWarscrollOption', 'marksOfChaos', ...roster.otherEnhancements, 'weaponOptions'] 
 
@@ -174,6 +174,7 @@ ${roster.points.all}/${roster.pointsLimit} Pts
     }
 
     const handleSendRoster = useCallback(async () => {
+        setDisableButton(true)
         const r_stat = {
             grandAlliance: roster.grandAlliance,
             allegiance: roster.allegiance,

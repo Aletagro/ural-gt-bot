@@ -22,7 +22,7 @@ import Styles from './styles/UnitRow.module.css'
 const dataBase = require('../dataBase.json')
 
 const UnitRow = ({
-    unit, unitIndex, regimentIndex, isAddUnit, onClick, onDelete, onCopy,onReinforced, artefacts, withoutMargin,
+    unit, unitIndex, regimentIndex, isAddUnit, onClick, onDelete, onCopy,onReinforced, artefacts, withoutMargin, isInfo,
     heroicTraits, withoutCopy, isAuxiliary, isGeneral, alliganceId, isRegimentsOfRenown, isRoRUnitWithKeyword, otherEnhancements
 }) => {
     const navigate = useNavigate()
@@ -39,6 +39,13 @@ const UnitRow = ({
     let rowImage = unit?.rowImage
     if (isRegimentsOfRenown) {
         rowImage = find(dataBase.data.warscroll, ['id', unit.regimentOfRenownRowImageWarscrollId])?.rowImage
+    }
+    let unitInfo = {}
+    if (isInfo) {
+        unitInfo = isRegimentsOfRenown
+            ? find(dataBase.data.ability_group, ['id', unit.id])
+            : find(dataBase.data.warscroll, ['id', unit.id])
+        rowImage = unitInfo?.rowImage
     }
     let requiredOtherEnhancementKeywords = []
     let excludedOtherEnhancementKeywords = []
@@ -68,7 +75,7 @@ const UnitRow = ({
 
     const handleClick = () => {
         if (onClick) {
-            onClick(unit)
+            onClick(isInfo ? unitInfo : unit)
         }
     }
 
@@ -191,7 +198,7 @@ const UnitRow = ({
             </div>
             : null
         }
-        {(optionGroups.length > 0 || additionalOption || size(otherEnhancements)) && !isAddUnit
+        {(optionGroups.length > 0 || additionalOption || size(otherEnhancements)) && !isAddUnit && !isInfo
             ? <div id={Styles.enhancementsContainer}>
                 {weaponOptions.length > 0 ? renderChooseWeapon() : null}
                 {marksOfChaos ? renderChooseOptionButton(marksOfChaos) : null}
