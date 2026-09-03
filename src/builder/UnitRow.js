@@ -62,8 +62,13 @@ const UnitRow = ({
             if (additionalOption && additionalOption.id === otherEnhancement.id) {
                 hiddenEnhancements.push(otherEnhancement.id)
             }
-            const requiredKeywordId = find(dataBase.data.ability_group_required_keyword, ['abilityGroupId', otherEnhancement.id])?.keywordId
-            requiredOtherEnhancementKeywords.push(find(dataBase.data.keyword, ['id', requiredKeywordId])?.name)
+            const requiredKeywords = map(
+                filter(dataBase.data.ability_group_required_keyword, ['abilityGroupId', otherEnhancement.id]),
+                requiredKeywordId => find(dataBase.data.keyword, ['id', requiredKeywordId])?.name
+            )
+            if (size(requiredKeywords)) {
+                requiredOtherEnhancementKeywords.push(requiredKeywords)
+            }
             const excludedKeywords = filter(dataBase.data.ability_group_excluded_keyword, ['abilityGroupId', otherEnhancement.id])
             excludedOtherEnhancementKeywords.push(map(excludedKeywords, excludedKeyword => find(dataBase.data.keyword, ['id', excludedKeyword.keywordId])?.name))
         })
