@@ -22,7 +22,7 @@ import Styles from './styles/UnitRow.module.css'
 const dataBase = require('../dataBase.json')
 
 const UnitRow = ({
-    unit, unitIndex, regimentIndex, isAddUnit, onClick, onDelete, onCopy,onReinforced, artefacts, withoutMargin, isInfo,
+    unit, unitIndex, regimentIndex, isAddUnit, onClick, onDelete, onCopy,onReinforced, artefacts, withoutMargin, isInfo, onOpenModal,
     heroicTraits, withoutCopy, isAuxiliary, isGeneral, alliganceId, isRegimentsOfRenown, isRoRUnitWithKeyword, otherEnhancements
 }) => {
     const navigate = useNavigate()
@@ -142,7 +142,7 @@ const UnitRow = ({
         }
     </button>
 
-    const renderAdditionalOption = (option) => <button id={Styles.chooseEnhancementButton} onClick={handleChooseAdditionalOption(option)}>
+    const renderAdditionalOption = (option) => <button id={Styles.chooseEnhancementButton} onClick={isInfo ? onOpenModal(unit[option?.name], option.name) : handleChooseAdditionalOption(option)}>
         {unit[option.name]
             ? `${option.name}: ${unit[option.name]}`
             : `${option.name}`
@@ -169,6 +169,10 @@ const UnitRow = ({
         Weapon Options
     </button>
 
+    const renderWeapon = (count, weapon) => <p id={Styles.weapon}>{count} x {weapon}</p>
+
+    const renderWeaponOption = (weaponOption) => map(weaponOption, renderWeapon)
+
     return <div id={withoutMargin ? Styles.rorContainer : Styles.container}>
         <div className={Styles.row}>
             <button id={Styles.addUnitButton} onClick={handleClick}>
@@ -192,16 +196,30 @@ const UnitRow = ({
             {onDelete ? <button id={Styles.button} onClick={handleDelete}><img src={Close} alt="" /></button> : null}
             {isAddUnit ? <button id={Styles.infoButton} onClick={handleClickInfo}><img src={Info} alt="" /></button> : null}
         </div>
-        {isShowEnhancements && !isAddUnit && !isCogfort
-            ? <div id={Styles.enhancementsContainer}>
-                <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Artefacts', 'artefact')}>
-                    {unit.artefact ? `Artefact: ${unit.artefact}` : 'Сhoose Artefact'}
-                </button>
-                <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Heroic Traits', 'heroicTrait')}>
-                    {unit.heroicTrait ? `Heroic Trait: ${unit.heroicTrait}` : 'Сhoose Heroic Trait'}
-                </button>
-            </div>
-            : null
+        {isInfo
+            ? <>
+                {unit.artefact && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit.artefact, 'artefact')}>
+                    {`Artefact: ${unit.artefact}`}
+                </button>}
+                {unit.heroicTrait && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit.heroicTrait, 'heroicTrait')}>
+                    {`Heroic Trait: ${unit.heroicTrait}`}
+                </button>}
+                {unit.weaponOptions
+                    ? map(unit.weaponOptions, renderWeaponOption)
+                    : null
+                }
+                {map(otherEnhancements, renderOtherEnhancement)}
+            </>
+            : isShowEnhancements && !isAddUnit && !isCogfort
+                ? <div id={Styles.enhancementsContainer}>
+                    <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Artefacts', 'artefact')}>
+                        {unit.artefact ? `Artefact: ${unit.artefact}` : 'Сhoose Artefact'}
+                    </button>
+                    <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Heroic Traits', 'heroicTrait')}>
+                        {unit.heroicTrait ? `Heroic Trait: ${unit.heroicTrait}` : 'Сhoose Heroic Trait'}
+                    </button>
+                </div>
+                : null
         }
         {(optionGroups.length > 0 || additionalOption || size(otherEnhancements)) && !isAddUnit && !isInfo
             ? <div id={Styles.enhancementsContainer}>

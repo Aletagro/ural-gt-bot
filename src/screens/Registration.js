@@ -107,7 +107,7 @@ const Registration = () => {
 
     const handleSendMessage = useCallback(async () => {
         const message = `${player.info.surname} ${player.info.name} отказался от участия в турнире`
-        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${200821933}&message=${message}`)
+        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${306287992}&message=${message}`)
             .catch(error => console.error(error))
       }, [])
 
