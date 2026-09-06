@@ -208,8 +208,8 @@ export const getErrors = (roster) => {
         }
     })
     forEach(unitsNames, unitsName => {
-        if (startsWith(unitsName, 'Scourge of Ghyran ')) {
-            const nameWithoutPrefix = unitsName.slice('Scourge of Ghyran '.length)
+        if (startsWith(unitsName, 'Scourge of Aqshy: ')) {
+            const nameWithoutPrefix = unitsName.slice('Scourge of Aqshy: '.length)
             if (includes(unitsNames, nameWithoutPrefix)) {
                 errors.push(`You can't have ${nameWithoutPrefix} and ${unitsName} in your army at the same time`)
             }
@@ -235,13 +235,24 @@ export const getErrors = (roster) => {
     }
     if (size(roster.requiredUnitsIds)) {
         requiredUnitsIds = uniq(requiredUnitsIds)
-        const filteredRequiredUnitsIds = filter(roster.requiredUnitsIds, requiredUnitsId => !includes(requiredUnitsIds, requiredUnitsId))
-        forEach(filteredRequiredUnitsIds, requiredUnitsId => {
-            const unitName = find(dataBase.data.warscroll, ['id', requiredUnitsId])?.name
-            if (unitName) {
-                errors.push(`You must be included ${unitName} in your roster`)
+        if (roster.allegianceId === 'af3cbad6-5f9e-49e9-95ff-6d07a587f229') {
+            if (size(requiredUnitsIds) === 0) {
+                errors.push('You must be included Iridan the Witness in your roster')
             }
-        })
+        } else {
+            const filteredRequiredUnitsIds = filter(roster.requiredUnitsIds, requiredUnitsId => !includes(requiredUnitsIds, requiredUnitsId))
+            const needCheck = roster.requiredUnitsLimit
+                ? size(filteredRequiredUnitsIds) > roster.requiredUnitsLimit
+                : true
+            if (needCheck) {
+                forEach(filteredRequiredUnitsIds, requiredUnitsId => {
+                    const unitName = find(dataBase.data.warscroll, ['id', requiredUnitsId])?.name
+                    if (unitName) {
+                        errors.push(`You must be included ${unitName} in your roster`)
+                    }
+                })
+            }
+        }
     }
     // В АоРе The Magnate's Crew нельзя иметь Брокка и геройский Айронклад одновременно. И всего один геройскйи Айронклад
     if (roster.allegianceId === '09e28194-8a37-4c3b-aaa5-8aa38bcfd9ac') {

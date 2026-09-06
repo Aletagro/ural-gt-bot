@@ -64,7 +64,7 @@ const UnitRow = ({
             }
             const requiredKeywords = map(
                 filter(dataBase.data.ability_group_required_keyword, ['abilityGroupId', otherEnhancement.id]),
-                requiredKeywordId => find(dataBase.data.keyword, ['id', requiredKeywordId])?.name
+                ({keywordId}) => find(dataBase.data.keyword, ['id', keywordId])?.name
             )
             if (size(requiredKeywords)) {
                 requiredOtherEnhancementKeywords.push(requiredKeywords)
@@ -152,7 +152,7 @@ const UnitRow = ({
     const renderOtherEnhancement = (otherEnhancement, index) => {
         if (
             otherEnhancement &&
-            (requiredOtherEnhancementKeywords[index] ? includes(unit.referenceKeywords, requiredOtherEnhancementKeywords[index]) : true) &&
+            (requiredOtherEnhancementKeywords[index] ? find(requiredOtherEnhancementKeywords[index], keyword => includes(unit.referenceKeywords, keyword)) : true) &&
             (excludedOtherEnhancementKeywords[index] ? every(excludedOtherEnhancementKeywords[index], keyword => !includes(unit.referenceKeywords, keyword)) : true) &&
             !unit.referenceKeywords?.includes('Unique') &&
             !includes(hiddenEnhancements, otherEnhancement.id)
