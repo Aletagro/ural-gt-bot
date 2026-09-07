@@ -157,7 +157,7 @@ const UnitRow = ({
             (excludedOtherEnhancementKeywords[index] ? every(excludedOtherEnhancementKeywords[index], keyword => !includes(referenceKeywords, keyword)) : true) &&
             !referenceKeywords?.includes('Unique') &&
             !includes(hiddenEnhancements, otherEnhancement.id) &&
-            unit[otherEnhancement.name]
+            (isInfo ? unit[otherEnhancement.name] : true)
         ) {
             return renderAdditionalOption(otherEnhancement)
         } else if (isCogfort && otherEnhancement.name === 'Ironweld Innovations') {
