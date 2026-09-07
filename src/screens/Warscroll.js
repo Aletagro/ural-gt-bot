@@ -32,10 +32,15 @@ const Warscroll = () => {
     const isManifestation = includes(unit.referenceKeywords, 'Manifestation')
     let manifestationInfo = undefined
     if (isManifestation) {
-        const loreId = find(dataBase.data.lore, lore => lore.factionId === allegianceId && find(Constants.manifestationIncludesTexts, text => includes(lore.name, text)))?.id
-        const lores = filter(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])
-        const loresInfo = map(lores, ({loreAbilityId}) => find(dataBase.data.lore_ability, ['id', loreAbilityId]))
-        manifestationInfo = find(loresInfo, ['loreId', loreId])
+        if (allegianceId) {
+            const loreId = find(dataBase.data.lore, lore => lore.factionId === allegianceId && find(Constants.manifestationIncludesTexts, text => includes(lore.name, text)))?.id
+            const lores = filter(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])
+            const loresInfo = map(lores, ({loreAbilityId}) => find(dataBase.data.lore_ability, ['id', loreAbilityId]))
+            manifestationInfo = find(loresInfo, ['loreId', loreId])
+        } else {
+            const loreAbilityId = find(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])?.loreAbilityId
+            manifestationInfo = find(dataBase.data.lore_ability, ['id', loreAbilityId])
+        }
     }
     const characteristics = [
         {value: unit.move, title: 'Move'},
