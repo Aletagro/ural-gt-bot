@@ -173,17 +173,6 @@ export const getErrors = (roster) => {
             errors.push(`You have ${otherEnhancementCounts[index]} ${otherEnhancement}`)
         }
     })
-    if (hasWarmasterInRegiments.length && !includes(hasWarmasterInRegiments, roster.generalRegimentIndex) && !roster.requiredGeneral) {
-        errors.push("You have a Warmaster hero, but he isn't your general")
-    }
-    if (roster.requiredGeneral) {
-        if (!hasRequiredGeneral) {
-            errors.push(`You must be included ${roster.requiredGeneral.name} in your roster`)
-        }
-        if (!isRequiredGeneralIsGeneral) {
-            errors.push(`${roster.requiredGeneral.name} must be your general`)
-        }
-    }
     forEach(roster.auxiliaryUnits, unit => {
         if (!includes(unitsNames, unit.name)) {
             unitsNames.push(unit.name)
@@ -207,6 +196,20 @@ export const getErrors = (roster) => {
             heroSoGBlackCoach += 1
         }
     })
+    if (hasWarmasterInRegiments.length && !includes(hasWarmasterInRegiments, roster.generalRegimentIndex) && !roster.requiredGeneral) {
+        if (roster.allegianceId === 'af3cbad6-5f9e-49e9-95ff-6d07a587f229') {
+        } else {
+            errors.push("You have a Warmaster hero, but he isn't your general")
+        }
+    }
+    if (roster.requiredGeneral) {
+        if (!hasRequiredGeneral) {
+            errors.push(`You must be included ${roster.requiredGeneral.name} in your roster`)
+        }
+        if (!isRequiredGeneralIsGeneral) {
+            errors.push(`${roster.requiredGeneral.name} must be your general`)
+        }
+    }
     forEach(unitsNames, unitsName => {
         if (startsWith(unitsName, 'Scourge of Aqshy: ')) {
             const nameWithoutPrefix = unitsName.slice('Scourge of Aqshy: '.length)
@@ -238,6 +241,9 @@ export const getErrors = (roster) => {
         if (roster.allegianceId === 'af3cbad6-5f9e-49e9-95ff-6d07a587f229') {
             if (size(requiredUnitsIds) === 0) {
                 errors.push('You must be included Iridan the Witness in your roster')
+            }
+            if (!includes(requiredUnitsIds, roster.regiments[roster.generalRegimentIndex]?.heroId)) {
+                errors.push("Iridan the Witness must be your general")
             }
         } else {
             const filteredRequiredUnitsIds = filter(roster.requiredUnitsIds, requiredUnitsId => !includes(requiredUnitsIds, requiredUnitsId))
