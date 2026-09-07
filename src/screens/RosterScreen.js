@@ -7,6 +7,7 @@ import {player, players, rostersStuck, rosterViewType} from '../utilities/appSta
 
 import get from 'lodash/get'
 import find from 'lodash/find'
+import noop from 'lodash/noop'
 
 import Styles from './styles/RosterScreen.module.css'
 
@@ -62,7 +63,7 @@ const RosterScreen = () => {
         }
         <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
             <p id={Styles.checkboxText}>Easy View</p>
-            <Checkbox onClick={handleChangeViewType} checked={rosterViewType.easy} />
+            <Checkbox onClick={noop} checked={rosterViewType.easy} />
         </div>
         {rosterViewType.easy
             ? <RosterEasy roster={_roster} info={rosterInfo} />

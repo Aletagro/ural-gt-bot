@@ -14,6 +14,7 @@ import {players, player as _player, rosterViewType, googleDrive} from '../utilit
 import map from 'lodash/map'
 import get from 'lodash/get'
 import find from 'lodash/find'
+import noop from 'lodash/noop'
 import size from 'lodash/size'
 
 import Styles from './styles/PlayerInfo.module.css'
@@ -220,7 +221,7 @@ const PlayerInfo = () => {
                 <b id={Styles.title}>Ростер</b>
                 <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
                     <p id={Styles.checkboxText}>Easy View</p>
-                    <Checkbox onClick={handleChangeViewType} checked={rosterViewType.easy} />
+                    <Checkbox onClick={noop} checked={rosterViewType.easy} />
                 </div>
                 {rosterViewType.easy
                     ? <RosterEasy roster={roster} info={rosterInfo} />

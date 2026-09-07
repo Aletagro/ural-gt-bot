@@ -91067,24 +91067,6 @@
         "isLegends": false
       },
       {
-        "id": "aef3b539-9aa6-4f0d-a215-d79a70c5a712",
-        "name": "Marks of Vulcatrix",
-        "restrictionText": "Marks of Vulcatrix are enhancements that can only be given to **MAGMADROTHS**.",
-        "abilityGroupType": "otherEnhancements",
-        "subsectionName": null,
-        "subsectionLore": null,
-        "subsectionRulesText": null,
-        "image": null,
-        "altText": null,
-        "regimentOfRenownPointsCost": null,
-        "factionId": "e9d8e88a-eed6-47f1-9263-7440476aeeba",
-        "rosterLevelLimit": 1,
-        "unitLevelLimit": 1,
-        "regimentOfRenownRowImageWarscrollId": null,
-        "gainsRosterFactionKeyword": false,
-        "isLegends": false
-      },
-      {
         "id": "d481a41a-7047-4726-8862-dffdad4e3998",
         "name": "Spitewing Flight Regiment Abilities",
         "restrictionText": "Pick 1 of the following regiment abilities.",

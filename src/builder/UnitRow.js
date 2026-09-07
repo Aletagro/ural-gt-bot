@@ -150,12 +150,14 @@ const UnitRow = ({
     </button>
 
     const renderOtherEnhancement = (otherEnhancement, index) => {
+        let referenceKeywords = unit.referenceKeywords || find(dataBase.data.warscroll, ['id', unit.id])?.referenceKeywords
         if (
             otherEnhancement &&
-            (requiredOtherEnhancementKeywords[index] ? find(requiredOtherEnhancementKeywords[index], keyword => includes(unit.referenceKeywords, keyword)) : true) &&
-            (excludedOtherEnhancementKeywords[index] ? every(excludedOtherEnhancementKeywords[index], keyword => !includes(unit.referenceKeywords, keyword)) : true) &&
-            !unit.referenceKeywords?.includes('Unique') &&
-            !includes(hiddenEnhancements, otherEnhancement.id)
+            (requiredOtherEnhancementKeywords[index] ? find(requiredOtherEnhancementKeywords[index], keyword => includes(referenceKeywords, keyword)) : true) &&
+            (excludedOtherEnhancementKeywords[index] ? every(excludedOtherEnhancementKeywords[index], keyword => !includes(referenceKeywords, keyword)) : true) &&
+            !referenceKeywords?.includes('Unique') &&
+            !includes(hiddenEnhancements, otherEnhancement.id) &&
+            unit[otherEnhancement.name]
         ) {
             return renderAdditionalOption(otherEnhancement)
         } else if (isCogfort && otherEnhancement.name === 'Ironweld Innovations') {
@@ -197,7 +199,7 @@ const UnitRow = ({
             {isAddUnit ? <button id={Styles.infoButton} onClick={handleClickInfo}><img src={Info} alt="" /></button> : null}
         </div>
         {isInfo
-            ? <>
+            ? <div id={Styles.enhancementsContainer}>
                 {unit.artefact && <button id={Styles.infoEnhancementButton} onClick={onOpenModal(unit.artefact, 'artefact')}>
                     {`Artefact: ${unit.artefact}`}
                 </button>}
@@ -209,7 +211,7 @@ const UnitRow = ({
                     : null
                 }
                 {map(otherEnhancements, renderOtherEnhancement)}
-            </>
+            </div>
             : isShowEnhancements && !isAddUnit && !isCogfort
                 ? <div id={Styles.enhancementsContainer}>
                     <button id={Styles.chooseEnhancementButton} onClick={handleChooseEnhancement('Artefacts', 'artefact')}>

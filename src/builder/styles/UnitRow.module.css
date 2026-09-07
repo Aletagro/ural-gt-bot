@@ -58,7 +58,7 @@
 }
 #enhancementsContainer {
   display: flex;
-  margin-left: 4px;
+  margin-left: 16px;
 }
 #chooseEnhancementButton {
   color: #525252;
@@ -88,7 +88,7 @@
   margin-bottom: 12px;
   border-radius: 24px;
   padding: 4px 8px;
-  margin-left: 16px;
+  margin-right: 16px;
 }
 #weapon {
   padding-left: 12px;
