@@ -210,6 +210,7 @@ const UnitRow = ({
                     ? map(unit.weaponOptions, renderWeaponOption)
                     : null
                 }
+                {unit[additionalOption?.name] ? renderAdditionalOption(additionalOption) : null}
                 {map(otherEnhancements, renderOtherEnhancement)}
             </div>
             : isShowEnhancements && !isAddUnit && !isCogfort
