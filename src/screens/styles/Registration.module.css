@@ -72,10 +72,26 @@
     font-size: 16px;
     font-family: 'Minion Pro Bold';
 }
-
-#limitWarningContainer {
+#notice {
+    background: green;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+#warningNotice {
     background: yellow;
     border-radius: 8px;
     padding: 16px;
     margin-bottom: 16px;
-  }
+}
+#errorNotice {
+    background: red;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+#noticeText {
+    text-align: center;
+    padding: 0 16px;
+    color: white;
+}

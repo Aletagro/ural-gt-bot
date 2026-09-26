@@ -272,8 +272,13 @@ const Registration = () => {
         </div>
     </div>
 
-    const renderLimitWarning = () => <div id={Styles.limitWarningContainer}>
-        <h3 id={Styles.title}>Вы находитесь в листе ожидания, организаторы свяжутся с вами</h3>
+    const renderNotice = (title, type) => <div id={type === 'error'
+        ? Styles.errorNotice
+        : type === 'warning'
+            ? Styles.warningNotice
+            : Styles.notice
+        }>
+        <h3 id={type === 'warning' ? Styles.title : Styles.noticeText}>{title}</h3>
     </div>
 
     if (player.isDrop) {
@@ -293,7 +298,12 @@ const Registration = () => {
             </div>
             : player.reg || player.isJudge || !meta.isRegOpen || player.isGuest
                 ? <div id='column' className='Chapter'>
-                    {isPlayerInWaitingList ? renderLimitWarning() : null}
+                    {console.log({meta, player})}
+                    {isPlayerInWaitingList ? renderNotice('Вы находитесь в листе ожидания, организаторы свяжутся с вами', 'warning') : null}
+                    {player.reg
+                        ? renderNotice('Вы зарегистированы на Ice Hammer 2026')
+                        : renderNotice('Вы еще не зарегистированы, попробуйте еще раз или обратитесь к организаторам', 'error')
+                    }
                     {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
                     {player.reg && meta.isRoundActive ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
                     {player.reg && player.roster
