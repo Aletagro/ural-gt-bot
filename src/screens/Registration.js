@@ -9,7 +9,7 @@ import FloatingLabelInput from '../components/FloatingLabelInput'
 import Row from '../components/Row'
 import HeaderImage from '../components/HeaderImage'
 import Modal from '../components/Modal'
-import Image from '../images/MGT.png'
+import Image from '../images/IceHammer.png'
 
 import size from 'lodash/size'
 import includes from 'lodash/includes'
@@ -107,7 +107,7 @@ const Registration = () => {
 
     const handleSendMessage = useCallback(async () => {
         const message = `${player.info.surname} ${player.info.name} отказался от участия в турнире`
-        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${306287992}&message=${message}`)
+        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${200821933}&message=${message}`)
             .catch(error => console.error(error))
       }, [])
 
@@ -233,7 +233,7 @@ const Registration = () => {
     </div>
 
     const renderRegForm = () => <div>
-        <h2 id={Styles.title}>Регистрация на Moscow GT 2026</h2>
+        <h2 id={Styles.title}>Регистрация на Ice Hammer 2026</h2>
         <FloatingLabelInput
             style={inputStyle}
             onChange={handleChangeName}
@@ -305,7 +305,7 @@ const Registration = () => {
                         : null
                     }
                     {meta.isRostersShow || player.isJudge ? <Row title='Ростера' navigateTo='rosters' /> : null}
-                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Moscow GT 2026', round: meta.round}} /> : null}
+                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Ice Hammer 2026', round: meta.round}} /> : null}
                     {/* {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='icePlayers' /> : null} */}
                     {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
                     {player.reg && meta.round === 5 && !player.sport_voted
@@ -320,7 +320,7 @@ const Registration = () => {
                     {player.isJudge || meta.isChallengesOpen ? <Row title='Челленджи' navigateTo='challenges' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
-                    {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Moscow GT 2026' navigateTo='tournamentRules' /> : null}
+                    {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Ice Hammer 2026' navigateTo='tournamentRules' /> : null}
                     <Row title='Подсказка во время игры' navigateTo='help' />
                     {meta.isRoundActive && player.reg ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     {meta.round || !player.reg ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}

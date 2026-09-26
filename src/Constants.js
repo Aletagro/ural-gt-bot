@@ -589,8 +589,7 @@ const Constants = {
         }
     ],
     myTgId: 530569849,
-    judgesIds: [530569849, 306287992, 615996874],
-    testersIds: [210233387, 200821933]
+    judgesIds: [530569849, 200821933]
 }
 
 export default Constants
