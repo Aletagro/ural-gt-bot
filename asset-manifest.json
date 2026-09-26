@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/ural-gt-bot/static/css/main.2ddd8c61.css",
-    "main.js": "/ural-gt-bot/static/js/main.3241b83b.js",
-    "static/media/MGT.png": "/ural-gt-bot/static/media/MGT.5cb7f67a012b5e2ebfe1.png",
+    "main.css": "/ural-gt-bot/static/css/main.a2a2542b.css",
+    "main.js": "/ural-gt-bot/static/js/main.45fd208d.js",
+    "static/media/IceHammer.png": "/ural-gt-bot/static/media/IceHammer.77fb02d034c4b921ec55.png",
     "static/media/placeholder.png": "/ural-gt-bot/static/media/placeholder.816f67bc014b91894c3e.png",
     "static/media/malekith.png": "/ural-gt-bot/static/media/malekith.6e0b07f7d78ebe386dc6.png",
     "static/media/MinionPro-Bold.woff": "/ural-gt-bot/static/media/MinionPro-Bold.e73f42dae2e6ae675375.woff",
@@ -29,11 +29,11 @@
     "static/media/goldCheckmark.svg": "/ural-gt-bot/static/media/goldCheckmark.3ba83c49489fe35dc43e87829735d5a0.svg",
     "static/media/plus.svg": "/ural-gt-bot/static/media/plus.1821b69dd59c40f640858714c03302df.svg",
     "static/media/minus.svg": "/ural-gt-bot/static/media/minus.e96d94d06862f0e438941502b49deb0e.svg",
-    "main.2ddd8c61.css.map": "/ural-gt-bot/static/css/main.2ddd8c61.css.map",
-    "main.3241b83b.js.map": "/ural-gt-bot/static/js/main.3241b83b.js.map"
+    "main.a2a2542b.css.map": "/ural-gt-bot/static/css/main.a2a2542b.css.map",
+    "main.45fd208d.js.map": "/ural-gt-bot/static/js/main.45fd208d.js.map"
   },
   "entrypoints": [
-    "static/css/main.2ddd8c61.css",
-    "static/js/main.3241b83b.js"
+    "static/css/main.a2a2542b.css",
+    "static/js/main.45fd208d.js"
   ]
 }
