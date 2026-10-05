@@ -19,7 +19,7 @@ import includes from 'lodash/includes'
 
 import Styles from './styles/Export.module.css'
 
-const tg = window.Telegram.WebApp
+const tg = window.Telegram?.WebApp
 
 const rorKeys =  ['id', 'name', 'regimentOfRenownPointsCost']
 

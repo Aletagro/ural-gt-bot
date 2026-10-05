@@ -17,7 +17,7 @@ import findIndex from 'lodash/findIndex'
 
 import Styles from './styles/Registration.module.css'
 
-const tg = window.Telegram.WebApp
+const tg = window.Telegram?.WebApp
 
 const inputStyle = {
     '--Input-minHeight': '48px',
@@ -298,7 +298,6 @@ const Registration = () => {
             </div>
             : player.reg || player.isJudge || !meta.isRegOpen || player.isGuest
                 ? <div id='column' className='Chapter'>
-                    {console.log({meta, player})}
                     {isPlayerInWaitingList ? renderNotice('Вы находитесь в листе ожидания, организаторы свяжутся с вами', 'warning') : null}
                     {player.reg
                         ? renderNotice('Вы зарегистированы на Ice Hammer 2026')

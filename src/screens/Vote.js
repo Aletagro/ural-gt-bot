@@ -11,7 +11,7 @@ import findIndex from 'lodash/findIndex'
 
 import Styles from './styles/Vote.module.css'
 
-const tg = window.Telegram.WebApp
+const tg = window.Telegram?.WebApp
 
 const inputStyle = {
     '--Input-minHeight': '48px',

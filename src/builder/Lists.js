@@ -14,7 +14,7 @@ import Styles from './styles/Lists.module.css'
 
 const dataBase = require('../dataBase.json')
 
-// const tg = window.Telegram.WebApp
+// const tg = window.Telegram?.WebApp
 
 const Lists = () => {
     const navigate = useNavigate()

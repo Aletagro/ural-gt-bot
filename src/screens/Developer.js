@@ -1,6 +1,6 @@
 import React from 'react';
 
-const tg = window.Telegram.WebApp
+const tg = window.Telegram?.WebApp
 
 const Developer = () => {
 

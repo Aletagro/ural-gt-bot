@@ -37,6 +37,10 @@ const Warscroll = () => {
             const lores = filter(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])
             const loresInfo = map(lores, ({loreAbilityId}) => find(dataBase.data.lore_ability, ['id', loreAbilityId]))
             manifestationInfo = find(loresInfo, ['loreId', loreId])
+            if (!manifestationInfo) {
+                const loreAbilityId = find(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])?.loreAbilityId
+                manifestationInfo = find(dataBase.data.lore_ability, ['id', loreAbilityId])
+            }
         } else {
             const loreAbilityId = find(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])?.loreAbilityId
             manifestationInfo = find(dataBase.data.lore_ability, ['id', loreAbilityId])

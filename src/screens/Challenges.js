@@ -15,7 +15,7 @@ import lowerCase from 'lodash/lowerCase'
 
 import Styles from './styles/Challenges.module.css'
 
-const tg = window.Telegram.WebApp
+const tg = window.Telegram?.WebApp
 
 const Challenges = () => {
     const navigate = useNavigate()

@@ -502,6 +502,8 @@ const Constants = {
         "Murkvast Menagerie",
         "Big Waaagh!",
         "King Brodd's Stomp",
+        "Stomper Tribe",
+        "Matriarch's Mob",
         "Trugg's Troggherd",
         "Da King's Gitz",
         "Droggz's Gitmob"

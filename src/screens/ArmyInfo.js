@@ -17,8 +17,8 @@ const ArmyInfo = () => {
     const renderAbility = (ability) => <Ability
         key={ability.id}
         ability={ability}
-        abilityKeywordsName={armyEnhancement?.abilityKeywordsName}
-        abilityIdName={armyEnhancement?.abilityIdName}
+        abilityKeywordsName={armyEnhancement?.abilityKeywordsName || 'ability_keyword'}
+        abilityIdName={armyEnhancement?.abilityIdName || 'abilityId'}
     />
 
     const renderBlock = (block) => {

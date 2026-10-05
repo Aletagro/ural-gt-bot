@@ -142,7 +142,7 @@ const UnitRow = ({
         }
     </button>
 
-    const renderAdditionalOption = (option) => <button id={Styles.chooseEnhancementButton} onClick={isInfo ? onOpenModal(unit[option?.name], option.name) : handleChooseAdditionalOption(option)}>
+    const renderAdditionalOption = (option) => <button key={option.option} id={Styles.chooseEnhancementButton} onClick={isInfo ? onOpenModal(unit[option?.name], option.name) : handleChooseAdditionalOption(option)}>
         {unit[option.name]
             ? `${option.name}: ${unit[option.name]}`
             : `${option.name}`

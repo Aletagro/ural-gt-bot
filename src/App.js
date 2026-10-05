@@ -52,7 +52,7 @@ import Developer from './screens/Developer'
 
 import './App.css'
 
-const tg = window.Telegram.WebApp
+const tg = window.Telegram?.WebApp
 
 function App() {
   useSwipeBack()

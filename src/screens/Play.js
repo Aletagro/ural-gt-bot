@@ -12,7 +12,7 @@ import isNull from 'lodash/isNull'
 
 import Styles from './styles/Play.module.css'
 
-const tg = window.Telegram.WebApp
+const tg = window.Telegram?.WebApp
 
 const inputStyle = {
     '--Input-minHeight': '48px',

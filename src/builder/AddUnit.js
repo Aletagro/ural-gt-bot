@@ -154,6 +154,10 @@ const AddUnit = () => {
         if (kruleboyzOption && !ironjawsOption) {
             units = units.filter(unit => includes(unit.referenceKeywords, 'Kruleboyz'))
         }
+        // У городов убираем лишнию юниты комманд корпса
+        if (includes(['62f9bb14-f04f-4ec2-895f-abcaec9b0507', 'f919dae8-4f22-4fb8-86db-8953a8462d47'], alliganceId)) {
+            units = filter(units, unit => !includes(['50e64cc9-99c4-4380-b9ef-60a948f9fae9', '5aa56cc8-cac2-4a90-8d11-6cb759a07fd8'], unit.id))
+        }
         const uniqUnits = uniqBy(units, 'id')
         units = uniqUnits
         hasPotentialLegends = setHasPonentialLegends(units)
@@ -222,6 +226,12 @@ const AddUnit = () => {
                 }
             }
             roster.regiments[regimentId] = newRegiment
+            // Для городских Корпс картов добавляем сразу все юниты
+            if (unit.id === '4367a305-83ac-415e-b2b3-d26b86050468') {
+                const corpsCartAux = find(dataBase.data.warscroll, ['id', '50e64cc9-99c4-4380-b9ef-60a948f9fae9'])
+                const corpsCartWisp = find(dataBase.data.warscroll, ['id', '5aa56cc8-cac2-4a90-8d11-6cb759a07fd8'])
+                newRegiment.units = [...newRegiment.units, corpsCartAux, corpsCartWisp]
+            }
         }
         roster.points.all += unit.points || unit.regimentOfRenownPointsCost || 0
     }
