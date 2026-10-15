@@ -3,7 +3,6 @@ import React from 'react';
 const tg = window.Telegram?.WebApp
 
 const Developer = () => {
-
     return <div>
         <p>test</p>
         <p>initData: {tg.initData}</p>

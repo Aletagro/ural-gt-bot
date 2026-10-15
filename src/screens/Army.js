@@ -105,6 +105,12 @@ const Army = () => {
         onClick={handleClickBuilder}
     />
 
+    const renderRoRRow = () => <Row 
+        title='Regiment Of Renown'
+        navigateTo='regimentOfRenownList'
+        state={{alliganceId: _allegiance.id}}
+    />
+
     const renderAddendas = () => <Row
         title={addendas.name}
         navigateTo='ruleChapters'
@@ -125,6 +131,7 @@ const Army = () => {
         <div id='column' className='Chapter'>
             {items.map(renderRow)}
             {renderBuilderRow()}
+            {renderRoRRow()}
             {addendas && renderAddendas()}
             {armyOfRenown.length > 0
                 ? <div>

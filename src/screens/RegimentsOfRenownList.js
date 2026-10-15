@@ -1,4 +1,5 @@
 import React, {useCallback, useReducer} from 'react'
+import {useLocation} from 'react-router-dom'
 import Constants from '../Constants'
 import {isCollapseRegimentAlliances} from '../utilities/appState'
 import {regimentSortesByGrandAlliances} from '../utilities/utils'
@@ -13,9 +14,16 @@ import filter from 'lodash/filter'
 const dataBase = require('../dataBase.json')
 
 const RegimentsOfRenownList = () => {
+    const {alliganceId} = useLocation().state
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
-    const regimentsOfRenown = filter(dataBase.data.ability_group, (group) => group.abilityGroupType === 'regimentOfRenown')
+    let regimentsOfRenown = []
+    if (alliganceId) {
+        const regimentsOfRenownKeywords = filter(dataBase.data.ability_group_regiment_of_renown_permitted_faction_keyword, ['factionKeywordId', alliganceId])
+        regimentsOfRenown = map(regimentsOfRenownKeywords, (keyword) => find(dataBase.data.ability_group, ['id', keyword.abilityGroupId]))
+    } else {
+        regimentsOfRenown = filter(dataBase.data.ability_group, (group) => group.abilityGroupType === 'regimentOfRenown')
+    }
     const sortedRegimentsOfRenown = regimentSortesByGrandAlliances(regimentsOfRenown.map(regiment => {
         const keywords = find(dataBase.data.warscroll, warscroll => warscroll.id === regiment.regimentOfRenownRowImageWarscrollId).referenceKeywords
         return {...regiment, keywords}
