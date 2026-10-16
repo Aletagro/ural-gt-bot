@@ -10,6 +10,7 @@
     "@vkontakte/vk-bridge": "^3.0.2",
     "cra-template": "1.2.0",
     "html-react-parser": "^5.1.18",
+    "html2canvas": "^1.4.1",
     "lodash": "^4.17.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -1,14 +1,18 @@
-import React, {useState, useEffect, useReducer, useCallback} from 'react'
+import React, {useState, useEffect, useReducer, useCallback, useRef} from 'react'
 import {useNavigate} from 'react-router-dom'
+import html2canvas from 'html2canvas'
 import {players, meta} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Checkbox from '../components/Checkbox'
+import armyImages from '../images/armies'
 import Constants from '../Constants'
 
 import min from 'lodash/min'
 import max from 'lodash/max'
 import find from 'lodash/find'
 import isNull from 'lodash/isNull'
+import camelCase from 'lodash/camelCase'
+import upperFirst from 'lodash/upperFirst'
 
 import Styles from './styles/Play.module.css'
 
@@ -34,6 +38,9 @@ const Play = () => {
     const [isFinished, setIsFinished] = useState(false)
     const [info, setInfo] = useState()
     const [minorWin, setMinorWin] = useState(null)
+    const [firstPlayerImage, setFirstPlayerImage] = useState(null)
+    const [secondPlayerImage, setSecondPlayerImage] = useState(null)
+    const bannerRef = useRef(null)
     const battleplan = find(Constants.tournamentBattleplans, ['title', meta.battleplan])
     const disableButton = !firstPlayer || !secondPlayer || (firstPlayer === secondPlayer ? isNull(minorWin) : false)
 
@@ -51,6 +58,32 @@ const Play = () => {
             })
             .catch(error => console.error(error))
     }, [user?.id])
+    
+    useEffect(() => {
+        if (info?.firstPlayer?.roster) {
+            const firstPlayerAllegiance = JSON.parse(info?.firstPlayer?.roster)?.allegiance
+            const firstPlayerImage = armyImages[upperFirst(camelCase(firstPlayerAllegiance))]
+            if (firstPlayerImage) {
+                setFirstPlayerImage(firstPlayerImage)
+            } else {
+                setFirstPlayerImage(armyImages.Ironjaws)
+            }
+        } else {
+            setFirstPlayerImage(armyImages.Ironjaws)
+        }
+
+        if (info?.secondPlayer?.roster) {
+            const secondPlayerAllegiance = JSON.parse(info?.secondPlayer?.roster)?.allegiance
+            const secondPlayerImage = armyImages[upperFirst(camelCase(secondPlayerAllegiance))]
+            if (secondPlayerImage) {
+                setSecondPlayerImage(secondPlayerImage)
+            } else {
+                setSecondPlayerImage(armyImages.StormcastEternal)
+            }
+        } else {
+            setSecondPlayerImage(armyImages.StormcastEternal)
+        }
+    }, [info])
 
     useEffect(() => {
         if (!players.rosters.length) {
@@ -104,14 +137,54 @@ const Play = () => {
         setMinorWin(value)
     }
 
+    const handleClickShare = async () => {
+        try {
+          const canvas = await html2canvas(bannerRef.current, {
+            useCORS: true,
+            backgroundColor: '#000000'
+          })
+          canvas.toBlob(async (blob) => {
+            if (!blob) {
+              console.error('Не удалось создать файл картинки')
+              return
+            }
+            const file = new File([blob], 'match-result.png', {type: 'image/png'})
+            const shareText = `Раунд ${meta?.round}. ${info?.firstPlayer?.surname} ${info?.firstPlayer?.name} vs ${info?.secondPlayer?.surname} ${info?.secondPlayer?.name}`
+    
+            if (navigator.canShare && navigator.canShare({files: [file]})) {
+              await navigator.share({
+                title: `IceHammer 2026. Раунд ${meta?.round}`,
+                text: shareText, 
+                files: [file]
+              })
+            }
+          }, 'image/png');
+    
+        } catch (error) {
+          console.error('Ошибка системного шеринга:', error);
+        }
+      }
+
+    const renderImageBlock = useCallback(() => <div id={Styles.imageContainer} ref={bannerRef}>
+        <img src={firstPlayerImage} id={Styles.firstImage} alt='firstImage' />
+        <div id={Styles.matchInfo}>
+            {/* <div id={Styles.score}>10 : 10</div> */}
+            <div id={Styles.versus}>VS</div>
+        </div>
+        <img src={secondPlayerImage} id={Styles.secondImage} alt='secondImage' />
+        {/* <img src={logo} id={Styles.logo} alt='logo' /> */}
+    </div>, [firstPlayerImage, secondPlayerImage])
+
     if (isFinished) {
         return <div id='column' className='Chapter'>
             <b id={Styles.result}>Результат вашей игры принят</b>
+            {renderImageBlock()}
         </div>
     }
 
     return <div id='column' className='Chapter'>
-        <b id={Styles.table} >Стол {info?.table}</b>
+        <b onClick={handleClickShare} id={Styles.table}>Стол 1{info?.table}</b>
+        {renderImageBlock()}
         <div id={Styles.inputContainer}>
             <div id={Styles.playerContainer}>
                 <FloatingLabelInput

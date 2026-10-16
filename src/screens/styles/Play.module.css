@@ -57,7 +57,7 @@
 }
 #table {
   text-align: center;
-  padding-bottom: 16px;
+  padding-bottom: 8px;
   font-size: 24px;
 }
 #checkboxRow {
@@ -73,4 +73,45 @@
 #checkboxTitle {
   font-size: 20px;
   padding-bottom: 4px;
+}
+#imageContainer {
+  width: 100%;
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  overflow: hidden;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  position: relative;
+}
+#firstImage {
+  width: 40%;
+}
+#secondImage {
+  width: 40%;
+  transform: scaleX(-1);
+}
+#matchInfo {
+  flex: 1;
+  align-self: center;
+  text-align: center;
+}
+#versus {
+  font-size: 30px;
+  color: rgb(236, 230, 175);
+}
+#score {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(236, 230, 175);
+}
+#logo {
+  position: absolute;
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px; 
+  height: 40px;
+  bottom: 8px;
 }
