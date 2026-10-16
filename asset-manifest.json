@@ -1,7 +1,32 @@
 {
   "files": {
-    "main.css": "/ural-gt-bot/static/css/main.28832a2d.css",
-    "main.js": "/ural-gt-bot/static/js/main.c0b4a42c.js",
+    "main.css": "/ural-gt-bot/static/css/main.ab54e19f.css",
+    "main.js": "/ural-gt-bot/static/js/main.ed16106a.js",
+    "static/media/SonsOfBehemat.png": "/ural-gt-bot/static/media/SonsOfBehemat.745e1fc2c8ad863bdc19.png",
+    "static/media/MaggotkinOfNurgle.png": "/ural-gt-bot/static/media/MaggotkinOfNurgle.c6f2cba6a77bf0b49d6d.png",
+    "static/media/Fyreslayers.png": "/ural-gt-bot/static/media/Fyreslayers.a8c7d4d967b8f2285d02.png",
+    "static/media/Sylvaneth.png": "/ural-gt-bot/static/media/Sylvaneth.932d909108f879b654c9.png",
+    "static/media/Skaven.png": "/ural-gt-bot/static/media/Skaven.6b63bfadfe3b073565c9.png",
+    "static/media/IdonethDeepkin.png": "/ural-gt-bot/static/media/IdonethDeepkin.b59771d468b11e0d42ee.png",
+    "static/media/Nighthaunt.png": "/ural-gt-bot/static/media/Nighthaunt.1f19da5c2a35d0ef2845.png",
+    "static/media/DaughtersOfKhaine.png": "/ural-gt-bot/static/media/DaughtersOfKhaine.ad1e350e9633ba4f5e9c.png",
+    "static/media/KharadronOverlords.png": "/ural-gt-bot/static/media/KharadronOverlords.affb3252f52132ecf0d4.png",
+    "static/media/OgorMawtribes.png": "/ural-gt-bot/static/media/OgorMawtribes.0d5a1075ed01a5da9a95.png",
+    "static/media/HelsmithsOfHashut.png": "/ural-gt-bot/static/media/HelsmithsOfHashut.f4fbed95d75fcf7826e6.png",
+    "static/media/SlavesToDarkness.png": "/ural-gt-bot/static/media/SlavesToDarkness.6787c52cd853b482ba24.png",
+    "static/media/Ironjaws.png": "/ural-gt-bot/static/media/Ironjaws.7082da2783cf3530cd71.png",
+    "static/media/Kruleboyz.png": "/ural-gt-bot/static/media/Kruleboyz.6eacb21fe04bdaff1e09.png",
+    "static/media/FleshEaterCourts.png": "/ural-gt-bot/static/media/FleshEaterCourts.fff1e9aff10722a2ea13.png",
+    "static/media/CitiesOfSigmar.png": "/ural-gt-bot/static/media/CitiesOfSigmar.eab5a36a5d895960a602.png",
+    "static/media/OssiarchBonereapers.png": "/ural-gt-bot/static/media/OssiarchBonereapers.c46bf626184e800785bc.png",
+    "static/media/Seraphon.png": "/ural-gt-bot/static/media/Seraphon.90ae9b4d0f76eda03cbb.png",
+    "static/media/DisciplesOfTzeentch.png": "/ural-gt-bot/static/media/DisciplesOfTzeentch.f7e641b4a112e2a399ad.png",
+    "static/media/BladesOfKhorne.png": "/ural-gt-bot/static/media/BladesOfKhorne.03b907250a6f65533754.png",
+    "static/media/StormcastEternal.png": "/ural-gt-bot/static/media/StormcastEternal.4df2c05c228c132e58ee.png",
+    "static/media/SoulblightGravelords.png": "/ural-gt-bot/static/media/SoulblightGravelords.cfdcb4de8c34f791050d.png",
+    "static/media/GloomspiteGitz.png": "/ural-gt-bot/static/media/GloomspiteGitz.42cb641d17edd571800e.png",
+    "static/media/HedonitesOfSlaanesh.png": "/ural-gt-bot/static/media/HedonitesOfSlaanesh.e15cde6f7c277ede3a53.png",
+    "static/media/LuminethRealmLords.png": "/ural-gt-bot/static/media/LuminethRealmLords.1ca47f825670f0eb262b.png",
     "static/media/IceHammer.png": "/ural-gt-bot/static/media/IceHammer.77fb02d034c4b921ec55.png",
     "static/media/placeholder.png": "/ural-gt-bot/static/media/placeholder.816f67bc014b91894c3e.png",
     "static/media/malekith.png": "/ural-gt-bot/static/media/malekith.6e0b07f7d78ebe386dc6.png",
@@ -29,11 +54,11 @@
     "static/media/goldCheckmark.svg": "/ural-gt-bot/static/media/goldCheckmark.3ba83c49489fe35dc43e87829735d5a0.svg",
     "static/media/plus.svg": "/ural-gt-bot/static/media/plus.1821b69dd59c40f640858714c03302df.svg",
     "static/media/minus.svg": "/ural-gt-bot/static/media/minus.e96d94d06862f0e438941502b49deb0e.svg",
-    "main.28832a2d.css.map": "/ural-gt-bot/static/css/main.28832a2d.css.map",
-    "main.c0b4a42c.js.map": "/ural-gt-bot/static/js/main.c0b4a42c.js.map"
+    "main.ab54e19f.css.map": "/ural-gt-bot/static/css/main.ab54e19f.css.map",
+    "main.ed16106a.js.map": "/ural-gt-bot/static/js/main.ed16106a.js.map"
   },
   "entrypoints": [
-    "static/css/main.28832a2d.css",
-    "static/js/main.c0b4a42c.js"
+    "static/css/main.ab54e19f.css",
+    "static/js/main.ed16106a.js"
   ]
 }
