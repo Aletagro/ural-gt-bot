@@ -7,6 +7,7 @@ import Checkbox from '../components/Checkbox'
 import armyImages from '../images/armies'
 import Constants from '../Constants'
 
+import get from 'lodash/get'
 import min from 'lodash/min'
 import max from 'lodash/max'
 import find from 'lodash/find'
@@ -15,6 +16,8 @@ import camelCase from 'lodash/camelCase'
 import upperFirst from 'lodash/upperFirst'
 
 import Styles from './styles/Play.module.css'
+
+const dataBase = require('../dataBase.json')
 
 const tg = window.Telegram?.WebApp
 
@@ -28,7 +31,7 @@ const inputStyle = {
     'fontFamily': 'Minion Pro Regular'
 }
 
-const Play = () => {
+const Play = ({setShareAction}) => {
     const navigate = useNavigate()
     const user = tg.initDataUnsafe?.user
     // eslint-disable-next-line
@@ -58,32 +61,34 @@ const Play = () => {
             })
             .catch(error => console.error(error))
     }, [user?.id])
-    
-    useEffect(() => {
-        if (info?.firstPlayer?.roster) {
-            const firstPlayerAllegiance = JSON.parse(info?.firstPlayer?.roster)?.allegiance
-            const firstPlayerImage = armyImages[upperFirst(camelCase(firstPlayerAllegiance))]
-            if (firstPlayerImage) {
-                setFirstPlayerImage(firstPlayerImage)
-            } else {
-                setFirstPlayerImage(armyImages.Ironjaws)
-            }
-        } else {
-            setFirstPlayerImage(armyImages.Ironjaws)
-        }
 
-        if (info?.secondPlayer?.roster) {
-            const secondPlayerAllegiance = JSON.parse(info?.secondPlayer?.roster)?.allegiance
-            const secondPlayerImage = armyImages[upperFirst(camelCase(secondPlayerAllegiance))]
-            if (secondPlayerImage) {
-                setSecondPlayerImage(secondPlayerImage)
+    const setPlayerImage = useCallback((isFirst) => {
+        let playerImage = isFirst ? armyImages.Ironjaws : armyImages.StormcastEternal
+        const player = isFirst ? 'firstPlayer' : 'secondPlayer'
+        if (get(info, `${player}.roster`)) {
+            const playerAllegiance = JSON.parse(get(info, `${player}.roster`))?.allegiance
+            const _playerImage = armyImages[upperFirst(camelCase(playerAllegiance))]
+            if (_playerImage) {
+                playerImage = _playerImage
             } else {
-                setSecondPlayerImage(armyImages.StormcastEternal)
+                const parentFactionKeywordId = find(dataBase.data.faction_keyword, ['name', playerAllegiance])?.parentFactionKeywordId
+                const faction = find(dataBase.data.faction_keyword, ['id', parentFactionKeywordId])?.name
+                if (faction) {
+                    playerImage = armyImages[upperFirst(camelCase(faction))]
+                }
             }
+        }
+        if (isFirst) {
+            setFirstPlayerImage(playerImage)
         } else {
-            setSecondPlayerImage(armyImages.StormcastEternal)
+            setSecondPlayerImage(playerImage)
         }
     }, [info])
+    
+    useEffect(() => {
+        setPlayerImage(true)
+        setPlayerImage()
+    }, [setPlayerImage, info])
 
     useEffect(() => {
         if (!players.rosters.length) {
@@ -137,7 +142,7 @@ const Play = () => {
         setMinorWin(value)
     }
 
-    const handleClickShare = async () => {
+    const handleClickShare = useCallback(async () => {
         try {
           const canvas = await html2canvas(bannerRef.current, {
             useCORS: true,
@@ -152,28 +157,47 @@ const Play = () => {
             const shareText = `Раунд ${meta?.round}. ${info?.firstPlayer?.surname} ${info?.firstPlayer?.name} vs ${info?.secondPlayer?.surname} ${info?.secondPlayer?.name}`
     
             if (navigator.canShare && navigator.canShare({files: [file]})) {
-              await navigator.share({
-                title: `IceHammer 2026. Раунд ${meta?.round}`,
-                text: shareText, 
-                files: [file]
-              })
+              try {
+                await navigator.share({
+                    title: `IceHammer 2026. Раунд ${meta?.round}`,
+                    text: shareText, 
+                    files: [file]
+                })
+              } catch (error) {
+                console.error('Ошибка системного шеринга:', error);
+              }
             }
           }, 'image/png');
     
         } catch (error) {
           console.error('Ошибка системного шеринга:', error);
         }
-      }
+    }, [info])
 
-    const renderImageBlock = useCallback(() => <div id={Styles.imageContainer} ref={bannerRef}>
-        <img src={firstPlayerImage} id={Styles.firstImage} alt='firstImage' />
-        <div id={Styles.matchInfo}>
-            {/* <div id={Styles.score}>10 : 10</div> */}
-            <div id={Styles.versus}>VS</div>
+    useEffect(() => {
+        if (firstPlayerImage) {
+          setShareAction(() => handleClickShare)
+        }
+        return () => setShareAction(null)
+    }, [firstPlayerImage, setShareAction, handleClickShare])
+
+    const renderImageBlock = useCallback(() => {
+        const firstPlayerName = info?.firstPlayer ? `${info?.firstPlayer?.surname} ${info?.firstPlayer?.name}` : undefined
+        const secondPlayerName = info?.secondPlayer ? `${info?.secondPlayer?.surname} ${info?.secondPlayer?.name}` : undefined
+        return <div id={Styles.imageContainer} ref={bannerRef}>
+            <img src={firstPlayerImage} id={Styles.firstImage} alt='firstImage' />
+            <div id={Styles.matchInfo}>
+                {/* <div id={Styles.score}>10 : 10</div> */}
+                <div id={Styles.versus}>VS</div>
+            </div>
+            <img src={secondPlayerImage} id={Styles.secondImage} alt='secondImage' />
+            <div id={Styles.playersNameContainer}>
+                {firstPlayerName ? <p id={Styles.firstPlayerName}>{firstPlayerName}</p> : null}
+                {secondPlayerName ? <p id={Styles.secondPlayerName}>{secondPlayerName}</p> : null}
+            </div>
+            {/* <img src={logo} id={Styles.logo} alt='logo' /> */}
         </div>
-        <img src={secondPlayerImage} id={Styles.secondImage} alt='secondImage' />
-        {/* <img src={logo} id={Styles.logo} alt='logo' /> */}
-    </div>, [firstPlayerImage, secondPlayerImage])
+    }, [firstPlayerImage, secondPlayerImage, info])
 
     if (isFinished) {
         return <div id='column' className='Chapter'>
@@ -183,7 +207,7 @@ const Play = () => {
     }
 
     return <div id='column' className='Chapter'>
-        <b onClick={handleClickShare} id={Styles.table}>Стол 1{info?.table}</b>
+        <b id={Styles.table}>Стол 1{info?.table}</b>
         {renderImageBlock()}
         <div id={Styles.inputContainer}>
             <div id={Styles.playerContainer}>

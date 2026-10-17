@@ -304,7 +304,7 @@ const Registration = () => {
                         : renderNotice('Вы еще не зарегистированы, попробуйте еще раз или обратитесь к организаторам', 'error')
                     }
                     {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
-                    {(player.reg && meta.isRoundActive) || player.isJudge ? <Row title='Ваша Игра' navigateTo='Play' /> : null}
+                    {(player.reg && meta.isRoundActive) || player.isJudge ? <Row title='Ваша Игра' navigateTo='play' /> : null}
                     {player.reg && player.roster
                         ? <Row title='Ваш ростер' navigateTo='roster' state={{isInfo: true}} />
                         : null

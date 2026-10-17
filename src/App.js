@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {Route, Routes} from 'react-router-dom'
 import useSwipeBack from './utilities/useSwipeBack'
 import Registration from './screens/Registration'
@@ -56,6 +56,7 @@ const tg = window.Telegram?.WebApp
 
 function App() {
   useSwipeBack()
+  const [shareAction, setShareAction] = useState(null)
 
   useEffect(() => {
     tg.ready()
@@ -68,7 +69,7 @@ function App() {
   }, [])
 
   return <div>
-    <Header />
+    <Header onShare={shareAction} />
     <Routes>
       <Route index element={<Registration />} />
       <Route path={'roster'} element={<RosterScreen />} />
@@ -81,7 +82,7 @@ function App() {
       <Route path={'playerInfo'} element={<PlayerInfo />} />
       <Route path={'rosters'} element={<Rosters />} />
       <Route path={'rounds'} element={<Rounds />} />
-      <Route path={'play'} element={<Play />} />
+      <Route path={'play'} element={<Play setShareAction={setShareAction} />} />
       <Route path={'vote'} element={<Vote />} />
       <Route path={'admin'} element={<Admin />} />
       <Route path={'help'} element={<Help />} />

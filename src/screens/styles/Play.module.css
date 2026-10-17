@@ -115,3 +115,21 @@
   height: 40px;
   bottom: 8px;
 }
+#playersNameContainer {
+  position: absolute;
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+  background-color:rgba(0, 0, 0, 0.5);
+}
+#firstPlayerName {
+  font-size: 18px;
+  color: rgb(236, 230, 175);
+  padding-left: 8px;
+}
+#secondPlayerName {
+  font-size: 18px;
+  color: rgb(236, 230, 175);
+  padding-right: 8px;
+  text-align: right;
+}

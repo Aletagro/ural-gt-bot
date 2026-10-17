@@ -11,7 +11,7 @@ import forEach from 'lodash/forEach'
 
 import Styles from './styles/Header.module.css'
 
-const Header = () => {
+const Header = ({onShare}) => {
     const navigate = useNavigate()
     const {pathname, state} = useLocation()
 
@@ -80,6 +80,8 @@ const Header = () => {
                 return null
             case '/builder':
                 return <button id={Styles.rightButton} onClick={handleNavigateToExport}><img src={Export} alt='' /></button>
+            case '/play':
+                return <button id={Styles.rightButton} onClick={onShare}><img src={Export} alt='' /></button>
             default:
                 return <div id={Styles.rightButtons}>
                     <button id={Styles.rightButton} onClick={handleNavigateToSearch}><img src={Search} alt='' /></button>
