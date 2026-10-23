@@ -370,7 +370,7 @@ const Registration = () => {
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
                     {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Ice Hammer 2026' navigateTo='tournamentRules' /> : null}
                     <Row title='Подсказка во время игры' navigateTo='help' />
-                    {player.info?.id && (!player.info?.tgId || !player.info?.vkId) ? <Row title='Связать аккаунты Телеграмма и ВК' navigateTo='linkAccounts' /> : null}
+                    {/* {player.info?.id && (!player.info?.tgId || !player.info?.vkId) ? <Row title='Связать аккаунты Телеграмма и ВК' navigateTo='linkAccounts' /> : null} */}
                     {meta.isRoundActive && player.reg ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     {meta.round || !player.reg ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}
                     <ToastContainer />
