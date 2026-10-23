@@ -20,7 +20,7 @@ import Styles from './styles/Registration.module.css'
 const tg = window.Telegram?.WebApp
 const href = window.location?.href
 const urlParams = new URLSearchParams(href.split('?')[1])
-player.tgId = tg?.initDataUnsafe?.user
+player.tgId = tg?.initDataUnsafe?.user?.id
 player.vkId = urlParams.get('vk_user_id')
 // player.tgId = 530569849
 // player.vkId = 45749262
