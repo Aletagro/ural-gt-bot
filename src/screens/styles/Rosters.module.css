@@ -32,3 +32,9 @@
     background: darkred;
     padding: 0px 8px;
 }
+#empty {
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 60px;
+    text-align: center;
+}

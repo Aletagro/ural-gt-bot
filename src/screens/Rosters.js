@@ -7,6 +7,7 @@ import Constants from '../Constants'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
+import isEmpty from 'lodash/isEmpty'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
@@ -75,10 +76,13 @@ const Rosters = () => {
             <input id={Styles.input} onChange={handleSearch} placeholder='Поиск' autoFocus type='search' name='search' />
         </div>
         <div id='column' className='Chapter'>
-            <div>
-                {renderRow('№', 'Игрок', 'Армия', true)}
-                {map(search.rosters, renderRoster)}
-            </div>
+            {isEmpty(search.rosters) && searchValue
+                ? <p id={Styles.empty}>Игроков, соответствующий поиску не найдено</p>
+                : <div>
+                    {renderRow('№', 'Игрок', 'Армия', true)}
+                    {map(search.rosters, renderRoster)}
+                </div>
+            }
         </div>
     </>
 }

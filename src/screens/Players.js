@@ -8,6 +8,7 @@ import Constants from '../Constants'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
+import isEmpty from 'lodash/isEmpty'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
@@ -117,10 +118,13 @@ const Players = () => {
             : null
         }
         <div id='column' className='Chapter'>
-            <div>
-                {renderRow('№', 'Игрок', undefined, 'Армия', 'W', 'D', 'ИО', lastColumn, true)}
-                {map(search.players, renderPlayer)}
-            </div>
+            {isEmpty(search.players) && searchValue
+                ? <p id={Styles.empty}>Игроков, соответствующий поиску не найдено</p>
+                : <div>
+                    {renderRow('№', 'Игрок', undefined, 'Армия', 'W', 'D', 'ИО', lastColumn, true)}
+                    {map(search.players, renderPlayer)}
+                </div>
+            }
         </div>
     </>
 }

@@ -32,12 +32,13 @@ const PlayerInfo = () => {
     if (roster) {
         roster = JSON.parse(roster)
     }
+    const playerInfo = find(players.data, ['id', player.id])
     const [modalData, setModalData] = useState({visible: false, title: ''})
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
-    const [isPlayerActive, setIsPlayerActive] = useState(Boolean(player?.status))
+    const [isPlayerActive, setIsPlayerActive] = useState(Boolean(playerInfo?.status))
     const [message, setMessage] = useState('')
-    const [paintChecked, setPaintChecked] = useState(player.paint_checked)
-    const photos = useMemo(() => map(find(players.data, ['id', player.id])?.validation_photo_path, addDomainForUrl), [player.id])
+    const [paintChecked, setPaintChecked] = useState(playerInfo.paint_checked)
+    const photos = useMemo(() => map(playerInfo?.validation_photo_path, addDomainForUrl), [playerInfo?.validation_photo_path])
 
     const handleClickAllegiance = () => {
         navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: roster.allegianceId}})
@@ -164,9 +165,9 @@ const PlayerInfo = () => {
     </div>
 
     const renderPlay = (playIndex, index) => {
-        const oppId = get(player, `game_${playIndex}_opp`)
+        const oppId = get(playerInfo, `game_${playIndex}_opp`)
         const opponent = find(players.data, ['id', oppId])
-        const tp = get(player, `game_${playIndex}_tp`)
+        const tp = get(playerInfo, `game_${playIndex}_tp`)
         const gameResult = tp > 10 ? 'Win' : tp === 10 ? 'Draw' : tp === null ? '' : 'Lose'
         return opponent
             ? <button key={index} id={Styles.playContainer} onClick={handleClickPlayer(opponent)}>
@@ -184,7 +185,7 @@ const PlayerInfo = () => {
         <p id={Styles.title}><b>Город:</b> {player.city}</p>
         <p id={Styles.title}><b>Гранд Альянс:</b> {rosterInfo?.grandAlliance}</p>
         <p id={Styles.title}><b>Армия:</b> {rosterInfo?.allegiance}</p>
-        {player.game_1_opp
+        {playerInfo.game_1_opp
             ? <>
                 <b id={Styles.title}>Игры</b>
                     <div id={Styles.tableContainer}>
