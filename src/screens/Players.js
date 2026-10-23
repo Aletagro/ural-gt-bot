@@ -75,10 +75,10 @@ const Players = () => {
         setLastColumn(newValue)
     }
 
-    const renderRow = (place, player, city, army, w, d, tp, last, isOddRow, withRoster, paintChecked) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+    const renderRow = (place, _player, city, army, w, d, tp, last, isOddRow, withRoster, paintChecked) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{place}</p>
         <div id={Styles.playerInfo}>
-            <p id={Styles.сolumn}>{player}</p>
+            <p id={Styles.сolumn}>{_player}</p>
             {city ? <p id={Styles.subtitle}>{city}</p> : null}
         </div>
         {meta.round || meta.isRostersShow
