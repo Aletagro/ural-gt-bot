@@ -1,6 +1,7 @@
 import {accordionSummaryClasses} from '@mui/joy/AccordionSummary'
 
 const Constants = {
+    domain: 'https://aos.aoscom.online',
     grandAlliances: [
         {
             name: 'Chaos',
@@ -591,7 +592,7 @@ const Constants = {
         }
     ],
     myTgId: 530569849,
-    judgesIds: [530569849, 200821933]
+    judgesIds: [530569849, 200821933, 589760439]
 }
 
 export default Constants

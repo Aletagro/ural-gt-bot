@@ -1,15 +1,10 @@
 import React, {useState, useReducer, useCallback} from 'react'
 import {ToastContainer, toast} from 'react-toastify'
 import {useNavigate} from 'react-router-dom'
-import Modal from '@mui/joy/Modal'
-import ModalDialog from '@mui/joy/ModalDialog'
 import 'react-toastify/dist/ReactToastify.css'
-import FloatingLabelInput from '../components/FloatingLabelInput'
-import Checkbox from '../components/Checkbox'
 import Constants from '../Constants'
-import {roster, player, lists, meta} from '../utilities/appState'
-import {getErrors, getWarnings, getWoundsCount, cleanObject, cleanBuilder} from '../utilities/utils'
-import Close from '../icons/close.svg'
+import {roster, player, meta} from '../utilities/appState'
+import {getErrors, getWarnings, getWoundsCount, cleanBuilder} from '../utilities/utils'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -19,27 +14,16 @@ import includes from 'lodash/includes'
 
 import Styles from './styles/Export.module.css'
 
-const tg = window.Telegram?.WebApp
-
-const rorKeys =  ['id', 'name', 'regimentOfRenownPointsCost']
-
-const manifistationsKeys =  ['id', 'name']
-
 const Export = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const [isCopy, setIsCopy] = useState(false)
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const [listName, setListName] = useState(roster.listName || `List-${lists.count + 1}`)
-    const [isListPublic, setIsListPublic] = useState(true)
     const errors = getErrors(roster)
     const warnings = getWarnings(roster)
     const [disableButton, setDisableButton] = useState(Boolean(errors.length || warnings.length))
     const wounds = getWoundsCount(roster)
     const drops = roster.regiments.length + roster.auxiliaryUnits.length + (roster.regimentOfRenown ? 1 : 0)
-    const user = tg.initDataUnsafe?.user
     const navigate = useNavigate()
-    const unitsKeys =  ['id', 'name', 'points', 'modelCount', 'isReinforced', 'heroicTrait', 'artefact', 'otherWarscrollOption', 'marksOfChaos', ...roster.otherEnhancements, 'weaponOptions'] 
 
     const getUniques = () => {
         let uniqueUnits = ''
@@ -88,7 +72,8 @@ const Export = () => {
     })
 
     const getPlayerInfo = useCallback(async () => {
-        fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
+        const urlQuery = player.tgId ? `tgId=${player.tgId}` : `vkId=${player.vkId}`
+        fetch(`${Constants.domain}/players/player/?${urlQuery}`)
             .then(response => response.json())
             .then(data => {
                 player.roster = data.roster
@@ -96,7 +81,7 @@ const Export = () => {
                 player.allegiance = JSON.parse(data.roster_stat)?.allegiance
             })
             .catch(error => console.error(error))
-    }, [user?.id])
+    }, [])
 
     const getErrorText = (error) => `- ${error}`
 
@@ -148,31 +133,6 @@ ${roster.points.all}/${roster.pointsLimit} Pts
         setIsCopy(true)
     }
 
-    const pickKeys = (unit, keys) => {
-        return keys.reduce((acc, key) => {
-            if (unit.hasOwnProperty(key)) {
-                acc[key] = unit[key];
-            }
-            return acc
-        }, {})
-    }
-
-    const getShortUnits = (units = [], keys) => {
-        if (size(units)) {
-            return map(units, (unit) => {
-                return pickKeys(unit, keys)
-            })
-        }
-        return null
-    }
-
-    const getShortRegiments = () => {
-        return map(roster.regiments, (regiment) => {
-            const units = getShortUnits(regiment.units, unitsKeys)
-            return JSON.stringify({...regiment, units})
-        })
-    }
-
     const handleSendRoster = useCallback(async () => {
         setDisableButton(true)
         const r_stat = {
@@ -202,7 +162,7 @@ ${roster.points.all}/${roster.pointsLimit} Pts
             spellsLore: roster.spellsLore,
             tactics: map(roster.tactics, 'name')
         }
-        await fetch(`https://aoscom.online/rosters/?tg_id=${user?.id}&roster=${JSON.stringify(_roster)}&r_stat=${JSON.stringify(r_stat)}`, {
+        await fetch(`${Constants.domain}/rosters/?user_id=${player?.info?.id}&roster=${JSON.stringify(_roster)}&r_stat=${JSON.stringify(r_stat)}`, {
             method: 'PUT'
         })
             .then(response => {
@@ -216,124 +176,6 @@ ${roster.points.all}/${roster.pointsLimit} Pts
             .catch(error => console.error(error))
     // eslint-disable-next-line
     }, [])
-
-    const handleSaveList = async () => {
-        const data = cleanObject({
-            id: roster.id,
-            allegiance: roster.allegiance,
-            allegiance_id: roster.allegianceId,
-            auxiliary_units: JSON.stringify(getShortUnits(roster.auxiliaryUnits, unitsKeys)),
-            battle_formation: roster.battleFormation,
-            faction_terrain: roster.factionTerrain,
-            general_regiment_index: roster.generalRegimentIndex,
-            grand_alliance: roster.grandAlliance,
-            manifestation_lore: roster.manifestationLore,
-            manifestations_list: JSON.stringify(getShortUnits(roster.manifestationsList, manifistationsKeys)),
-            points: roster.points,
-            points_limit: roster.pointsLimit,
-            prayers_lore: roster.prayersLore,
-            regiment_of_renown: roster.regimentOfRenown ? JSON.stringify(pickKeys(roster.regimentOfRenown, rorKeys)) : null,
-            regiments: getShortRegiments(),
-            regiments_of_renown_units: JSON.stringify(getShortUnits(roster.regimentsOfRenownUnits, unitsKeys)),
-            spells_lore: roster.spellsLore,
-            tactics: map(roster.tactics, 'name'),
-            tg_id: user?.id,
-            name: `${user?.last_name || ''} ${user?.first_name || ''}`,
-            is_public: isListPublic,
-            note: {...roster.note, wounds, drops},
-            list_name: listName
-        })
-
-        try {
-            if (roster.id) {
-                await fetch('https://aoscom.online/list', {
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': "application/json, text/javascript, /; q=0.01"
-                    }
-                })
-            } else {
-                await fetch('https://aoscom.online/list', {
-                    method: 'PUT',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': "application/json, text/javascript, /; q=0.01"
-                    }
-                })
-            }
-        } catch (err) {
-            console.error(err.message)
-        }
-        handleCloseModal()
-        toast.success('List Saved', Constants.toastParams)
-    }
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false)
-    }
-
-    // const handleClickSaveButton = () => {
-    //     setIsModalOpen(true)
-    // }
-
-    const handleDeleteList = (listId) => async () => {
-        try {
-            await fetch(`https://aoscom.online/list/?id=${listId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': "application/json, text/javascript, /; q=0.01"
-                }
-            })
-            lists.count--
-            forceUpdate()
-        } catch (err) {
-            console.error(err.message)
-        }
-    }
-
-    const renderList = (list) => <div id={Styles.listDeletedContainer} onClick={handleDeleteList(list.id)}>
-        <div>
-            <p id={Styles.listDeletedTitle}>{list.name}</p>
-            <p id={Styles.listDeletedSubtitle}>{list.allegiance}</p>
-        </div>
-        <img id={Styles.allegianceInfoIcon} src={Close} alt="" />
-    </div>
-
-    const handleBlurName = (e) => {
-        setListName(e.target.value)
-    }
-    const handleChangePublic = () => {
-        setIsListPublic(!isListPublic)
-    }
-
-    const renderModalContent = () => {
-        if (lists.count >= Constants.listsMax) {
-            return <>
-                <b id={Styles.modalTitle}>You have reached limit of saved lists</b>
-                <p id={Styles.modalText}>You can delete one of your list</p>
-                {map(lists.data, renderList)}
-            </>
-        }
-        return <>
-            <b id={Styles.modalTitle}>Save Roster</b>
-            <FloatingLabelInput
-                style={inputStyles.listName}
-                onBlur={handleBlurName}
-                label='List Name'
-                defaultValue={listName}
-            />
-            <div id={Styles.publicCheckboxContainer} onClick={handleChangePublic}>
-                <p id={Styles.potentialLegends}>Save as public</p>
-                <Checkbox onClick={handleChangePublic} checked={isListPublic} />
-            </div>
-            <p id={Styles.publicNote}>Other users will be able to see this list.</p>
-            <button id={listName ? Styles.button : Styles.disabledButton} disabled={!listName} onClick={handleSaveList}>Save</button>
-        </>
-    }
 
     const renderWeapon = ([key, value]) => value
         ? <p>&#8226; {value} x {key}</p>
@@ -376,9 +218,6 @@ ${roster.points.all}/${roster.pointsLimit} Pts
     const renderWarning = (error, index) => <p  id={Styles.warning}>&#8226; {error}</p>
 
     return <div id={Styles.container}>
-        {/* <div id={Styles.buttonContainer}>
-            <button id={Styles.button} onClick={handleClickSaveButton}>Save List</button>
-        </div> */}
         {meta.rostersBeingAccepted
             ? <>
                 <div id={Styles.buttonContainer}>
@@ -442,23 +281,7 @@ ${roster.points.all}/${roster.pointsLimit} Pts
         <p>Wounds: {wounds}</p>
         <p>{roster.points.all}/{roster.pointsLimit} Pts</p>
         <ToastContainer />
-        <Modal open={isModalOpen} onClose={handleCloseModal}>
-            <ModalDialog layout="center">
-                {renderModalContent()}
-            </ModalDialog>
-        </Modal>
     </div>
 }
 
 export default Export
-
-const inputStyles = {
-    listName: {
-        '--Input-minHeight': '48px',
-        borderRadius: '4px',
-        'border-color': '#B4B4B4',
-        color: '#000000',
-        'box-shadow': 'none',
-        'font-family': 'Minion Pro Bold'
-    }
-}

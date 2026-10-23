@@ -5,8 +5,6 @@ import size from 'lodash/size'
 
 import Styles from './styles/PhotoGallery.module.css'
 
-const API_KEY = process.env.REACT_APP_API_KEY
-
 const PhotoGallery = ({photos}) => {
     const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(null)
 
@@ -29,23 +27,19 @@ const PhotoGallery = ({photos}) => {
     }
 
     const renderPhotos = (photo, index) => {
-        const src = `https://www.googleapis.com/drive/v3/files/${photo.id}?alt=media&key=${API_KEY}`
         return <img
-            key={photo.id}
-            src={src}
-            alt={photo.name}
-            width={360}
-            height={196}
+            key={index}
+            src={photo}
+            alt={photo}
+            width={200}
+            height={200}
             loading="lazy"
-            style={{ cursor: 'pointer', flexShrink: 0 }}
+            style={{cursor: 'pointer', flexShrink: 0}}
             onClick={() => openModal(index)}
         />
     }
 
     const currentPhoto = selectedPhotoIndex !== null ? photos[selectedPhotoIndex] : null
-    const currentSrc = currentPhoto
-        ? `https://www.googleapis.com/drive/v3/files/${currentPhoto.id}?alt=media&key=${API_KEY}`
-        : ''
 
     return <div id={Styles.container}>
         {size(photos)
@@ -101,8 +95,8 @@ const PhotoGallery = ({photos}) => {
                 </button>
                 {/* Изображение */}
                 <img
-                    src={currentSrc}
-                    alt={currentPhoto?.name}
+                    src={currentPhoto}
+                    alt={currentPhoto}
                     style={{
                         maxHeight: '90vh',
                         maxWidth: '90vw',

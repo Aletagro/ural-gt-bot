@@ -15,8 +15,6 @@ import lowerCase from 'lodash/lowerCase'
 
 import Styles from './styles/Challenges.module.css'
 
-const tg = window.Telegram?.WebApp
-
 const Challenges = () => {
     const navigate = useNavigate()
     const [showPLayers, setShowPLayers] = useState(false)
@@ -25,7 +23,6 @@ const Challenges = () => {
     const [playerChallenges, setPlayerChallenges] = useState([])
     const [isPlayerChallengesGet, setIsPlayerChallengesGet] = useState(false)
     const [modalData, setModalData] = useState({visible: false, title: ''})
-    const user = tg.initDataUnsafe?.user
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
@@ -48,7 +45,7 @@ const Challenges = () => {
     )
 
     const handleGetChallenges = useCallback(async () => {
-        await fetch('https://aoscom.online/challenges/')
+        await fetch(`${Constants.domain}/challenges/`)
             .then(response => response.json())
             .then(data => {
                 players.сhallenges = data
@@ -80,27 +77,30 @@ const Challenges = () => {
     }
 
     const getPlayerInfo = useCallback(async () => {
-        fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
+        const urlQuery = player.tgId ? `tgId=${player.tgId}` : `vkId=${player.vkId}`
+        fetch(`${Constants.domain}/players/player/?${urlQuery}`)
             .then(response => response.json())
             .then(data => {
                 player.info = data
                 forceUpdate()
             })
             .catch(error => console.error(error))
-    }, [user?.id])
+    }, [])
 
     const handleGetPlayerChallenges = useCallback(async () => {
-        await fetch(`https://aoscom.online/challenges/challenges_for_player/?player_id=${player?.info?.id}`)
+        await fetch(`${Constants.domain}/challenges/challenges_for_player/?id=${player?.info?.id}`)
             .then(response => response.json())
             .then(data => {
                 setPlayerChallenges(data)
-                setIsPlayerChallengesGet(true)
             })
             .catch(error => console.error(error))
+            .finally(() => {
+                setIsPlayerChallengesGet(true)
+            })
     }, [])
 
     const handleCreateChallenge = useCallback(async (_player) => {
-        await fetch(`https://aoscom.online/challenges/issue_a_challenge/?tg_id=${user?.id}&opp_id=${_player?.id}`, {
+        await fetch(`${Constants.domain}/challenges/issue/?id=${player?.info?.id}&opp_id=${_player?.id}`, {
             method: 'PUT'
         })
             .then(response => response.json())
@@ -109,10 +109,10 @@ const Challenges = () => {
                 toast.success('Челлендж брошен!', Constants.toastParams)
             })
             .catch(error => console.error(error))
-    }, [getPlayerInfo, user?.id])
+    }, [getPlayerInfo])
 
     const handleAcceptChallenge = useCallback(async (_player) => {
-        await fetch(`https://aoscom.online/challenges/accept_a_challenge/?tg_id=${user?.id}&opp_id=${_player?.id}`, {
+        await fetch(`${Constants.domain}/challenges/accept/?id=${player?.info?.id}&opp_id=${_player?.id}`, {
             method: 'PUT'
         })
             .then(response => response.json())
@@ -122,10 +122,10 @@ const Challenges = () => {
                 toast.success('Челлендж принят! Грядёт великая битва!', Constants.toastParams)
             })
             .catch(error => console.error(error))
-    }, [getPlayerInfo, user?.id])
+    }, [getPlayerInfo])
 
     const handleDeclineChallenge = useCallback(async (_player) => {
-        await fetch(`https://aoscom.online/challenges/reject_a_challenge/?tg_id=${user?.id}&opp_id=${_player?.id}`, {
+        await fetch(`${Constants.domain}/challenges/reject/?id=${player?.info?.id}&opp_id=${_player?.id}`, {
             method: 'PUT'
         })
             .then(response => response.json())
@@ -135,7 +135,7 @@ const Challenges = () => {
                 toast.success('Челлендж отменён', Constants.toastParams)
             })
             .catch(error => console.error(error))
-    }, [user?.id, handleGetPlayerChallenges])
+    }, [handleGetPlayerChallenges])
 
     const handleClickCreateChallenge = (_player) => () => {
         handleCloseModal()

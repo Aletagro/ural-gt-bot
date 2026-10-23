@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useReducer, useCallback, useRef} from 'react'
 import {useNavigate} from 'react-router-dom'
 import html2canvas from 'html2canvas'
-import {players, meta} from '../utilities/appState'
+import {player, players, meta} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Checkbox from '../components/Checkbox'
 import armyImages from '../images/armies'
@@ -19,8 +19,6 @@ import Styles from './styles/Play.module.css'
 
 const dataBase = require('../dataBase.json')
 
-const tg = window.Telegram?.WebApp
-
 const inputStyle = {
     '--Input-minHeight': '48px',
     'width': '100%',
@@ -33,7 +31,6 @@ const inputStyle = {
 
 const Play = ({setShareAction}) => {
     const navigate = useNavigate()
-    const user = tg.initDataUnsafe?.user
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const [firstPlayer, setFirstPlayer] = useState()
@@ -48,7 +45,7 @@ const Play = ({setShareAction}) => {
     const disableButton = !firstPlayer || !secondPlayer || (firstPlayer === secondPlayer ? isNull(minorWin) : false)
 
     useEffect(() => {
-        fetch(`https://aoscom.online/rounds/play/?tg_id=${user?.id}&cur_round=${meta.round}`)
+        fetch(`${Constants.domain}/rounds/play/?id=${player?.info?.id}&cur_round=${meta.round}`)
             .then(response => response.json())
             .then(data => {
                 const firstPlayer = find(players.data, ['id',  min([Number(data.first_player_id), Number(data.second_player_id)])])
@@ -60,7 +57,7 @@ const Play = ({setShareAction}) => {
                 })
             })
             .catch(error => console.error(error))
-    }, [user?.id])
+    }, [])
 
     const setPlayerImage = useCallback((isFirst) => {
         let playerImage = isFirst ? armyImages.Ironjaws : armyImages.StormcastEternal
@@ -92,7 +89,7 @@ const Play = ({setShareAction}) => {
 
     useEffect(() => {
         if (!players.rosters.length) {
-            fetch('https://aoscom.online/rosters/')
+            fetch(`${Constants.domain}/rosters/`)
                 .then(response => response.json())
                 .then(data => {
                     players.rosters = data
@@ -122,7 +119,7 @@ const Play = ({setShareAction}) => {
     }
 
     const handleSendResult = useCallback(async () => {
-        await fetch(`https://aoscom.online/rounds/play/?cur_round=${info?.round}&cur_table=${info?.table}&vp_first=${firstPlayer}&vp_second=${secondPlayer}&minor_win=${minorWin || 0}`, {
+        await fetch(`${Constants.domain}/rounds/play/?cur_round=${info?.round}&cur_table=${info?.table}&vp_first=${firstPlayer}&vp_second=${secondPlayer}&minor_win=${minorWin || 0}`, {
             method: 'PUT'
         })
             .then(response => response.json())
@@ -133,7 +130,13 @@ const Play = ({setShareAction}) => {
     }, [firstPlayer, secondPlayer, info?.round, info?.table, minorWin])
 
     const handleJudgeCall = () => {
-        fetch(`https://aoscom.online/messages/judges_call?tg_id=${user?.id}`)
+        fetch(`${Constants.domain}/messages/judges_call?id=${player?.info?.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
             .then(response => response.json())
             .catch(error => console.error(error))
     }
@@ -207,7 +210,7 @@ const Play = ({setShareAction}) => {
     }
 
     return <div id='column' className='Chapter'>
-        <b id={Styles.table}>Стол 1{info?.table}</b>
+        <b id={Styles.table}>Стол {info?.table}</b>
         {renderImageBlock()}
         <div id={Styles.inputContainer}>
             <div id={Styles.playerContainer}>

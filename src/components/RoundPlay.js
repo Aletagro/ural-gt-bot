@@ -3,6 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import FloatingLabelInput from './FloatingLabelInput'
 import Checkbox from './Checkbox'
 import {rounds, player, players} from '../utilities/appState'
+import Constants from '../Constants'
 
 import get from 'lodash/get'
 import find from 'lodash/find'
@@ -44,7 +45,7 @@ const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
 
     const handleChangeResult = useCallback(async () => {
         setIsChangeResultBlockShow(false)
-        await fetch(`https://aoscom.online/rounds/play/?cur_round=${round}&cur_table=${table}&vp_first=${firstValue}&vp_second=${secondValue}&minor_win=${minorWin || 0}`, {
+        await fetch(`${Constants.domain}/rounds/play/?cur_round=${round}&cur_table=${table}&vp_first=${firstValue}&vp_second=${secondValue}&minor_win=${minorWin || 0}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

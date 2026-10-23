@@ -79,7 +79,9 @@ export const navigationState = {
 export const player = {
     roster: '',
     reg: false,
-    isRequested: false
+    isRequested: false,
+    vkId: undefined,
+    tgId: undefined
 }
 
 export const players = {
@@ -118,9 +120,4 @@ export const isCollapseRegimentAlliances = Constants.defaultIsCollapseRegimentAl
 export const lists = {
     count: 0,
     data: []
-}
-
-export const googleDrive = {
-    folders: [],
-    players: {}
 }

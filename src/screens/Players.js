@@ -1,21 +1,20 @@
-import React, {useState, useEffect, useReducer, useCallback} from 'react'
+import React, {useState, useEffect, useReducer} from 'react'
 import {useNavigate} from 'react-router-dom'
 import useDebounce from '../utilities/useDebounce'
 import {players, search, player, meta} from '../utilities/appState'
 import General from '../icons/blackGeneral.svg'
 import PaintChecked from '../icons/paintChecked.svg'
+import Constants from '../Constants'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
-import sortBy from 'lodash/sortBy'
-import reverse from 'lodash/reverse'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
 import Styles from './styles/Players.module.css'
 
 const lastColumnValues = {
-    'CO': 'opp_p',
+    'TO': 'tp_sum',
     'Paint': 'my_paint',
     'Sport': 'my_sport',
 }
@@ -23,49 +22,37 @@ const lastColumnValues = {
 const Players = () => {
     const navigate = useNavigate()
     const [searchValue, setSearchValue] = useState(search.playersValue)
-    const [lastColumn, setLastColumn] = useState('CO')
+    const [lastColumn, setLastColumn] = useState('ТО')
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
 
-    const sortPlayers = useCallback((array) => meta.round || meta.isRostersShow
-        ? reverse(sortBy(array, ['win', 'draw', 'tp_sum', lastColumnValues[lastColumn]]))
-        :array
-    , [lastColumn])
-
     useDebounce(() => {
         if (searchValue) {
-            const _players = filter(players.data, (player) => {
+            const _players = filter(players.standing, (player) => {
                 const rosterInfo = JSON.parse(player.roster_stat) || {}
                 return includes(lowerCase(`${player.surname} ${player.name}`), lowerCase(searchValue)) ||
                     includes(lowerCase(rosterInfo?.allegiance), lowerCase(searchValue)) ||
                     includes(lowerCase(rosterInfo.grandAlliance), lowerCase(searchValue)) ||
                     includes(lowerCase(player.city), lowerCase(searchValue))
             })
-            search.players = sortPlayers(_players)
+            search.players = _players
         } else {
-            search.players = sortPlayers(players.data)
+            search.players = players.standing
         }
         forceUpdate()
       }, [searchValue], 300
     )
 
     useEffect(() => {
-        fetch('https://aoscom.online/players/')
+        fetch(`${Constants.domain}/players/ranking`)
             .then(response => response.json())
             .then(data => {
-                players.data = data
+                const _players = map(data.players, (_player, index) => ({..._player, place: index + 1}))
+                players.standing = _players
                 forceUpdate()
             })
             .catch(error => console.error(error))
     }, [])
-
-    useEffect(() => {
-        if (lastColumn === 'CO') {
-            search.players = sortPlayers(search.players)
-        } else {
-            search.players = sortBy(search.players, [lastColumnValues[lastColumn]])
-        }
-    }, [lastColumn, sortPlayers])
 
     const handleClickPlayer = (_player) => () => {
         if (meta.round || meta.isRostersShow || player.isJudge) {
@@ -79,11 +66,11 @@ const Players = () => {
     }
 
     const handleChangeLastColumn = () => {
-        const newValue = lastColumn === 'CO'
+        const newValue = lastColumn === 'ТО'
             ? 'Paint'
             : lastColumn === 'Paint'
                 ? 'Sport'
-                : 'CO'
+                : 'ТО'
         setLastColumn(newValue)
     }
 
@@ -117,7 +104,7 @@ const Players = () => {
     const renderPlayer = (player, index) => {
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
-            {renderRow(index + 1, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.tp_sum, player[lastColumnValues[lastColumn]], index % 2, player.roster, player.paint_checked)}
+            {renderRow(player.place, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.final_formula, player[lastColumnValues[lastColumn]] || (player[lastColumnValues[lastColumn]] === 0 ? 0 : player.tp_sum), index % 2, player.roster, player.paint_checked)}
         </button>
     }
 
@@ -131,7 +118,7 @@ const Players = () => {
         }
         <div id='column' className='Chapter'>
             <div>
-                {renderRow('№', 'Игрок', undefined, 'Армия', 'W', 'D', 'TO', lastColumn, true)}
+                {renderRow('№', 'Игрок', undefined, 'Армия', 'W', 'D', 'ИО', lastColumn, true)}
                 {map(search.players, renderPlayer)}
             </div>
         </div>

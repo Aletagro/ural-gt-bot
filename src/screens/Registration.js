@@ -18,6 +18,14 @@ import findIndex from 'lodash/findIndex'
 import Styles from './styles/Registration.module.css'
 
 const tg = window.Telegram?.WebApp
+const href = window.location?.href
+const urlParams = new URLSearchParams(href.split('?')[1])
+player.tgId = tg?.initDataUnsafe?.user
+player.vkId = urlParams.get('vk_user_id')
+// player.tgId = 530569849
+// player.vkId = 45749262
+
+const user = tg?.initDataUnsafe?.user
 
 const inputStyle = {
     '--Input-minHeight': '48px',
@@ -61,27 +69,25 @@ const cities = [
 const Registration = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
-    // const user = {
-    //     id: 530569849
-    // }
-    const user = tg.initDataUnsafe?.user
     const [name, setName] = useState(user?.first_name || '')
     const [surname, setSurname] = useState(user?.last_name || '')
     const [city, setCity] = useState('')
     const [modalData, setModalData] = useState({visible: false, title: ''})
     const isPlayerInWaitingList = useMemo(() => {
-        const playersPositionInData = findIndex(players.data, ['tgId', user?.id])
+        const playersPositionInData = tg
+            ? findIndex(players.data, ['tgId', player.tgId])
+            : findIndex(players.data, ['vkId', player.vkId]) 
         return player.reg && playersPositionInData + 1 > meta.playersLimit
     // eslint-disable-next-line
-    }, [user?.id, player.reg, players.data, meta.playersLimit])
+    }, [player.reg, players.data, meta.playersLimit])
 
     const isDisableButton = !name || !surname || !city
-    if (includes(Constants.judgesIds, user?.id)) {
+    if (includes(Constants.judgesIds, player.tgId)) {
         player.isJudge = true
     }
 
     const handleGetPlayers = useCallback(async () => {
-        await fetch('https://aoscom.online/players/')
+        await fetch(`${Constants.domain}/players/`)
             .then(response => response.json())
             .then(data => {
                 players.data = data
@@ -91,9 +97,9 @@ const Registration = () => {
       }, [])
 
     const handleRegUser = useCallback(async () => {
-        await fetch('https://aoscom.online/players/reg', {
+        await fetch(`${Constants.domain}/players/reg`, {
             method: 'POST',
-            body: JSON.stringify({tgId: user?.id, name, surname, city}),
+            body: JSON.stringify({tgId: player.tgId, vkId: player.vkId, name, surname, city}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -103,17 +109,24 @@ const Registration = () => {
                 handleGetPlayers()
             })
             .catch(error => console.error(error))
-      }, [name, surname, city, user?.id, handleGetPlayers])
+      }, [name, surname, city, handleGetPlayers])
 
     const handleSendMessage = useCallback(async () => {
-        const message = `${player.info.surname} ${player.info.name} отказался от участия в турнире`
-        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${200821933}&message=${message}`)
+        const message = `${player.info?.surname} ${player.info?.name} отказался от участия в турнире`
+        // TODO убрать на бек
+        await fetch(`${Constants.domain}/messages/send_personal_message/?id=${2}&message=${message}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
             .catch(error => console.error(error))
       }, [])
 
     const handleDrop = useCallback(async () => {
         handleCloseModal()
-        await fetch(`https://aoscom.online/players/?tg_id=${user?.id}`, {
+        await fetch(`${Constants.domain}/players/?id=${player?.info?.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -127,37 +140,41 @@ const Registration = () => {
                 handleSendMessage()
             })
             .catch(error => console.error(error))
-      }, [user?.id, handleSendMessage])
+      }, [handleSendMessage])
+
+    const getPlayerInfo = useCallback(async () => {
+        const urlQuery = player.tgId ? `tgId=${player.tgId}` : `vkId=${player.vkId}`
+        const response = await fetch(`${Constants.domain}/players/player/?${urlQuery}`)
+        if (response.ok) {
+            const data = await response.json()
+            if (data.tgId || data.vkId) {
+                player.reg = true
+                player.roster = data.roster
+                player.roster_stat = data.roster_stat
+                player.allegianceId = JSON.parse(data.roster_stat)?.allegianceId
+                player.allegiance = JSON.parse(data.roster_stat)?.allegiance
+                player.info = data
+            } else {
+                player.reg = false
+            }
+            fetching.main = false
+            // запрос ростеров юзера из основного приложения
+            const responseRosters = await fetch(`${Constants.domain}/rosters_db/rosters_by_user?${urlQuery}`)
+            if (responseRosters.ok) {
+                const rostersData = await responseRosters.json()
+                player.mainRosters = rostersData.rosters
+            }
+            forceUpdate()
+        }
+        fetching.main = false
+    }, [])
 
     useEffect(() => {
         if (!player.isRequested) {
             player.isRequested = true
-            fetch(`https://aoscom.online/players/player/?tg_id=${user?.id}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.tgId) {
-                        player.reg = true
-                        player.roster = data.roster
-                        player.roster_stat = data.roster_stat
-                        player.allegianceId = JSON.parse(data.roster_stat)?.allegianceId
-                        player.allegiance = JSON.parse(data.roster_stat)?.allegiance
-                        player.info = data
-                    } else {
-                        player.reg = false
-                    }
-                    fetching.main = false
-                    forceUpdate()
-                })
-                .catch(error => console.error(error))
-            // запрос ростеров юзера из основного приложения
-            fetch(`https://aoscom.online/rosters_db/rosters_by_user?tg_id=${user?.id}`)
-                .then(response => response.json())
-                .then(data => {
-                    player.mainRosters = data?.rosters
-                })
-                .catch(error => console.error(error))
+            getPlayerInfo()
         }
-    }, [user?.id])
+    }, [getPlayerInfo])
 
     useEffect(() => {
         if (!size(players.data)) {
@@ -165,8 +182,8 @@ const Registration = () => {
         }
     }, [handleGetPlayers])
 
-    useEffect(() => {
-        fetch('https://aoscom.online/tournament-meta/')
+    const handleGetMeta = useCallback(() => {
+        fetch(`${Constants.domain}/tournament-meta/`)
             .then(response => response.json())
             .then(data => {
                 meta.round = data.round
@@ -183,6 +200,20 @@ const Registration = () => {
             })
             .catch(error => console.error(error))
     }, [])
+
+    useEffect(() => {
+        handleGetMeta()
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                handleGetMeta()
+                handleGetPlayers()
+            }
+        }
+        document.addEventListener('visibilitychange', handleVisibilityChange)
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange)
+        }
+    }, [handleGetMeta, handleGetPlayers])
 
     const handleCloseModal = () => {
         setModalData({visible: false, title: ''})
@@ -211,7 +242,13 @@ const Registration = () => {
     }
 
     const handleJudgeCall = () => {
-        fetch(`https://aoscom.online/messages/judges_call?tg_id=${user?.id}`)
+        fetch(`${Constants.domain}/messages/judges_call?id=${player?.info?.id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
             .then(response => response.json())
             .catch(error => console.error(error))
         toast.success('Судья спешит на помощь!', Constants.toastParams)
@@ -299,12 +336,14 @@ const Registration = () => {
             : player.reg || player.isJudge || !meta.isRegOpen || player.isGuest
                 ? <div id='column' className='Chapter'>
                     {isPlayerInWaitingList ? renderNotice('Вы находитесь в листе ожидания, организаторы свяжутся с вами', 'warning') : null}
-                    {player.reg
-                        ? renderNotice('Вы зарегистированы на Ice Hammer 2026')
-                        : renderNotice('Вы еще не зарегистированы, попробуйте еще раз или обратитесь к организаторам', 'error')
+                    {player.isJudge
+                        ? renderNotice('Вы организатор этого турнира')
+                        : player.reg
+                            ? renderNotice('Вы зарегистированы на Ice Hammer 2026')
+                            : renderNotice('Вы еще не зарегистированы, попробуйте еще раз или обратитесь к организаторам', 'error')
                     }
                     {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
-                    {(player.reg && meta.isRoundActive) || player.isJudge ? <Row title='Ваша Игра' navigateTo='play' /> : null}
+                    {(player.reg && meta.isRoundActive) ? <Row title='Ваша Игра' navigateTo='play' /> : null}
                     {player.reg && player.roster
                         ? <Row title='Ваш ростер' navigateTo='roster' state={{isInfo: true}} />
                         : null
@@ -315,22 +354,23 @@ const Registration = () => {
                     }
                     {meta.isRostersShow || player.isJudge ? <Row title='Ростера' navigateTo='rosters' /> : null}
                     {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Ice Hammer 2026', round: meta.round}} /> : null}
-                    {/* {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='icePlayers' /> : null} */}
                     {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
-                    {player.reg && meta.round === 5 && !player.sport_voted
-                        ? <Row title='Голосование За Спортивность' navigateTo='vote' state={{type: 'sport'}} />
+                    {player.reg && meta.round === 5 && !player?.info?.sport_voted
+                        ? <Row title='Голосование За Спортивность' navigateTo='vote' />
                         : null
                     }
-                    {player.reg && ((meta.round === 4 && !meta.isRoundActive) || meta.round === 5) && !player.paint_voted
-                        ? <Row title='Голосование За Покрас' navigateTo='vote' state={{type: 'paint'}} />
+                    {player.reg && ((meta.round === 4 && !meta.isRoundActive) || meta.round === 5) && !player?.info?.paint_voted
+                        ? <Row title='Голосование За Покрас' navigateTo='paintVote' />
                         :null
                     }
                     {player.isJudge || (meta.rostersBeingAccepted && player.reg) ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
                     {player.isJudge || meta.isChallengesOpen ? <Row title='Челленджи' navigateTo='challenges' /> : null}
+                    {player.reg ? <Row title='Подать заявку в конкурс Покраса' navigateTo='paintVoteReg' /> : null}
                     <Row title='Правила' navigateTo='mainRules' />
                     <Row title='Калькулятор Урона' navigateTo='calculator' />
                     {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Ice Hammer 2026' navigateTo='tournamentRules' /> : null}
                     <Row title='Подсказка во время игры' navigateTo='help' />
+                    {player.info?.id && (!player.info?.tgId || !player.info?.vkId) ? <Row title='Связать аккаунты Телеграмма и ВК' navigateTo='linkAccounts' /> : null}
                     {meta.isRoundActive && player.reg ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
                     {meta.round || !player.reg ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}
                     <ToastContainer />

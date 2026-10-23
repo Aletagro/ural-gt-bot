@@ -1,4 +1,4 @@
-import React, {useReducer, useState, useCallback, useEffect} from 'react'
+import React, {useReducer, useState, useCallback, useMemo} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -9,7 +9,8 @@ import Checkbox from '../components/Checkbox'
 import Modal from '../components/Modal'
 import PhotoGallery from '../components/PhotoGallery'
 import FloatingLabelInput from '../components/FloatingLabelInput'
-import {players, player as _player, rosterViewType, googleDrive} from '../utilities/appState'
+import {players, player as _player, rosterViewType} from '../utilities/appState'
+import {addDomainForUrl} from '../utilities/utils'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -18,9 +19,6 @@ import noop from 'lodash/noop'
 import size from 'lodash/size'
 
 import Styles from './styles/PlayerInfo.module.css'
-
-const FOLDER_ID = process.env.REACT_APP_FOLDER_ID
-const API_KEY = process.env.REACT_APP_API_KEY
 
 const PlayerInfo = () => {
     const navigate = useNavigate()
@@ -38,34 +36,8 @@ const PlayerInfo = () => {
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(player?.status))
     const [message, setMessage] = useState('')
-    const [photos, setPhotos] = useState([])
     const [paintChecked, setPaintChecked] = useState(player.paint_checked)
-
-    const loadPhotos = useCallback(async () => {
-        if (!size(googleDrive.folders)) {
-            const response = await fetch(
-                `https://www.googleapis.com/drive/v3/files?q='${FOLDER_ID}'+in+parents&key=${API_KEY}&pageSize=150`
-            )
-            const data = await response.json()
-            googleDrive.folders = data?.files
-        }
-        const playerName = `${player.surname} ${player.name}`
-        const folder = find(googleDrive.folders, ['name', playerName])
-        if (folder?.id) {
-            if (!googleDrive.players[playerName]) {
-                const responsePhotos = await fetch(
-                    `https://www.googleapis.com/drive/v3/files?q='${folder.id}'+in+parents&key=${API_KEY}`
-                )
-                const photosData = await responsePhotos.json()
-                googleDrive.players[playerName] = photosData?.files
-            }
-            setPhotos(googleDrive.players[playerName])
-        }
-    }, [player.surname, player.name])
-
-    useEffect(() => {
-        loadPhotos()
-    }, [loadPhotos]) 
+    const photos = useMemo(() => map(find(players.data, ['id', player.id])?.validation_photo_path, addDomainForUrl), [player.id])
 
     const handleClickAllegiance = () => {
         navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: roster.allegianceId}})
@@ -94,7 +66,7 @@ const PlayerInfo = () => {
 
     const handleDropPlayer = useCallback(async () => {
         handleCloseModal()
-        await fetch(`https://aoscom.online/players/?tg_id=${player?.tgId}`, {
+        await fetch(`${Constants.domain}/players/?id=${player?.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -106,11 +78,11 @@ const PlayerInfo = () => {
                 forceUpdate()
             })
             .catch(error => console.error(error))
-      }, [player?.tgId])
+      }, [player?.id])
 
     const handlChangeStatus = useCallback(async () => {
         handleCloseModal()
-        await fetch(`https://aoscom.online/players/status/?tg_id=${player?.tgId}`, {
+        await fetch(`${Constants.domain}/players/something/?id=${player?.id}&column=status&value=${!isPlayerActive}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -122,24 +94,30 @@ const PlayerInfo = () => {
                 forceUpdate()
             })
             .catch(error => console.error(error))
-      }, [player?.tgId, isPlayerActive])
+      }, [player?.id, isPlayerActive])
 
     const handleSendMessage = useCallback(async (_message, customMessage) => {
-        await fetch(`https://aoscom.online/messages/send_personal_message/?tg_id=${player?.tgId}&message=${customMessage ? _message : message}`)
+        await fetch(`${Constants.domain}/messages/send_personal_message/?id=${player?.id}&message=${customMessage ? _message : message}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
             .then(() => {
                 toast.success('Сообщение игроку отправлено', Constants.toastParams)
                 forceUpdate()
             })
             .catch(error => console.error(error))
         setMessage('')
-      }, [player?.tgId, message])
+      }, [player?.id, message])
 
     const handleChangeMessage = (e) => {
         setMessage(e.target.value)
     }
 
     const handleClickPhotovalidation = useCallback(async () => {
-        await fetch(`https://aoscom.online/players/something/?id=${player?.id}&column=paint_checked&value=${paintChecked ? 0 : 1}`, {
+        await fetch(`${Constants.domain}/players/something/?id=${player?.id}&column=paint_checked&value=${paintChecked ? 0 : 1}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 import React, {useState, useCallback} from 'react'
-import {useLocation, useNavigate} from 'react-router-dom'
-import FloatingLabelInput from '../components/FloatingLabelInput'
+import {useNavigate} from 'react-router-dom'
 import {player, players} from '../utilities/appState'
+import Constants from '../Constants'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -11,56 +11,28 @@ import findIndex from 'lodash/findIndex'
 
 import Styles from './styles/Vote.module.css'
 
-const tg = window.Telegram?.WebApp
-
-const inputStyle = {
-    '--Input-minHeight': '48px',
-    'borderRadius': '4px',
-    'marginBottom': '16px',
-    'borderColor': '#B4B4B4',
-    'boxShadow': 'none',
-    'fontFamily': 'Minion Pro Regular'
-}
-
 const Vote = () => {
-    const user = tg.initDataUnsafe?.user
     const navigate = useNavigate()
-    const {type} = useLocation().state
-    const isPaint = type === 'paint'
-    const [result, setResult] = useState(isPaint ? [0, 0, 0] : [])
-    const disabledSendButton = isPaint
-        ? result.includes(0)
-        : size(result) !== 1
-    let opponents = []
+    const [result, setResult] = useState([player?.info?.best_opp || 0])
+    const disabledSendButton = size(result) !== 1
     
-    const getOpponent = (value) => {
+    const getOpponent = useCallback((value) => {
         const oppIndex = get(player, `info.game_${value}_opp`)
         const opp = find(players.data, ['id', oppIndex])
         return {name: `${opp?.surname} ${opp?.name}`, id: oppIndex}
-    }
+    }, [])
 
-    if (!isPaint) {
-        opponents = map([1, 2, 3, 4, 5, 6], getOpponent)
-    }
-
-    const handleChangeResult = (index) => (e) => {
-        const newResult = [...result]
-        newResult[index] = e.target.value || 0
-        setResult(newResult)
-    }
-
-    const handleFocus = (e) => {
-        e.target.select()
-    }
+    let opponents = map([1, 2, 3, 4, 5], getOpponent)
 
     const handleClickVote = useCallback(async () => {
-        await fetch(`https://aoscom.online/vote/?tg_id=${user?.id}&v_type=${type}&plrs=${result}`, {
+        await fetch(`${Constants.domain}/vote/?user_id=${player?.info?.id}&v_type=sport&plrs=${result}`, {
             method: 'PUT'
         })
             .then(response => response.json())
             .catch(error => console.error(error))
+        player.info.sport_voted = true
         navigate('/')
-    }, [result, type, user?.id, navigate])
+    }, [result, navigate])
 
     const handleClickOpp = (id) => () => {
         const newResult = [...result]
@@ -76,26 +48,11 @@ const Vote = () => {
         setResult(newResult)
     }
 
-    const renderInput = (_, index) => <FloatingLabelInput
-        key={index}
-        style={inputStyle}
-        onChange={handleChangeResult(index)}
-        label={`${index + 1} Выбор`}
-        value={result[index] || undefined}
-        onFocus={handleFocus}
-    />
-
     const renderOpponent = (opponent) => <button key={opponent.id} id={result.includes(opponent.id) ? Styles.selectedButton : Styles.button} onClick={handleClickOpp(opponent.id)}>{opponent.name}</button>
 
     return <div id='column' className='Chapter'>
-        {isPaint
-            ? <p id={Styles.text}>Введите номера игроков, чья армия вам понравилась больше всего</p>
-            : <p id={Styles.text}>Выберите игрока, с которыми у вас была самая приятная игра</p>
-        }
-        {isPaint
-            ? map(result, renderInput)
-            : map(opponents, renderOpponent)
-        }
+        <p id={Styles.text}>Выберите игрока, с которыми у вас была самая приятная игра</p>
+        {map(opponents, renderOpponent)}
         <button disabled={disabledSendButton} id={disabledSendButton ? Styles.disabledSendButton : Styles.sendButton} onClick={handleClickVote}>Проголосовать</button>
     </div>
 }

@@ -8,12 +8,13 @@ import AppendixRules from './screens/AppendixRules'
 import Photovalidation from './screens/Photovalidation'
 import Challenges from './screens/Challenges'
 import Players from './screens/Players'
-import IcePlayers from './screens/IcePlayers'
 import PlayerInfo from './screens/PlayerInfo'
 import Rosters from './screens/Rosters'
 import Rounds from './screens/Rounds'
 import Play from './screens/Play'
 import Vote from './screens/Vote'
+import PaintVote from './screens/PaintVote'
+import PaintVoteReg from './screens/PaintVoteReg'
 import Admin from './screens/Admin'
 import Help from './screens/Help'
 import MainRules from './screens/MainRules'
@@ -35,8 +36,9 @@ import Battleplan from './screens/Battleplan'
 import Legends from './screens/Legends'
 import LegendUnits from './screens/LegendUnits'
 import Tactic from './screens/Tactic'
+import Developer from './screens/Developer'
+import LinkAccounts from './screens/LinkAccounts'
 import Header from './components/Header'
-import Lists from './builder/Lists'
 import ChooseGrandAlliance from './builder/ChooseGrandAlliance'
 import ChooseFaction from './builder/ChooseFaction'
 import Builder from './builder/Builder'
@@ -48,7 +50,6 @@ import Export from './builder/Export'
 import BuilderChooseTacticsCard from './builder/BuilderChooseTacticsCard'
 import PasteList from './builder/PasteList'
 import Calculator from './calculator/Calculator'
-import Developer from './screens/Developer'
 
 import './App.css'
 
@@ -59,7 +60,7 @@ function App() {
   const [shareAction, setShareAction] = useState(null)
 
   useEffect(() => {
-    tg.ready()
+    tg?.ready()
     if (!tg.isExpanded) {
       tg.expand()
     }
@@ -78,12 +79,13 @@ function App() {
       <Route path={'photovalidation'} element={<Photovalidation />} />
       <Route path={'challenges'} element={<Challenges />} />
       <Route path={'players'} element={<Players />} />
-      <Route path={'icePlayers'} element={<IcePlayers />} />
       <Route path={'playerInfo'} element={<PlayerInfo />} />
       <Route path={'rosters'} element={<Rosters />} />
       <Route path={'rounds'} element={<Rounds />} />
       <Route path={'play'} element={<Play setShareAction={setShareAction} />} />
       <Route path={'vote'} element={<Vote />} />
+      <Route path={'paintVote'} element={<PaintVote />} />
+      <Route path={'paintVoteReg'} element={<PaintVoteReg />} />
       <Route path={'admin'} element={<Admin />} />
       <Route path={'help'} element={<Help />} />
       <Route path={'mainRules'} element={<MainRules />} />
@@ -111,7 +113,6 @@ function App() {
       <Route path={'manifestations'} element={<Manifestations />} />
       <Route path={'legends'} element={<Legends />} />
       <Route path={'legendUnits'} element={<LegendUnits />} />
-      <Route path={'lists'} element={<Lists />} />
       <Route path={'chooseGrandAlliance'} element={<ChooseGrandAlliance />} />
       <Route path={'chooseFaction'} element={<ChooseFaction />} />
       <Route path={'export'} element={<Export />} />
@@ -119,6 +120,7 @@ function App() {
       <Route path={'builderChooseTacticsCard'} element={<BuilderChooseTacticsCard />} />
       <Route path={'tactic'} element={<Tactic />} />
       <Route path={'pasteList'} element={<PasteList />} />
+      <Route path={'linkAccounts'} element={<LinkAccounts />} />
     </Routes>
   </div>
 }

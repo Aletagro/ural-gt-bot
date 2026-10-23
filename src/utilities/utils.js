@@ -1006,3 +1006,5 @@ export const isScourgeOfGhyran = (id, isWarscroll, isAbility) => {
     const publicationGroupId = find(dataBase.data.publication_publication_group, ['publicationId', publicationId])?.publicationGroupId
     return Constants.sogPublicationId === publicationGroupId
 }
+
+export const addDomainForUrl = (url) => `${Constants.domain}${url}`

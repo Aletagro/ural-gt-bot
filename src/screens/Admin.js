@@ -3,36 +3,29 @@ import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
 import {setTournamentStatus} from '../utilities/utils'
-import Checkbox from '../components/Checkbox'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import {players, meta} from '../utilities/appState'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
 import size from 'lodash/size'
-import remove from 'lodash/remove'
+import trim from 'lodash/trim'
+import filter from 'lodash/filter'
 import isEmpty from 'lodash/isEmpty'
+import includes from 'lodash/includes'
 
 import Styles from './styles/Admin.module.css'
 
 const Admin = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
-    const [pairings, setPairings] = useState([])
+    const [pairings, setPairings] = useState({})
     const [playersForChange, setPlayersForChange] = useState([])
     const isChangeButtonDisabled = size(playersForChange) !== 2
     const [message, setMessage] = useState('')
 
-    // const handleChangeParam = useCallback(async () => {
-    //     await fetch(`https://aoscom.online/players/something/?id=${playerId}&column=${key}&value=${value}`, {
-    //         method: 'PUT'
-    //     })
-    //         .then(response => response.json())
-    //         .catch(error => console.error(error))
-    // }, [playerId, key, value])
-
     const handleCreateParings = useCallback(async () => {
-        await fetch(`https://aoscom.online/parings/?next_round=${meta.round + 1}`)
+        await fetch(`${Constants.domain}/parings/?next_round=${meta.round + 1}`)
             .then(response => response.json())
             .then(data => {
                 setPairings(data)
@@ -40,28 +33,25 @@ const Admin = () => {
             .catch(error => console.error(error))
     }, [])
 
-    const handleChangePlayers = () => {
+    const handleChangePlayers = useCallback(() => {
         const newPairings = {...pairings}
         const firstPlayer = playersForChange[0]
         const secondPlayer = playersForChange[1]
-        
-        const oldFirstPlayerTable = newPairings[firstPlayer[0]]
-        const oldSecondPlayerTable = newPairings[secondPlayer[0]]
-
-        const newCheckedPlayersTable = [firstPlayer[1], secondPlayer[1]]
-        const firstRemainingPlayer = find(oldFirstPlayerTable, p => p !== firstPlayer[1])
-        const secondRemainingPlayer = find(oldSecondPlayerTable, p => p !== secondPlayer[1])
+        const oldFirstPlayerTable = newPairings[firstPlayer.table]
+        const oldSecondPlayerTable = newPairings[secondPlayer.table]
+        const newCheckedPlayersTable = [firstPlayer.id, secondPlayer.id]
+        const firstRemainingPlayer = find(oldFirstPlayerTable, p => p !== firstPlayer.id)
+        const secondRemainingPlayer = find(oldSecondPlayerTable, p => p !== secondPlayer.id)
         const newRemainingPlayersTable = [firstRemainingPlayer, secondRemainingPlayer]
-        
-        newPairings[firstPlayer[0]] = newCheckedPlayersTable.sort((a, b) => a - b)
-        newPairings[secondPlayer[0]] = newRemainingPlayersTable.sort((a, b) => a - b)
+        newPairings[firstPlayer.table] = newCheckedPlayersTable.sort((a, b) => a - b)
+        newPairings[secondPlayer.table] = newRemainingPlayersTable.sort((a, b) => a - b)
         setPairings(newPairings)
         setPlayersForChange([])
         toast.success('Паринги изменены', Constants.toastParams)
-    }
+    }, [pairings, playersForChange])
 
     const handleGetMeta = useCallback(async () => {
-        fetch('https://aoscom.online/tournament-meta/')
+        fetch(`${Constants.domain}/tournament-meta/`)
             .then(response => response.json())
             .then(data => {
                 meta.round = data.round
@@ -80,9 +70,9 @@ const Admin = () => {
     }, [])
 
     const handleChangeRoundActiveMeta = useCallback(async () => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
+        await fetch(`${Constants.domain}/tournament-meta/`, {
             method: 'PUT',
-            body: JSON.stringify({...meta, isRoundActive: !meta.isRoundActive}),
+            body: JSON.stringify({isRoundActive: !meta.isRoundActive}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -96,7 +86,7 @@ const Admin = () => {
     }, [handleGetMeta])
 
     const handleSetOppPower = useCallback(async () => {
-        fetch('https://aoscom.online/rounds/opp_power/', {
+        fetch(`${Constants.domain}/rounds/opp_power/`, {
             method: 'PUT'
         })
             .catch(error => console.error(error))
@@ -110,9 +100,9 @@ const Admin = () => {
     }, [handleChangeRoundActiveMeta, handleSetOppPower])
 
     const handleStartRoundMeta = useCallback(async () => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
+        await fetch(`${Constants.domain}/tournament-meta/`, {
             method: 'PUT',
-            body: JSON.stringify({...meta, round: meta.round + 1}),
+            body: JSON.stringify({round: meta.round + 1}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -126,7 +116,8 @@ const Admin = () => {
 
 
     const handleStartRound = useCallback(async () => {
-        await fetch(`https://aoscom.online/parings/update_parings/?next_round=${meta.round + 1}`, {
+        setPairings({})
+        await fetch(`${Constants.domain}/parings/update_parings/?next_round=${meta.round + 1}`, {
             method: 'PUT',
             body: JSON.stringify(pairings),
             headers: {
@@ -144,97 +135,23 @@ const Admin = () => {
             })
     }, [pairings, handleStartRoundMeta])
 
-    const handleCheckPlayer = (id, table) => (checked) => {
-        let newData = [...playersForChange]
-        if (checked) {
-            newData.push([table, id])
-        } else {
-            newData = remove(newData, p => {
-                return p[1] !== id
-            })
-        }
-        setPlayersForChange(newData)
-    }
-
-    const handleChangeRosterAccepted = useCallback(async () => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
-            method: 'PUT',
-            body: JSON.stringify({...meta, rostersBeingAccepted: !meta.rostersBeingAccepted}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
+    const handleCheckPlayer = useCallback((playerId, table) => () => {
+        setPlayersForChange((prevSelected) => {
+          const isAlreadySelected = find(prevSelected, ['id', playerId])
+          if (isAlreadySelected) {
+            return filter(prevSelected, p => p.id !== playerId)
+          }
+          if (size(prevSelected) >= 2) {
+            return prevSelected
+          }
+          return [...prevSelected, {id: playerId, table}]
         })
-            .then(() => {
-                handleGetMeta()
-            })
-            .catch(error => console.error(error))
-    }, [handleGetMeta])
+    }, [])
 
-    const handleChangeRostersShow = useCallback(async () => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
+    const handleChangeMetaParam = useCallback((param) => async () => {
+        await fetch(`${Constants.domain}/tournament-meta/`, {
             method: 'PUT',
-            body: JSON.stringify({...meta, isRostersShow: !meta.isRostersShow}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .then(() => {
-                handleGetMeta()
-            })
-            .catch(error => console.error(error))
-    }, [handleGetMeta])
-
-    const handleChangeTournamentRulesShow = useCallback(async () => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
-            method: 'PUT',
-            body: JSON.stringify({...meta, isTournamentRulesShow: !meta.isTournamentRulesShow}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .then(() => {
-                handleGetMeta()
-            })
-            .catch(error => console.error(error))
-    }, [handleGetMeta])
-
-    const handleChangePlayersListShow = useCallback(async () => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
-            method: 'PUT',
-            body: JSON.stringify({...meta, isPlayersListShow: !meta.isPlayersListShow}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .then(() => {
-                handleGetMeta()
-            })
-            .catch(error => console.error(error))
-    }, [handleGetMeta])
-
-    const handleChangeChallengesOpen = useCallback(async () => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
-            method: 'PUT',
-            body: JSON.stringify({...meta, isChallengesOpen: !meta.isChallengesOpen}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .then(() => {
-                handleGetMeta()
-            })
-            .catch(error => console.error(error))
-    }, [handleGetMeta])
-
-    const handleChangeRegOpen = useCallback(async () => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
-            method: 'PUT',
-            body: JSON.stringify({...meta, isRegOpen: !meta.isRegOpen}),
+            body: JSON.stringify({[param]: !meta[param]}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -248,7 +165,13 @@ const Admin = () => {
 
     const handleSendMessage = useCallback(async () => {
         setMessage('')
-        await fetch(`https://aoscom.online/messages/send_mas_message/?message=${message}`)
+        await fetch(`${Constants.domain}/messages/send_mas_message/?message=${message}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json, text/javascript, /; q=0.01"
+            }
+        })
             .then(() => {
                 toast.success('Сообщение всем игрокам отправлено', Constants.toastParams)
                 forceUpdate()
@@ -261,9 +184,9 @@ const Admin = () => {
     }
 
     const handleSetBattleplan = useCallback(async (battleplan) => {
-        await fetch('https://aoscom.online/tournament-meta/any_state', {
+        await fetch(`${Constants.domain}/tournament-meta/`, {
             method: 'PUT',
-            body: JSON.stringify({...meta, battleplan}),
+            body: JSON.stringify({battleplan}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
@@ -279,35 +202,58 @@ const Admin = () => {
         handleSetBattleplan(battleplan)
     }
 
-    const renderPlayer = (player, table, isFirst) => {
-        const playerArmy = JSON.parse(player?.roster_stat)?.allegiance
-        const isChecked = find(playersForChange, p => p[1] === player?.id)
-        return <div id={Styles.player}>
-            <b>{isFirst ? 'Первый' : 'Второй'} игрок</b>
-            <p>Имя: {player?.surname} {player?.name}</p>
-            <p>id: {player?.id}</p>
-            <p>Город: {player?.city}</p>
-            <p>Армия: {playerArmy}</p>
-            <Checkbox
-                onClick={handleCheckPlayer(player?.id, Number(table))}
-                checked={isChecked}
-                disabled={!isChecked && size(playersForChange) >= 2}
-            />
-        </div>
-    }
-
-    const renderPairing = (pairing, index) => {
-        const firstPlayer = find(players.data, ['id', pairing[0]])
-        if (!firstPlayer) {
+    const renderTable = useCallback((pairing, index) => {
+        const player1 = find(players.data, ['id', pairing[0]])
+        if (!player1) {
             return null
         }
-        const secondPlayer = find(players.data, ['id', pairing[1]])
-        return <div id={Styles.play} key={index}>
-            <h3 id={Styles.text}>Стол {index}</h3>
-            {renderPlayer(firstPlayer, index, true)}
-            {renderPlayer(secondPlayer, index)}
+        const player2 = find(players.data, ['id', pairing[1]])
+        const p1Army = JSON.parse(player1?.roster_stat)?.allegiance
+        const p2Army = JSON.parse(player2?.roster_stat)?.allegiance
+
+        const isP1Selected = find(playersForChange, p => p.id === player1?.id)
+        const isP2Selected = find(playersForChange, p => p.id === player2?.id)
+
+        const alreadyPlayed = includes([player1.game_1_opp, player1.game_2_opp, player1.game_3_opp, player1.game_4_opp, player1.game_5_opp, player1.game_6_opp,], player2.id)
+        const isSameCity = trim(player1.city) === trim(player2.city)
+        const isSameFaction = p1Army === p2Army
+
+        let tableClass = Styles.tableCard;
+        if (alreadyPlayed) tableClass += ` ${Styles.alreadyPlayed}`
+        else if (isSameCity) tableClass += ` ${Styles.conflictCity}`
+        else if (isSameFaction) tableClass += ` ${Styles.conflictMirror}`;
+
+        return <div className={tableClass}>
+            <div className={Styles.tableHeader}>
+                <span className={Styles.tableName}>Стол {index}</span>
+                <div className={Styles.badges}>
+                    {alreadyPlayed && <span className={Styles.badgeAlready} title="Уже играли!">🚫 Уже играли!</span>}
+                    {isSameCity && <span className={Styles.badgeCity} title="Игроки из одного города">📍 {player1.city}</span>}
+                    {isSameFaction && <span className={Styles.badgeMirror} title="Зеркальный матч армий!">⚔️ Mirror</span>}
+                </div>
+            </div>
+            <div 
+                className={`${Styles.playerRow} ${isP1Selected ? Styles.playerSelected : ''}`}
+                onClick={handleCheckPlayer(player1?.id, index)}
+            >
+                <div className={Styles.playerInfo}>
+                <span className={Styles.playerName}>{player1?.surname} {player1?.name}</span>
+                <span className={Styles.playerFaction}>{p1Army}</span>
+                </div>
+                <div className={Styles.customCheck}>{isP1Selected ? '✓' : player1?.win}</div>
+            </div>
+            <div 
+                className={`${Styles.playerRow} ${isP2Selected ? Styles.playerSelected : ''}`}
+                onClick={handleCheckPlayer(player2?.id, index)}
+            >
+                <div className={Styles.playerInfo}>
+                <span className={Styles.playerName}>{player2?.surname} {player2?.name}</span>
+                <span className={Styles.playerFaction}>{p2Army}</span>
+                </div>
+                <div className={Styles.customCheck}>{isP2Selected ? '✓' : player2?.win}</div>
+            </div>
         </div>
-    }
+    }, [playersForChange, handleCheckPlayer])
 
     const renderSendMessage = () => <div id={Styles.sendMessageContainer}>
         <FloatingLabelInput
@@ -332,31 +278,30 @@ const Admin = () => {
         <b id={Styles.text}>Состояние турнира</b>
         <p id={Styles.text}>Статус: {setTournamentStatus(meta.isRoundActive, meta.round)}</p>
         {meta.round === 0
-            ? <button id={Styles.button} onClick={handleChangeRosterAccepted}>{meta.rostersBeingAccepted ? 'Прекратить приём ростеров' : 'Начать принимать ростера'}</button>
+            ? <button id={Styles.button} onClick={handleChangeMetaParam('rostersBeingAccepted')}>{meta.rostersBeingAccepted ? 'Прекратить приём ростеров' : 'Начать принимать ростера'}</button>
             : null
         }
-        <button id={Styles.button} onClick={handleChangeRostersShow}>{meta.isRostersShow ? 'Скрыть ростера' : 'Открыть ростера для всех'}</button>
-        <button id={Styles.button} onClick={handleChangeTournamentRulesShow}>{meta.isTournamentRulesShow ? 'Скрыть регламент' : 'Открыть регламент для всех'}</button>
-        <button id={Styles.button} onClick={handleChangePlayersListShow}>{meta.isPlayersListShow ? 'Скрыть список участников' : 'Открыть список участников для всех'}</button>
-        <button id={Styles.button} onClick={handleChangeChallengesOpen}>{meta.isChallengesOpen ? 'Закрыть челленджи' : 'Открыть челленджи'}</button>
-        <button id={Styles.button} onClick={handleChangeRegOpen}>{meta.isRegOpen ? 'Закрыть регистрацию' : 'Открыть регистрацию'}</button>
+        <button id={Styles.button} onClick={handleChangeMetaParam('isRostersShow')}>{meta.isRostersShow ? 'Скрыть ростера' : 'Открыть ростера для всех'}</button>
+        <button id={Styles.button} onClick={handleChangeMetaParam('isTournamentRulesShow')}>{meta.isTournamentRulesShow ? 'Скрыть регламент' : 'Открыть регламент для всех'}</button>
+        <button id={Styles.button} onClick={handleChangeMetaParam('isPlayersListShow')}>{meta.isPlayersListShow ? 'Скрыть список участников' : 'Открыть список участников для всех'}</button>
+        <button id={Styles.button} onClick={handleChangeMetaParam('isChallengesOpen')}>{meta.isChallengesOpen ? 'Закрыть челленджи' : 'Открыть челленджи'}</button>
+        <button id={Styles.button} onClick={handleChangeMetaParam('isRegOpen')}>{meta.isRegOpen ? 'Закрыть регистрацию' : 'Открыть регистрацию'}</button>
         <button id={meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</button>
         {isEmpty(pairings)
             ? null
             : <>
                 <b id={Styles.text}>Паринги</b>
-                <div>
-                    {map(pairings, renderPairing)}
+                <div id={Styles.pairingsGrid}>
+                    {map(pairings, renderTable)}
                 </div>
                 <button id={isChangeButtonDisabled ? Styles.disableButton : Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
                     Запарить выбранных игроков друг на друга
                 </button>
-                <button id={Styles.button} onClick={handleStartRound}>Начать новый раунд</button>
+                <button id={Styles.button} onClick={handleStartRound}>Принять паринги</button>
             </>
         }
-        <button id={Styles.button} onClick={handleChangeRoundActive}>{meta.isRoundActive ? 'Закончить раунд' : 'Начать раунд'}</button>
+        <button id={Styles.button} onClick={handleChangeRoundActive}>{meta.isRoundActive ? 'Закончить раунд' : 'Начать раунд для игроков'}</button>
         {renderSendMessage()}
-        <hr/>
         <b id={Styles.text}>Установить активную миссию</b>
         <div id={Styles.battleplansContainer}>
             {map(Constants.tournamentBattleplans, renderBattleplan)}

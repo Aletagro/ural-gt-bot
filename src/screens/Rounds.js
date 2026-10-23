@@ -2,6 +2,7 @@ import React, {useEffect, useReducer} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import {rounds, players, meta} from '../utilities/appState'
 import RoundPlay from '../components/RoundPlay'
+import Constants from '../Constants'
 
 import map from 'lodash/map'
 
@@ -20,7 +21,7 @@ const Rounds = () => {
 
     useEffect(() => {
         if (!rounds[rounds.selected]) {
-            fetch(`https://aoscom.online/rounds/?cur_round=${rounds.selected}`)
+            fetch(`${Constants.domain}/rounds/?cur_round=${rounds.selected}`)
                 .then(response => response.json())
                 .then(data => {
                     rounds[rounds.selected] = data
@@ -29,7 +30,7 @@ const Rounds = () => {
                 .catch(error => console.error(error))
         }
         if (!players.data.length) {
-            fetch('https://aoscom.online/players/')
+            fetch(`${Constants.domain}/players/`)
                 .then(response => response.json())
                 .then(data => {
                     players.data = data

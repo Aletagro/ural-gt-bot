@@ -3,6 +3,7 @@ import useDebounce from '../utilities/useDebounce'
 import {useNavigate} from 'react-router-dom'
 import {players, search} from '../utilities/appState'
 import {sortByName} from '../utilities/utils'
+import Constants from '../Constants'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
@@ -37,7 +38,7 @@ const Rosters = () => {
 
     useEffect(() => {
         if (!players.rosters.length) {
-            fetch('https://aoscom.online/rosters/')
+            fetch(`${Constants.domain}/rosters/`)
                 .then(response => response.json())
                 .then(data => {
                     players.rosters = data
