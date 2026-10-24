@@ -39,6 +39,7 @@ import Tactic from './screens/Tactic'
 import Developer from './screens/Developer'
 import LinkAccounts from './screens/LinkAccounts'
 import Header from './components/Header'
+import ScrollToTop from './components/ScrollToTop'
 import ChooseGrandAlliance from './builder/ChooseGrandAlliance'
 import ChooseFaction from './builder/ChooseFaction'
 import Builder from './builder/Builder'
@@ -71,6 +72,7 @@ function App() {
 
   return <div>
     <Header onShare={shareAction} />
+    <ScrollToTop />
     <Routes>
       <Route index element={<Registration />} />
       <Route path={'roster'} element={<RosterScreen />} />
