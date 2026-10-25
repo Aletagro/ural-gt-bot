@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ural-gt-bot/static/css/main.fd723e5a.css",
-    "main.js": "/ural-gt-bot/static/js/main.2f5f980e.js",
+    "main.css": "/ural-gt-bot/static/css/main.a91ee50c.css",
+    "main.js": "/ural-gt-bot/static/js/main.a6491c3c.js",
     "static/media/SonsOfBehemat.png": "/ural-gt-bot/static/media/SonsOfBehemat.745e1fc2c8ad863bdc19.png",
     "static/media/MaggotkinOfNurgle.png": "/ural-gt-bot/static/media/MaggotkinOfNurgle.c6f2cba6a77bf0b49d6d.png",
     "static/media/Fyreslayers.png": "/ural-gt-bot/static/media/Fyreslayers.a8c7d4d967b8f2285d02.png",
@@ -54,11 +54,11 @@
     "static/media/goldCheckmark.svg": "/ural-gt-bot/static/media/goldCheckmark.3ba83c49489fe35dc43e87829735d5a0.svg",
     "static/media/plus.svg": "/ural-gt-bot/static/media/plus.1821b69dd59c40f640858714c03302df.svg",
     "static/media/minus.svg": "/ural-gt-bot/static/media/minus.e96d94d06862f0e438941502b49deb0e.svg",
-    "main.fd723e5a.css.map": "/ural-gt-bot/static/css/main.fd723e5a.css.map",
-    "main.2f5f980e.js.map": "/ural-gt-bot/static/js/main.2f5f980e.js.map"
+    "main.a91ee50c.css.map": "/ural-gt-bot/static/css/main.a91ee50c.css.map",
+    "main.a6491c3c.js.map": "/ural-gt-bot/static/js/main.a6491c3c.js.map"
   },
   "entrypoints": [
-    "static/css/main.fd723e5a.css",
-    "static/js/main.2f5f980e.js"
+    "static/css/main.a91ee50c.css",
+    "static/js/main.a6491c3c.js"
   ]
 }
