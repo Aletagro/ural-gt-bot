@@ -95591,7 +95591,7 @@
       {
         "id": "b2e61626-7447-481d-83aa-4668b66d676a",
         "name": "Idoneth Deepkin Battle Traits",
-        "restrictionText": null,
+        "restrictionText": "Idoneth Deepkin armies can use the following abilities:",
         "abilityGroupType": "battleTraits",
         "subsectionName": null,
         "subsectionLore": null,
@@ -243744,7 +243744,7 @@
         "reaction": false,
         "lore": "Bloab Rotspawned completes a complicated gesture in the air and a vile mist rises from the ground around his target.",
         "usedBy": null,
-        "declare": "Pick a visible friendly unit within 12\" of this unit to be the target, then make a casting roll of 2D6.",
+        "declare": "Pick a visible friendly unit wholly within 12\" of this unit to be the target, then make a casting roll of 2D6.",
         "effect": "Until the start of your next turn, other than the **Companion** weapon ability, weapon abilities for attacks that target that friendly unit have no effect.",
         "abilityAndCommandIcon": "offensive",
         "cost": null,

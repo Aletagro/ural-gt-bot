@@ -52,8 +52,8 @@
   text-align: center;
 }
 #noticed {
-  padding-bottom: 16px;
-  font-size: 20px;
+  padding-bottom: 8px;
+  font-size: 18px;
 }
 #table {
   text-align: center;
@@ -101,20 +101,6 @@
   font-size: 30px;
   color: rgb(236, 230, 175);
 }
-#score {
-  font-size: 20px;
-  font-weight: bold;
-  color: rgb(236, 230, 175);
-}
-#logo {
-  position: absolute;
-  border-radius: 50%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40px; 
-  height: 40px;
-  bottom: 8px;
-}
 #playersNameContainer {
   position: absolute;
   justify-content: space-between;
@@ -132,4 +118,17 @@
   color: rgb(236, 230, 175);
   padding-right: 8px;
   text-align: right;
+}
+#resultContainer {
+  text-align: center;
+  padding-bottom: 16px;
+}
+#resultLabel {
+  font-size: 16px;
+  padding-bottom: 4px;
+  text-align: center;
+}
+#resultNotice {
+  font-size: 12px;
+  color: rgb(155, 155, 155)
 }

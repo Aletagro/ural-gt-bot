@@ -5,6 +5,7 @@ import Constants from '../Constants'
 import {setTournamentStatus} from '../utilities/utils'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import {players, meta} from '../utilities/appState'
+import {buildRostersPdf, deliverPdf} from '../utilities/exportRostersPdf'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -23,6 +24,7 @@ const Admin = () => {
     const [playersForChange, setPlayersForChange] = useState([])
     const isChangeButtonDisabled = size(playersForChange) !== 2
     const [message, setMessage] = useState('')
+    const [pdfLoading, setPdfLoading] = useState(false)
 
     const handleCreateParings = useCallback(async () => {
         await fetch(`${Constants.domain}/parings/?next_round=${meta.round + 1}`)
@@ -202,6 +204,20 @@ const Admin = () => {
         handleSetBattleplan(battleplan)
     }
 
+    const handleDownloadRosters = async () => {
+        setPdfLoading(true)
+        try {
+            const result = await buildRostersPdf(players.data, 'IceHammer 2026')
+            if (!result) return toast.info('Нет ни одного ростера')
+            await deliverPdf(result.blob, 'rosters.pdf')
+        } catch (e) {
+            console.error(e)
+            toast.error('Не удалось собрать PDF')
+        } finally {
+            setPdfLoading(false)
+        }
+    }
+
     const renderTable = useCallback((pairing, index) => {
         const player1 = find(players.data, ['id', pairing[0]])
         if (!player1) {
@@ -282,6 +298,7 @@ const Admin = () => {
             : null
         }
         <button id={Styles.button} onClick={handleChangeMetaParam('isRostersShow')}>{meta.isRostersShow ? 'Скрыть ростера' : 'Открыть ростера для всех'}</button>
+        <button id={Styles.button} onClick={handleDownloadRosters} disabled={pdfLoading}>{pdfLoading ? 'Готовлю PDF…' : 'Скачать все ростеры (PDF)'}</button>
         <button id={Styles.button} onClick={handleChangeMetaParam('isTournamentRulesShow')}>{meta.isTournamentRulesShow ? 'Скрыть регламент' : 'Открыть регламент для всех'}</button>
         <button id={Styles.button} onClick={handleChangeMetaParam('isPlayersListShow')}>{meta.isPlayersListShow ? 'Скрыть список участников' : 'Открыть список участников для всех'}</button>
         <button id={Styles.button} onClick={handleChangeMetaParam('isChallengesOpen')}>{meta.isChallengesOpen ? 'Закрыть челленджи' : 'Открыть челленджи'}</button>

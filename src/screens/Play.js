@@ -157,8 +157,9 @@ const Play = ({setShareAction}) => {
               return
             }
             const file = new File([blob], 'match-result.png', {type: 'image/png'})
-            const shareText = `Раунд ${meta?.round}. ${info?.firstPlayer?.surname} ${info?.firstPlayer?.name} vs ${info?.secondPlayer?.surname} ${info?.secondPlayer?.name}`
-    
+            const shareText = info?.results_submitted
+                ? `IceHammer 2026. Раунд ${info?.round}. ${info?.firstPlayer?.surname} ${info?.firstPlayer?.name} (${info.first_player_vp}) ${info.first_player_tp} - ${info.second_player_tp} (${info.second_player_vp}) ${info?.secondPlayer?.surname} ${info?.secondPlayer?.name}`
+                : `IceHammer 2026. Раунд ${info?.round}. ${info?.firstPlayer?.surname} ${info?.firstPlayer?.name} vs ${info?.secondPlayer?.surname} ${info?.secondPlayer?.name}. Грядёт великая битва!`
             if (navigator.canShare && navigator.canShare({files: [file]})) {
               try {
                 await navigator.share({
@@ -190,7 +191,6 @@ const Play = ({setShareAction}) => {
         return <div id={Styles.imageContainer} ref={bannerRef}>
             <img src={firstPlayerImage} id={Styles.firstImage} alt='firstImage' />
             <div id={Styles.matchInfo}>
-                {/* <div id={Styles.score}>10 : 10</div> */}
                 <div id={Styles.versus}>VS</div>
             </div>
             <img src={secondPlayerImage} id={Styles.secondImage} alt='secondImage' />
@@ -198,7 +198,6 @@ const Play = ({setShareAction}) => {
                 {firstPlayerName ? <p id={Styles.firstPlayerName}>{firstPlayerName}</p> : null}
                 {secondPlayerName ? <p id={Styles.secondPlayerName}>{secondPlayerName}</p> : null}
             </div>
-            {/* <img src={logo} id={Styles.logo} alt='logo' /> */}
         </div>
     }, [firstPlayerImage, secondPlayerImage, info])
 
@@ -212,6 +211,14 @@ const Play = ({setShareAction}) => {
     return <div id='column' className='Chapter'>
         <b id={Styles.table}>Стол {info?.table}</b>
         {renderImageBlock()}
+        {info?.results_submitted
+            ? <div id={Styles.resultContainer}>
+                <b>Результат игры</b>
+                <p id={Styles.resultLabel}>{info.firstPlayer.surname} {info.firstPlayer.name} <b>({info.first_player_vp}) {info.first_player_tp} - {info.second_player_tp} ({info.second_player_vp})</b> {info.secondPlayer.surname} {info.secondPlayer.name}</p>
+                <p id={Styles.resultNotice}>Вы можете пересдать результаты игры. Для этого просто отправьте новые результаты</p>
+            </div>
+            : null
+        }
         <div id={Styles.inputContainer}>
             <div id={Styles.playerContainer}>
                 <FloatingLabelInput
@@ -271,6 +278,7 @@ const Play = ({setShareAction}) => {
             </button>
             : null
         }
+        <p id={Styles.noticed}>Будьте внимательны, вводятся ваши VP, набранные за игру, а не TO </p>
         <button
             id={disableButton ? Styles.disableButton : Styles.button}
             onClick={handleSendResult}
@@ -278,9 +286,20 @@ const Play = ({setShareAction}) => {
         >
             Отправить Результаты
         </button>
-        <p id={Styles.noticed}>Будьте внимательны, вводятся ваши VP, набранные за игру, а не TO </p>
         <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button>
     </div>
 }
 
 export default Play
+
+// const _data = {
+//     first_player_id: 1,
+//     first_player_tp: 12,
+//     first_player_vp: 73,
+//     second_player_id: 2,
+//     second_player_tp: 8,
+//     second_player_vp: 72,
+//     round: 1,
+//     table: 20,
+//     results_submitted: true
+// }

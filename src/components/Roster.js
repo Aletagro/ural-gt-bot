@@ -166,7 +166,7 @@ const Roster = ({roster, info}) => {
     }
 
     const renderBattleTacticCard = (card, index) => {
-        return <div id={Styles.block} onClick={handleClickTacticCard(card)}>
+        return <div key={index} id={Styles.block} onClick={handleClickTacticCard(card)}>
             <p id={Styles.text}>{index === 0 ? 'First' : 'Second'} Tactics Cards: {card}</p>
         </div>
     }
