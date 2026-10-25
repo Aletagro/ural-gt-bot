@@ -82,7 +82,7 @@ function App() {
       <Route path={'challenges'} element={<Challenges />} />
       <Route path={'players'} element={<Players />} />
       <Route path={'playerInfo'} element={<PlayerInfo />} />
-      <Route path={'rosters'} element={<Rosters />} />
+      <Route path={'rosters'} element={<Rosters setShareAction={setShareAction} />} />
       <Route path={'rounds'} element={<Rounds />} />
       <Route path={'play'} element={<Play setShareAction={setShareAction} />} />
       <Route path={'vote'} element={<Vote />} />

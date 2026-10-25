@@ -1008,3 +1008,12 @@ export const isScourgeOfGhyran = (id, isWarscroll, isAbility) => {
 }
 
 export const addDomainForUrl = (url) => `${Constants.domain}${url}`
+
+const DIVIDER = '━━━━━━━━━━'
+const EOL = '  \n'
+
+export const toTelegramSafe = (text) => text
+    .replace(/\n{3,}/g, '\n\n')
+    .split('\n')
+    .map((line) => (/^-{3,}$/.test(line.trim()) ? DIVIDER : line))
+    .join(EOL)

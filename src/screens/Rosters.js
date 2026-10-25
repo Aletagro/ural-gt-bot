@@ -1,8 +1,10 @@
-import React, {useEffect, useState, useReducer} from 'react'
+import React, {useEffect, useState, useReducer, useCallback} from 'react'
 import useDebounce from '../utilities/useDebounce'
 import {useNavigate} from 'react-router-dom'
+import {ToastContainer, toast} from 'react-toastify'
 import {players, search} from '../utilities/appState'
 import {sortByName} from '../utilities/utils'
+import {buildRostersPdf, deliverPdf} from '../utilities/exportRostersPdf'
 import Constants from '../Constants'
 
 import map from 'lodash/map'
@@ -13,7 +15,7 @@ import lowerCase from 'lodash/lowerCase'
 
 import Styles from './styles/Rosters.module.css'
 
-const Rosters = () => {
+const Rosters = ({setShareAction}) => {
     const navigate = useNavigate()
     const [searchValue, setSearchValue] = useState(search.rostersValue)
     // eslint-disable-next-line
@@ -48,6 +50,22 @@ const Rosters = () => {
                 .catch(error => console.error(error))
         }
     }, [])
+
+    const handleDownloadRosters = useCallback(async () => {
+        try {
+            const result = await buildRostersPdf(players.data, 'IceHammer 2026')
+            if (!result) return toast.info('Нет ни одного ростера')
+            await deliverPdf(result.blob, 'IceHammer 2026.pdf')
+        } catch (e) {
+            console.error(e)
+            toast.error('Не удалось собрать PDF')
+        }
+    }, [])
+
+    useEffect(() => {
+        setShareAction(() => handleDownloadRosters)
+        return () => setShareAction(null)
+    }, [setShareAction, handleDownloadRosters])
 
     const handleClickPlayer = (player, index) => () => {
         navigate('/roster', {state: {title: `${player.surname} ${player.name}`, playerId: player.id, playerIndex: index}})
@@ -84,6 +102,7 @@ const Rosters = () => {
                 </div>
             }
         </div>
+        <ToastContainer />
     </>
 }
 

@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
 import {roster, player, meta} from '../utilities/appState'
-import {getErrors, getWarnings, getWoundsCount, cleanBuilder} from '../utilities/utils'
+import {getErrors, getWarnings, getWoundsCount, cleanBuilder, toTelegramSafe} from '../utilities/utils'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -128,7 +128,7 @@ ${roster.auxiliaryUnits.length > 0 ? `Auxiliary Units\n${getUnitsForExport(roste
 Wounds: ${wounds}
 ${roster.points.all}/${roster.pointsLimit} Pts
 `
-        navigator.clipboard.writeText(rosterText)
+        navigator.clipboard.writeText(toTelegramSafe(rosterText))
         toast.success('List Copied', Constants.toastParams)
         setIsCopy(true)
     }

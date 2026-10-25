@@ -209,7 +209,7 @@ const Admin = () => {
         try {
             const result = await buildRostersPdf(players.data, 'IceHammer 2026')
             if (!result) return toast.info('Нет ни одного ростера')
-            await deliverPdf(result.blob, 'rosters.pdf')
+            await deliverPdf(result.blob, 'IceHammer 2026.pdf')
         } catch (e) {
             console.error(e)
             toast.error('Не удалось собрать PDF')
