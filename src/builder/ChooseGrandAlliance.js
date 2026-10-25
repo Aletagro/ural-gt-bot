@@ -162,7 +162,7 @@ const ChooseGrandAlliance = () => {
 
     return  <div id='column' className='Chapter'>
         <h4 id={Styles.title}>Choose your Grand Alliance</h4>
-        {Constants.grandAlliances.map(renderRow)}
+        {map(Constants.grandAlliances, renderRow)}
         {size(player.mainRosters)
             ? <>
                 <h4 id={Styles.title}>Your saved rosters</h4>

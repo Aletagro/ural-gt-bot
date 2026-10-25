@@ -1,0 +1,208 @@
+.summary {
+  margin: 0 0 12px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.empty {
+  margin: 40px 0;
+  text-align: center;
+  color: #777;
+}
+
+.section {
+  margin-bottom: 14px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.sectionHint {
+  margin: 2px 0 10px;
+  font-size: 12px;
+  color: #888;
+}
+
+.section > .sectionTitle + :not(.sectionHint) {
+  margin-top: 10px;
+}
+
+/* ---------- Полосы ---------- */
+.barRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.thumb {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  object-position: 50% 20%;
+  background: #1a1610;
+}
+
+.barBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.barHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.barLabel {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.barValue {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: #777;
+}
+
+.track {
+  position: relative;
+  height: 10px;
+  border-radius: 5px;
+  background: #eee;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 5px;
+}
+
+.moreButton {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  color: #8a6d1f;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ---------- Вунды ---------- */
+.woundsRow {
+  margin-bottom: 10px;
+}
+
+.woundsLabel {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.woundsEmpty {
+  margin-left: 8px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.range {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 5px;
+  opacity: 0.85;
+}
+
+.avgMark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  margin-left: -1px;
+  background: #000;
+}
+
+.fact {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #555;
+}
+
+/* ---------- Гистограмма дропов ---------- */
+.histogram {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 10px;
+  height: 164px;
+  padding-top: 24px; /* запас под число над самым высоким столбцом */
+  box-sizing: border-box;
+}
+
+.column {
+  flex: 1;
+  max-width: 56px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.columnCount {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 3px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.columnBarWrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  margin: 2px 0;
+}
+
+.columnBar {
+  position: relative;
+  width: 100%;
+  min-height: 2px;
+  border-radius: 6px 6px 0 0;
+  background: #8a6d1f;
+}
+
+.columnLabel {
+  font-size: 13px;
+  color: #666;
+}
+
+/* ---------- Тактики ---------- */
+.subTitle {
+  margin: 12px 0 6px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.pair {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: #555;
+}

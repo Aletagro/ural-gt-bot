@@ -6,6 +6,7 @@ import Constants from '../Constants'
 import map from 'lodash/map'
 import find from 'lodash/find'
 import size from 'lodash/size'
+import reduce from 'lodash/reduce'
 
 import Styles from './styles/AllianceTop.module.css'
 
@@ -19,17 +20,17 @@ const parseStat = (player) => {
     }
 }
 
-const AllianceTop = ({standing, leaderId, themes = {}, onOpen}) => {
+const AllianceTop = ({standing, leaderId, onOpen}) => {
     const tops = useMemo(() => {
         const rest = (standing || []).filter((p) => p.id !== leaderId)
-        return Constants.grandAlliances.reduce((acc, alliance) => {
+        return reduce(Constants.grandAlliances, (acc, alliance) => {
             acc[alliance.name] = rest.filter((p) => parseStat(p).grandAlliance === alliance.name).slice(0, TOP_N)
             return acc
         }, {})
     }, [standing, leaderId])
 
     const [active, setActive] = useState(() => find(Constants.grandAlliances, (a) => size(tops[a.name])) || Constants.grandAlliances[0].name)
-    const accent = themes[active]
+    const accent = Constants.grandAlliances[active]?.color
 
     return <div className={Styles.container} style={{'--accent': accent}}>
         <div className={Styles.tabs}>
@@ -37,7 +38,7 @@ const AllianceTop = ({standing, leaderId, themes = {}, onOpen}) => {
                 <button
                     key={alliance.id}
                     className={`${Styles.tab} ${alliance.name === active ? Styles.tabActive : ''}`}
-                    style={{'--tab-accent': themes[alliance.name]}}
+                    style={{'--tab-accent': Constants.grandAlliances[alliance.name]?.color}}
                     onClick={() => setActive(alliance.name)}
                 >
                     {alliance.name}

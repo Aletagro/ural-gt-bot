@@ -12,13 +12,6 @@ import find from 'lodash/find'
 
 import Styles from './styles/Leaders.module.css'
 
-const ALLIANCE_THEME = {
-    Order: '#b8962e',
-    Chaos: '#c0392b',
-    Death: '#8e6bbf',
-    Destruction: '#3f9d47',
-}
-
 const ArmyImage = ({allegiance, className}) => {
     const src = getArmyImage(allegiance)
     return src
@@ -74,7 +67,7 @@ const Leaders = () => {
                 return <button
                     key={alliance}
                     className={Styles.champion}
-                    style={{'--accent': ALLIANCE_THEME[alliance]}}
+                    style={{'--accent': Constants.grandAlliances[alliance]?.color}}
                     onClick={player ? openPlayer(player) : undefined}
                     disabled={!player}
                 >
@@ -94,7 +87,6 @@ const Leaders = () => {
         <AllianceTop
             standing={players.standing}
             leaderId={leader.id}
-            themes={ALLIANCE_THEME}
             onOpen={openPlayer}
         />
         {console.log(_player)}

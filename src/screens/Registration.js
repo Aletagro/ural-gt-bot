@@ -356,6 +356,7 @@ const Registration = () => {
                     {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Ice Hammer 2026', round: meta.round}} /> : null}
                     {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
                     {player.isJudge || meta.round ? <Row title='Лидеры турнира' navigateTo='leaders' /> : null}
+                    {meta.isRostersShow || player.isJudge ? <Row title='Статистика Турнира' navigateTo='statistics' /> : null}
                     {player.reg && meta.round === 5 && !player?.info?.sport_voted
                         ? <Row title='Голосование За Спортивность' navigateTo='vote' />
                         : null
