@@ -1,0 +1,112 @@
+.container {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 2px dashed #ccc;
+}
+
+.title {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: bold;
+}
+
+.title span {
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: normal;
+  color: #999;
+}
+
+.nomination {
+  margin-bottom: 14px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.nominationTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.hint {
+  margin: 2px 0 8px;
+  font-size: 12px;
+  color: #888;
+}
+
+.tie {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: #b8962e;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 6px 8px;
+  border: none;
+  border-radius: 8px;
+  background: #f6f3ea;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.row:active {
+  background: #ece6d2;
+}
+
+.thumb {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: 50% 20%;
+  background: #1a1610;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.sub {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #777;
+}
+
+.value {
+  flex: 0 0 auto;
+  font-size: 18px;
+  font-weight: bold;
+  color: #8a6d1f;
+}
+
+.empty {
+  margin: 6px 0 2px;
+  font-size: 14px;
+  color: #999;
+}

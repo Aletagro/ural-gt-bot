@@ -2,7 +2,7 @@ import React from 'react'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
-import {replaceAsterisks} from '../utilities/utils'
+import {replaceAsterisks, toTelegramSafe} from '../utilities/utils'
 
 import upperFirst from 'lodash/upperFirst'
 
@@ -13,7 +13,7 @@ const BattleTactic = ({tactic}) => {
 
     const handlleClick = () => {
         const tacticText = `${upperFirst(tactic.battleTacticType)}: ${tactic.name}\nTactics: ${tactic.rulesText}`
-        navigator.clipboard.writeText(tacticText)
+        navigator.clipboard.writeText(toTelegramSafe(tacticText))
         toast.success('Ability Copied', Constants.toastParams)
     }
 

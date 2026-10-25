@@ -1,6 +1,7 @@
 import parse from 'html-react-parser'
 import Constants from '../Constants'
 import {roster} from '../utilities/appState'
+import armyImages from '../images/armies'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -15,8 +16,10 @@ import forEach from 'lodash/forEach'
 import isEmpty from 'lodash/isEmpty'
 import replace from 'lodash/replace'
 import includes from 'lodash/includes'
+import camelCase from 'lodash/camelCase'
 import lowerCase from 'lodash/lowerCase'
 import startsWith from 'lodash/startsWith'
+import upperFirst from 'lodash/upperFirst'
 
 const dataBase = require('../dataBase.json')
 
@@ -1017,3 +1020,34 @@ export const toTelegramSafe = (text) => text
     .split('\n')
     .map((line) => (/^-{3,}$/.test(line.trim()) ? DIVIDER : line))
     .join(EOL)
+
+
+export const getChampions = (standings) => {
+    if (standings) {
+        const [leader, ...rest] = standings
+        const byAlliance = map(Constants.grandAlliances, (alliance) => ({
+            alliance: alliance.name,
+            player: find(rest, (p) => {
+                const playerGA = p.roster_stat ? JSON.parse(p.roster_stat)?.grandAlliance : undefined
+                return alliance.name === playerGA
+            }),
+        }))
+        return {leader: leader || null, byAlliance}
+    }
+    return {}
+}
+
+export const getArmyImage = (allegiance) => {
+    const playerImage = armyImages[upperFirst(camelCase(allegiance))]
+    if (playerImage) {
+        return playerImage
+    } else {
+        const parentFactionKeywordId = find(dataBase.data.faction_keyword, ['name', allegiance])?.parentFactionKeywordId
+        const faction = find(dataBase.data.faction_keyword, ['id', parentFactionKeywordId])?.name
+        if (faction) {
+            return armyImages[upperFirst(camelCase(faction))]
+        }
+    }
+    return null
+}
+ 

@@ -37,7 +37,7 @@ const PlayerInfo = () => {
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(playerInfo?.status))
     const [message, setMessage] = useState('')
-    const [paintChecked, setPaintChecked] = useState(playerInfo.paint_checked)
+    const [paintChecked, setPaintChecked] = useState(player.paint_checked)
     const photos = useMemo(() => map(playerInfo?.validation_photo_path, addDomainForUrl), [playerInfo?.validation_photo_path])
 
     const handleClickAllegiance = () => {
@@ -133,7 +133,7 @@ const PlayerInfo = () => {
             })
             .catch(error => {
                 console.error(error)
-                toast.success('Возникла ошибка', Constants.toastParams)
+                toast.error('Возникла ошибка', Constants.toastParams)
             })
       }, [player, handleSendMessage, paintChecked])
 

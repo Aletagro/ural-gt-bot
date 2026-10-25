@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom'
 import useDebounce from '../utilities/useDebounce'
 import {players, search, player, meta} from '../utilities/appState'
 import General from '../icons/blackGeneral.svg'
-import PaintChecked from '../icons/paintChecked.svg'
+import PaintIcon from '../icons/PaintIcon'
 import Constants from '../Constants'
 
 import map from 'lodash/map'
@@ -50,6 +50,7 @@ const Players = () => {
             .then(data => {
                 const _players = map(data.players, (_player, index) => ({..._player, place: index + 1}))
                 players.standing = _players
+                search.players = _players
                 forceUpdate()
             })
             .catch(error => console.error(error))
@@ -75,7 +76,7 @@ const Players = () => {
         setLastColumn(newValue)
     }
 
-    const renderRow = (place, _player, city, army, w, d, tp, last, isOddRow, withRoster, paintChecked) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+    const renderRow = (place, _player, city, army, w, d, tp, last, isOddRow, withRoster, paintChecked, hasPhoto) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
         <p id={Styles.smallColumn}>{place}</p>
         <div id={Styles.playerInfo}>
             <p id={Styles.сolumn}>{_player}</p>
@@ -94,8 +95,10 @@ const Players = () => {
                     ? <img id={Styles.rosterIcon} src={General} alt="" />
                     : null
                 }
-                {player.isJudge && paintChecked
-                    ? <img id={Styles.rosterIcon} src={PaintChecked} alt="" />
+                {player.isJudge && hasPhoto
+                    ? paintChecked
+                        ? <PaintIcon id={Styles.painIcon} /> 
+                        : <PaintIcon crossed id={Styles.painIcon} />
                     : null
                 }
             </>
@@ -105,7 +108,7 @@ const Players = () => {
     const renderPlayer = (player, index) => {
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
-            {renderRow(player.place, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.final_formula, player[lastColumnValues[lastColumn]] || (player[lastColumnValues[lastColumn]] === 0 ? 0 : player.tp_sum), index % 2, player.roster_stat, player.paint_checked)}
+            {renderRow(player.place, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.final_formula, player[lastColumnValues[lastColumn]] || (player[lastColumnValues[lastColumn]] === 0 ? 0 : player.tp_sum), index % 2, player.roster_stat, player.paint_checked, player.has_photo)}
         </button>
     }
 

@@ -38,6 +38,7 @@ import LegendUnits from './screens/LegendUnits'
 import Tactic from './screens/Tactic'
 import Developer from './screens/Developer'
 import LinkAccounts from './screens/LinkAccounts'
+import Leaders from './screens/Leaders'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
 import ChooseGrandAlliance from './builder/ChooseGrandAlliance'
@@ -123,6 +124,7 @@ function App() {
       <Route path={'tactic'} element={<Tactic />} />
       <Route path={'pasteList'} element={<PasteList />} />
       <Route path={'linkAccounts'} element={<LinkAccounts />} />
+      <Route path={'leaders'} element={<Leaders />} />
     </Routes>
   </div>
 }

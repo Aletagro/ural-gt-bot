@@ -1,0 +1,164 @@
+.empty {
+    margin: 40px 0;
+    text-align: center;
+    color: #777;
+}
+
+.sectionTitle {
+    margin: 20px 0 10px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+/* ---------- Общая основа карточек: картинка на всю площадь ---------- */
+.leader,
+.champion {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    min-width: 0;
+    padding: 12px;
+    text-align: center;
+    background: #111;
+    color: #fff;
+    font-family: inherit;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease;
+}
+
+.leader:active,
+.champion:not(:disabled):active {
+    transform: scale(0.98);
+}
+
+/* Затемнение снизу, чтобы текст читался на любом арте */
+.leader::after,
+.champion::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.92) 0%,
+        rgba(0, 0, 0, 0.6) 32%,
+        rgba(0, 0, 0, 0) 62%
+    );
+}
+
+/* Тексты поверх картинки и затемнения */
+.leader > p,
+.champion > p {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Картинка (или заглушка, если картинки нет) */
+.leaderImage,
+.championImage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 20%; /* лица и герои обычно в верхней части */
+    background: radial-gradient(circle at 50% 30%, #2a2418, #0e0c08);
+}
+
+/* ---------- Лидер ---------- */
+.leader {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border: 2px solid #d9b44a;
+    border-radius: 14px;
+    box-shadow: 0 0 18px rgba(217, 180, 74, 0.35);
+}
+
+.leaderLabel {
+    padding: 4px 12px !important;
+    border-radius: 999px;
+    background: #b8962e;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-shadow: none !important;
+}
+
+.leaderName {
+    margin-top: auto !important; /* прижимаем текст к низу карточки */
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.1;
+    color: #f0d27a;
+}
+
+.leaderPoints {
+    margin-top: 6px !important;
+    font-size: 22px;
+    font-weight: bold;
+    color: #f0d27a;
+}
+
+/* ---------- Чемпионы Альянсов ---------- */
+.champion {
+    aspect-ratio: 3 / 4;
+    border: 2px solid var(--accent);
+    border-radius: 12px;
+}
+
+.alliance {
+    padding: 3px 10px !important;
+    border-radius: 999px;
+    background: var(--accent);
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: none !important;
+}
+
+.name {
+    margin-top: auto !important;
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    color: #e2d8bd;
+}
+
+.army {
+    margin-top: 3px !important;
+    font-size: 12px;
+    color: #e2d8bd;
+}
+
+/* Пустая карточка Альянса: без картинки и затемнения */
+.champion:disabled {
+    background: #f6f3ea;
+    border-style: dashed;
+    cursor: default;
+}
+
+.champion:disabled::after {
+    display: none;
+}
+
+.none {
+    margin: auto 0 !important;
+    font-size: 13px;
+    color: #999;
+    text-shadow: none !important;
+}

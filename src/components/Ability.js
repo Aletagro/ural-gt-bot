@@ -2,7 +2,7 @@ import React from 'react'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
-import {replaceAsterisks, removeAsterisks} from '../utilities/utils'
+import {replaceAsterisks, removeAsterisks, toTelegramSafe} from '../utilities/utils'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -31,7 +31,7 @@ const Ability = ({ability, abilityKeywordsName, abilityIdName, isRegimentOfRenow
 Phase: ${ability.phaseDetails}${ability.cpCost && !isRegimentOfRenown ? `\nCP Cost: ${ability.cpCost}` : ''}${castingValue ? `\nCasting Value: ${castingValue}` : ''}\n${ability.declare ? `\nDeclare: ${ability.declare}` : ''}\n${ability.usedBy ? `\nUsed By: ${ability.usedBy}` : ''}${ability.effect ? `\nEffect: ${ability.effect}` : ''}
 ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), ', ')}` : ''}
 `
-            navigator.clipboard.writeText(abilityText)
+            navigator.clipboard.writeText(toTelegramSafe(abilityText))
             toast.success('Ability Copied', Constants.toastParams)
         }
     }

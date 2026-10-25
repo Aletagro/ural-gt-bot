@@ -2,6 +2,7 @@ import React, {useState, useEffect, useReducer, useCallback, useRef} from 'react
 import {useNavigate} from 'react-router-dom'
 import html2canvas from 'html2canvas'
 import {player, players, meta} from '../utilities/appState'
+import {getArmyImage} from '../utilities/utils'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Checkbox from '../components/Checkbox'
 import armyImages from '../images/armies'
@@ -12,12 +13,8 @@ import min from 'lodash/min'
 import max from 'lodash/max'
 import find from 'lodash/find'
 import isNull from 'lodash/isNull'
-import camelCase from 'lodash/camelCase'
-import upperFirst from 'lodash/upperFirst'
 
 import Styles from './styles/Play.module.css'
-
-const dataBase = require('../dataBase.json')
 
 const inputStyle = {
     '--Input-minHeight': '48px',
@@ -64,16 +61,7 @@ const Play = ({setShareAction}) => {
         const player = isFirst ? 'firstPlayer' : 'secondPlayer'
         if (get(info, `${player}.roster`)) {
             const playerAllegiance = JSON.parse(get(info, `${player}.roster`))?.allegiance
-            const _playerImage = armyImages[upperFirst(camelCase(playerAllegiance))]
-            if (_playerImage) {
-                playerImage = _playerImage
-            } else {
-                const parentFactionKeywordId = find(dataBase.data.faction_keyword, ['name', playerAllegiance])?.parentFactionKeywordId
-                const faction = find(dataBase.data.faction_keyword, ['id', parentFactionKeywordId])?.name
-                if (faction) {
-                    playerImage = armyImages[upperFirst(camelCase(faction))]
-                }
-            }
+            playerImage = getArmyImage(playerAllegiance) || playerImage
         }
         if (isFirst) {
             setFirstPlayerImage(playerImage)
