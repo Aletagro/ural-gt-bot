@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ural-gt-bot/static/css/main.5ccf2cd4.css",
-    "main.js": "/ural-gt-bot/static/js/main.6669353e.js",
+    "main.css": "/ural-gt-bot/static/css/main.9018e31c.css",
+    "main.js": "/ural-gt-bot/static/js/main.55ae1c25.js",
     "static/media/SonsOfBehemat.png": "/ural-gt-bot/static/media/SonsOfBehemat.745e1fc2c8ad863bdc19.png",
     "static/media/MaggotkinOfNurgle.png": "/ural-gt-bot/static/media/MaggotkinOfNurgle.c6f2cba6a77bf0b49d6d.png",
     "static/media/Fyreslayers.png": "/ural-gt-bot/static/media/Fyreslayers.a8c7d4d967b8f2285d02.png",
@@ -33,6 +33,7 @@
     "static/media/MinionPro-Bold.woff": "/ural-gt-bot/static/media/MinionPro-Bold.e73f42dae2e6ae675375.woff",
     "static/media/MinionPro-Regular.woff": "/ural-gt-bot/static/media/MinionPro-Regular.7cfa635450eff096f301.woff",
     "static/media/calculator.svg": "/ural-gt-bot/static/media/calculator.f724ea6fabd284bd48378ca5b8742f9f.svg",
+    "static/media/sRGB_IEC61966_2_1.icc": "/ural-gt-bot/static/media/sRGB_IEC61966_2_1.38b05b78f50224cfe229.icc",
     "static/media/add.svg": "/ural-gt-bot/static/media/add.fc78ba00fcec417be7fade2132452c3e.svg",
     "static/media/export.svg": "/ural-gt-bot/static/media/export.891ab20efb017ba3fc68b8ca59b6b9e7.svg",
     "static/media/delete.svg": "/ural-gt-bot/static/media/delete.5b90fab076dec066ad769f8f7e7448cf.svg",
@@ -54,11 +55,11 @@
     "static/media/goldCheckmark.svg": "/ural-gt-bot/static/media/goldCheckmark.3ba83c49489fe35dc43e87829735d5a0.svg",
     "static/media/plus.svg": "/ural-gt-bot/static/media/plus.1821b69dd59c40f640858714c03302df.svg",
     "static/media/minus.svg": "/ural-gt-bot/static/media/minus.e96d94d06862f0e438941502b49deb0e.svg",
-    "main.5ccf2cd4.css.map": "/ural-gt-bot/static/css/main.5ccf2cd4.css.map",
-    "main.6669353e.js.map": "/ural-gt-bot/static/js/main.6669353e.js.map"
+    "main.9018e31c.css.map": "/ural-gt-bot/static/css/main.9018e31c.css.map",
+    "main.55ae1c25.js.map": "/ural-gt-bot/static/js/main.55ae1c25.js.map"
   },
   "entrypoints": [
-    "static/css/main.5ccf2cd4.css",
-    "static/js/main.6669353e.js"
+    "static/css/main.9018e31c.css",
+    "static/js/main.55ae1c25.js"
   ]
 }
