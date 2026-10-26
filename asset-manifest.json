@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/ural-gt-bot/static/css/main.a91ee50c.css",
-    "main.js": "/ural-gt-bot/static/js/main.a6491c3c.js",
+    "main.css": "/ural-gt-bot/static/css/main.22d08dca.css",
+    "main.js": "/ural-gt-bot/static/js/main.337c6544.js",
     "static/media/SonsOfBehemat.png": "/ural-gt-bot/static/media/SonsOfBehemat.745e1fc2c8ad863bdc19.png",
     "static/media/MaggotkinOfNurgle.png": "/ural-gt-bot/static/media/MaggotkinOfNurgle.c6f2cba6a77bf0b49d6d.png",
     "static/media/Fyreslayers.png": "/ural-gt-bot/static/media/Fyreslayers.a8c7d4d967b8f2285d02.png",
@@ -14,7 +14,7 @@
     "static/media/OgorMawtribes.png": "/ural-gt-bot/static/media/OgorMawtribes.0d5a1075ed01a5da9a95.png",
     "static/media/HelsmithsOfHashut.png": "/ural-gt-bot/static/media/HelsmithsOfHashut.f4fbed95d75fcf7826e6.png",
     "static/media/SlavesToDarkness.png": "/ural-gt-bot/static/media/SlavesToDarkness.6787c52cd853b482ba24.png",
-    "static/media/Ironjaws.png": "/ural-gt-bot/static/media/Ironjaws.7082da2783cf3530cd71.png",
+    "static/media/Ironjawz.png": "/ural-gt-bot/static/media/Ironjawz.7082da2783cf3530cd71.png",
     "static/media/Kruleboyz.png": "/ural-gt-bot/static/media/Kruleboyz.6eacb21fe04bdaff1e09.png",
     "static/media/FleshEaterCourts.png": "/ural-gt-bot/static/media/FleshEaterCourts.fff1e9aff10722a2ea13.png",
     "static/media/CitiesOfSigmar.png": "/ural-gt-bot/static/media/CitiesOfSigmar.eab5a36a5d895960a602.png",
@@ -22,7 +22,7 @@
     "static/media/Seraphon.png": "/ural-gt-bot/static/media/Seraphon.90ae9b4d0f76eda03cbb.png",
     "static/media/DisciplesOfTzeentch.png": "/ural-gt-bot/static/media/DisciplesOfTzeentch.f7e641b4a112e2a399ad.png",
     "static/media/BladesOfKhorne.png": "/ural-gt-bot/static/media/BladesOfKhorne.03b907250a6f65533754.png",
-    "static/media/StormcastEternal.png": "/ural-gt-bot/static/media/StormcastEternal.4df2c05c228c132e58ee.png",
+    "static/media/StormcastEternals.png": "/ural-gt-bot/static/media/StormcastEternals.4df2c05c228c132e58ee.png",
     "static/media/SoulblightGravelords.png": "/ural-gt-bot/static/media/SoulblightGravelords.cfdcb4de8c34f791050d.png",
     "static/media/GloomspiteGitz.png": "/ural-gt-bot/static/media/GloomspiteGitz.42cb641d17edd571800e.png",
     "static/media/HedonitesOfSlaanesh.png": "/ural-gt-bot/static/media/HedonitesOfSlaanesh.e15cde6f7c277ede3a53.png",
@@ -54,11 +54,11 @@
     "static/media/goldCheckmark.svg": "/ural-gt-bot/static/media/goldCheckmark.3ba83c49489fe35dc43e87829735d5a0.svg",
     "static/media/plus.svg": "/ural-gt-bot/static/media/plus.1821b69dd59c40f640858714c03302df.svg",
     "static/media/minus.svg": "/ural-gt-bot/static/media/minus.e96d94d06862f0e438941502b49deb0e.svg",
-    "main.a91ee50c.css.map": "/ural-gt-bot/static/css/main.a91ee50c.css.map",
-    "main.a6491c3c.js.map": "/ural-gt-bot/static/js/main.a6491c3c.js.map"
+    "main.22d08dca.css.map": "/ural-gt-bot/static/css/main.22d08dca.css.map",
+    "main.337c6544.js.map": "/ural-gt-bot/static/js/main.337c6544.js.map"
   },
   "entrypoints": [
-    "static/css/main.a91ee50c.css",
-    "static/js/main.a6491c3c.js"
+    "static/css/main.22d08dca.css",
+    "static/js/main.337c6544.js"
   ]
 }
