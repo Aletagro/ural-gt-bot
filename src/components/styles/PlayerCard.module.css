@@ -1,0 +1,415 @@
+/* Карточка игрока. Цвета и скругления подобраны под экран лидеров и плашку «Ваше место» */
+
+/* ---------- Вкладки ---------- */
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px 4px;
+    border: 2px solid #b0953f;
+    border-radius: 999px;
+    background: #fff;
+    color: #8a6d1f;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tabActive {
+    background: #b0953f;
+    color: #fff;
+}
+
+/* ---------- Обложка ---------- */
+.hero {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    max-height: 440px;
+    margin-bottom: 14px;
+    border: 2px solid var(--accent, #b0953f);
+    border-radius: 20px;
+    background: #000;
+    box-sizing: border-box;
+}
+
+.heroImage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 25%;
+}
+
+.heroShade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 42%, rgba(0, 0, 0, 0.88) 100%);
+}
+
+.pill {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: #b0953f;
+    color: #1a1408;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.heroBottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 16px 14px 18px;
+    text-align: center;
+}
+
+.heroName {
+    margin: 0;
+    font-size: 26px;
+    line-height: 1.15;
+    color: #f0d98a;
+}
+
+.heroArmy {
+    margin: 4px 0 0;
+    font-size: 15px;
+    color: #efe6cc;
+}
+
+.heroMeta {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #c9bd98;
+}
+
+/* ---------- Результаты ---------- */
+.placeBox {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+    padding: 14px 16px;
+    border: 2px solid #b0953f;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #fbf3dc 0%, #fffdf8 70%);
+}
+
+.placeNumber {
+    flex: 0 0 auto;
+    min-width: 62px;
+    padding-right: 14px;
+    border-right: 1px solid #d9c98f;
+    text-align: center;
+}
+
+.placeNumberValue {
+    display: block;
+    font-size: 44px;
+    line-height: 1;
+    color: #8a6d1f;
+}
+
+.placeNumberOf {
+    display: block;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #777;
+}
+
+.placeLabel {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8a6d1f;
+}
+
+.placeTp {
+    margin: 2px 0 0;
+    font-size: 28px;
+    line-height: 1.1;
+}
+
+.placeNote {
+    margin: 2px 0 0;
+    font-size: 14px;
+    color: #666;
+}
+
+.tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.tile {
+    padding: 10px 12px;
+    border: 1px solid #e3dcc6;
+    border-radius: 14px;
+    background: #fff;
+}
+
+.tileValue {
+    margin: 0;
+    font-size: 22px;
+    color: #8a6d1f;
+}
+
+.tileLabel {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.tileHint {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #999;
+}
+
+/* ---------- Заголовки разделов ---------- */
+.sectionHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 18px 0 10px;
+}
+
+.sectionTitle {
+    margin: 0;
+    font-size: 20px;
+}
+
+.sectionCount {
+    font-size: 14px;
+    color: #8a6d1f;
+}
+
+/* ---------- Значки ---------- */
+.badges {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.badge {
+    padding: 12px 10px;
+    border: 2px solid #b0953f;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #fbf3dc 0%, #fffdf8 75%);
+    text-align: center;
+}
+
+.badgeFun {
+    border-color: #e3dcc6;
+    background: #fff;
+}
+
+.badgeIcon {
+    display: block;
+    font-size: 30px;
+    line-height: 1.1;
+}
+
+.badgeTitle {
+    margin: 6px 0 0;
+    font-size: 15px;
+    line-height: 1.2;
+    color: #5c4700;
+}
+
+.badgeCaption {
+    margin: 4px 0 0;
+    font-size: 12px;
+    line-height: 1.3;
+    color: #777;
+}
+
+.badgesEmpty {
+    margin: 4px 0 8px;
+    font-size: 14px;
+    color: #888;
+}
+
+.moreButton {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #b0953f;
+    border-radius: 12px;
+    background: #fff;
+    color: #8a6d1f;
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.lockedList {
+    margin-top: 10px;
+}
+
+.locked {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border: 1px dashed #d6d0bd;
+    border-radius: 12px;
+    opacity: 0.75;
+}
+
+.lockedIcon {
+    flex: 0 0 auto;
+    font-size: 22px;
+    filter: grayscale(1);
+}
+
+.lockedTitle {
+    margin: 0;
+    font-size: 14px;
+}
+
+.lockedHow {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #777;
+}
+
+.lockedNote {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #8a6d1f;
+}
+
+/* ---------- Игры ---------- */
+.game {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 10px 12px 10px 10px;
+    border: 1px solid #e3dcc6;
+    border-left: 5px solid var(--result, #bbb);
+    border-radius: 14px;
+    background: #fff;
+    font: inherit;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.gameButton {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.gameRound {
+    flex: 0 0 22px;
+    font-size: 22px;
+    text-align: center;
+    color: #8a6d1f;
+}
+
+.gameThumb {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    object-fit: cover;
+    object-position: 50% 20%;
+    background: #111;
+}
+
+.gameThumbEmpty {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #ddd;
+}
+
+.gameBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.gameName {
+    margin: 0;
+    font-size: 16px;
+    overflow-wrap: anywhere;
+}
+
+.gameSub {
+    margin: 2px 0 0;
+    font-size: 13px;
+    color: #888;
+}
+
+.gameResult {
+    flex: 0 0 auto;
+    text-align: right;
+}
+
+.gameOutcome {
+    margin: 0;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--result, #888);
+}
+
+.gameTp {
+    margin: 2px 0 0;
+    font-size: 18px;
+    color: #8a6d1f;
+}
+
+.gameVp {
+    margin: 0;
+    font-size: 12px;
+    color: #999;
+}
+
+.gamePending {
+    font-size: 13px;
+    color: #888;
+}
+
+.empty {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #888;
+}
+
+/* ---------- Блок судьи и ростер ---------- */
+.judgeBlock {
+    margin-bottom: 12px;
+}
+
+.judgeStatus {
+    margin: 0 0 12px;
+    font-size: 16px;
+}
+
+.rosterMissing {
+    margin: 24px 0;
+    text-align: center;
+    color: #888;
+}

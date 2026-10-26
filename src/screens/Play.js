@@ -57,7 +57,7 @@ const Play = ({setShareAction}) => {
     }, [])
 
     const setPlayerImage = useCallback((isFirst) => {
-        let playerImage = isFirst ? armyImages.Ironjaws : armyImages.StormcastEternal
+        let playerImage = isFirst ? armyImages.Ironjawz : armyImages.StormcastEternals
         const player = isFirst ? 'firstPlayer' : 'secondPlayer'
         if (get(info, `${player}.roster`)) {
             const playerAllegiance = JSON.parse(get(info, `${player}.roster`))?.allegiance

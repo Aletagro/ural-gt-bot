@@ -50,6 +50,7 @@
 
 #points {
   color: white;
+  padding-left: 8px;
 }
 
 #container {
@@ -64,6 +65,23 @@
 
 #keyword {
   font-size: 16px;
+}
+
+#usedKeywords {
+  padding-bottom: 12px;
+  padding-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#usedKeyword {
+  font-size: 14px;
+  border: 1px solid #8B8B8B;
+  border-radius: 24px;
+  padding: 4px 12px;
+  display: inline-block;
+  color: #525252;
 }
 
 #name {

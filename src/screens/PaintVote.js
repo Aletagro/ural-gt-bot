@@ -62,7 +62,7 @@ const PaintVote = () => {
                 )}
                 <div id={Styles.nameContainer}>
                     <span id={Styles.playerName}>{item.surname} {item.name}</span>
-                    <span id={Styles.playerFaction}>Ironjaws{rosterInfo.allegiance}</span>
+                    <span id={Styles.playerFaction}>{rosterInfo.allegiance}</span>
                 </div>
             </div>
         </div>

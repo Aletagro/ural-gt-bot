@@ -1,0 +1,254 @@
+/* ---------- Секция ---------- */
+.section {
+    margin-bottom: 14px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.sectionTitle {
+    margin: 0;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.sectionHint {
+    margin: 2px 0 10px;
+    font-size: 12px;
+    line-height: 1.3;
+    color: #888;
+}
+
+.noData {
+    margin: 6px 0;
+    font-size: 13px;
+    color: #999;
+}
+
+/* ---------- Полоска побед / ничьих / поражений ---------- */
+.wdl {
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #eee;
+}
+
+.wdlWin {
+    background: #8a6d1f;
+}
+
+.wdlDraw {
+    background: #c9c9c9;
+}
+
+.wdlLoss {
+    background: #e9e3d0;
+}
+
+/* ---------- Гранд Альянсы ---------- */
+.allianceGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.allianceCard {
+    min-width: 0;
+    padding: 10px;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    background: #fff;
+}
+
+.allianceHead {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.allianceName {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+}
+
+.winRate {
+    margin: 0;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.winRateLabel {
+    margin: 2px 0 8px;
+    font-size: 12px;
+    color: #888;
+}
+
+.wdlText {
+    margin: 4px 0 0;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.metrics {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #666;
+}
+
+.internal {
+    margin: 6px 0 0;
+    font-size: 11px;
+    color: #aaa;
+}
+
+/* ---------- Армии ---------- */
+.sortChips {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0;
+}
+
+.chip {
+    flex: 1;
+    padding: 6px 2px;
+    border: 1px solid #ccc;
+    border-radius: 999px;
+    background: #fff;
+    color: #666;
+    font-family: inherit;
+    font-size: 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.chipActive {
+    border-color: #8a6d1f;
+    background: #8a6d1f;
+    color: #fff;
+}
+
+.armyRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.armyRowSmall {
+    opacity: 0.5;
+}
+
+.armyThumb {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    object-position: 50% 20%;
+    background: #1a1610;
+}
+
+.armyBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.armyHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.armyName {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+    border-radius: 50%;
+}
+
+.armyWinRate {
+    flex: 0 0 auto;
+    font-size: 16px;
+    font-weight: bold;
+    color: #8a6d1f;
+}
+
+.armyMetrics {
+    margin: 3px 0 0;
+    font-size: 12px;
+    color: #777;
+}
+
+.moreButton {
+    width: 100%;
+    margin-top: 2px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    color: #8a6d1f;
+    font-family: inherit;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* ---------- Матрица ---------- */
+.matrix {
+    display: grid;
+    grid-template-columns: 64px repeat(4, 1fr);
+    gap: 4px;
+    margin-top: 10px;
+}
+
+.matrixColTitle {
+    padding-bottom: 2px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.matrixRowTitle {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.matrixCell {
+    min-width: 0;
+    min-height: 52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.matrixDiagonal {
+    background: repeating-linear-gradient(45deg, #f6f6f6, #f6f6f6 6px, #efefef 6px, #efefef 12px);
+}
+
+.cellValue {
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.cellGames {
+    font-size: 10px;
+    color: #777;
+}

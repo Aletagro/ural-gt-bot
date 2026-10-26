@@ -8,7 +8,7 @@ import GloomspiteGitz from './GloomspiteGitz.png'
 import HedonitesOfSlaanesh from './HedonitesOfSlaanesh.png'
 import HelsmithsOfHashut from './HelsmithsOfHashut.png'
 import IdonethDeepkin from './IdonethDeepkin.png'
-import Ironjaws from './Ironjaws.png'
+import Ironjawz from './Ironjawz.png'
 import KharadronOverlords from './KharadronOverlords.png'
 import Kruleboyz from './Kruleboyz.png'
 import LuminethRealmLords from './LuminethRealmLords.png'
@@ -21,7 +21,7 @@ import Skaven from './Skaven.png'
 import SlavesToDarkness from './SlavesToDarkness.png'
 import SonsOfBehemat from './SonsOfBehemat.png'
 import SoulblightGravelords from './SoulblightGravelords.png'
-import StormcastEternal from './StormcastEternal.png'
+import StormcastEternals from './StormcastEternals.png'
 import Sylvaneth from './Sylvaneth.png'
 
 
@@ -37,20 +37,21 @@ const armyImages = {
     HedonitesOfSlaanesh,
     HelsmithsOfHashut,
     IdonethDeepkin,
-    Ironjaws,
+    Ironjawz,
     KharadronOverlords,
     Kruleboyz,
     LuminethRealmLords,
     MaggotkinOfNurgle,
     Nighthaunt,
     OgorMawtribes,
+    OrrukWarclans: Ironjawz,
     OssiarchBonereapers,
     Seraphon,
     Skaven,
     SlavesToDarkness,
     SonsOfBehemat,
     SoulblightGravelords,
-    StormcastEternal,
+    StormcastEternals,
     Sylvaneth
 };
 

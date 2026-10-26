@@ -1,4 +1,4 @@
-import React, {useReducer, useState, useCallback, useMemo} from 'react'
+import React, {useReducer, useState, useCallback, useMemo, useEffect} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -9,30 +9,60 @@ import Checkbox from '../components/Checkbox'
 import Modal from '../components/Modal'
 import PhotoGallery from '../components/PhotoGallery'
 import FloatingLabelInput from '../components/FloatingLabelInput'
-import {players, player as _player, rosterViewType} from '../utilities/appState'
+import PlayerHero from '../components/PlayerHero'
+import PlayerResults from '../components/PlayerResults'
+import PlayerBadges from '../components/PlayerBadges'
+import PlayerGames from '../components/PlayerGames'
+import PlayerShareCard from '../components/PlayerShareCard'
+import {players, player as _player, rosterViewType, meta} from '../utilities/appState'
+import {useFreshPlayers} from '../utilities/useFreshPlayers'
+import {usePlayerShare} from '../utilities/usePlayerShare'
+import {ROUNDS_COUNT} from '../utilities/gamesCalc'
 import {addDomainForUrl} from '../utilities/utils'
+import {buildTournamentContext, calcPlayerCard} from '../utilities/playerCalc'
 
 import map from 'lodash/map'
-import get from 'lodash/get'
 import find from 'lodash/find'
 import noop from 'lodash/noop'
 import size from 'lodash/size'
 
 import Styles from './styles/PlayerInfo.module.css'
+import CardStyles from '../components/styles/PlayerCard.module.css'
 
-const PlayerInfo = () => {
+const TABS = [
+    {key: 'overview', title: 'Обзор'},
+    {key: 'roster', title: 'Ростер'},
+]
+const JUDGE_TAB = {key: 'judge', title: 'Судье'}
+
+const safeParse = (value) => {
+    if (!value) return null
+    if (typeof value === 'object') return value
+    try {
+        return JSON.parse(value)
+    } catch (e) {
+        return null
+    }
+}
+
+const PlayerInfo = ({setShareAction}) => {
     const navigate = useNavigate()
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const {player} = useLocation().state
-    const rosterInfo = player.roster_stat ? JSON.parse(player.roster_stat) : {}
-    let roster = player.roster
-        ? player.roster
-        : find(players?.data, ['id', player.id])?.roster
-    if (roster) {
-        roster = JSON.parse(roster)
-    }
-    const playerInfo = find(players.data, ['id', player.id])
+    const isJudge = Boolean(_player.isJudge)
+
+    // свежие данные, пока грузятся или не получилось загрузить, берём сохранённые
+    const {data: freshData} = useFreshPlayers()
+    const data = useMemo(() => freshData?.length ? freshData : (players?.data || []), [freshData])
+    const standing = players?.standing
+    const isFinished = Boolean(meta?.isFinished)
+
+    const playerInfo = find(data, ['id', player.id]) || find(players?.data, ['id', player.id]) || player
+    const rosterInfo = safeParse(player.roster_stat || playerInfo.roster_stat) || {}
+    const roster = safeParse(player.roster || playerInfo.roster)
+
+    const [tab, setTab] = useState('overview')
     const [modalData, setModalData] = useState({visible: false, title: ''})
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(playerInfo?.status))
@@ -40,12 +70,26 @@ const PlayerInfo = () => {
     const [paintChecked, setPaintChecked] = useState(player.paint_checked)
     const photos = useMemo(() => map(playerInfo?.validation_photo_path, addDomainForUrl), [playerInfo?.validation_photo_path])
 
+    const context = useMemo(
+        () => buildTournamentContext(data, standing || [], ROUNDS_COUNT, isFinished),
+        [data, standing, isFinished]
+    )
+    const card = useMemo(() => calcPlayerCard(context, player.id, ROUNDS_COUNT), [context, player.id])
+    const handleUnsupported = useCallback(() => toast.error('На этом устройстве нельзя поделиться картинкой', Constants.toastParams), [])
+    const {shareRef, share} = usePlayerShare(card, isFinished, handleUnsupported)
+
+    useEffect(() => {
+        if (!setShareAction || !card) return undefined
+        setShareAction(() => share)
+        return () => setShareAction(null)
+    }, [setShareAction, share, card])
+
     const handleClickAllegiance = () => {
         navigate('/army', {state: {title: rosterInfo.allegiance, allegianceId: roster.allegianceId}})
     }
 
-    const handleClickPlayer = (player) => () => {
-        navigate('/playerInfo', {state: {player, title: `${player.surname} ${player.name}`}})
+    const handleClickPlayer = (opponent) => () => {
+        navigate('/playerInfo', {state: {player: opponent, title: `${opponent.surname} ${opponent.name}`}})
     }
 
     const handleChangeViewType = () => {
@@ -98,7 +142,8 @@ const PlayerInfo = () => {
       }, [player?.id, isPlayerActive])
 
     const handleSendMessage = useCallback(async (_message, customMessage) => {
-        await fetch(`${Constants.domain}/messages/send_personal_message/?id=${player?.id}&message=${customMessage ? _message : message}`, {
+        // encodeURIComponent: иначе сообщение с & или # обрежется
+        await fetch(`${Constants.domain}/messages/send_personal_message/?id=${player?.id}&message=${encodeURIComponent(customMessage ? _message : message)}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -157,72 +202,70 @@ const PlayerInfo = () => {
         <button id={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</button>
     </div>
 
-    const renderPlayRow = (number, player, result, to, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
-        <p id={Styles.extraSmallColumn}>{number}</p>
-        <p id={Styles.сolumn}>{player}</p>
-        <p id={Styles.smallColumn}>{result}</p>
-        <p id={Styles.smallColumn}>{to || 0}</p>
-    </div>
-
-    const renderPlay = (playIndex, index) => {
-        const oppId = get(playerInfo, `game_${playIndex}_opp`)
-        const opponent = find(players.data, ['id', oppId])
-        const tp = get(playerInfo, `game_${playIndex}_tp`)
-        const gameResult = tp > 10 ? 'Win' : tp === 10 ? 'Draw' : tp === null ? '' : 'Lose'
-        return opponent
-            ? <button key={index} id={Styles.playContainer} onClick={handleClickPlayer(opponent)}>
-                {renderPlayRow(playIndex, `${opponent.surname} ${opponent.name}`, gameResult, tp, index % 2)}
-            </button>
-            : null
+    const renderTabs = () => {
+        const tabs = isJudge ? [...TABS, JUDGE_TAB] : TABS
+        return <div className={CardStyles.tabs}>
+            {map(tabs, (item) =>
+                <button
+                    key={item.key}
+                    className={`${CardStyles.tab} ${tab === item.key ? CardStyles.tabActive : ''}`}
+                    onClick={() => setTab(item.key)}
+                >
+                    {item.title}
+                </button>
+            )}
+        </div>
     }
-    
-    return <div id='column' className='Chapter'>
-        {isPlayerDrop ? <p id={Styles.isPlayerDrop}>Игрок удалён с турнира</p> : null}
-        {_player.isJudge
-            ? <p id={Styles.title}>Статус игрока: <b>{isPlayerActive ? 'Активен' : 'Не активен'}</b></p>
-            : null
-        }
-        <p id={Styles.title}><b>Город:</b> {player.city}</p>
-        <p id={Styles.title}><b>Гранд Альянс:</b> {rosterInfo?.grandAlliance}</p>
-        <p id={Styles.title}><b>Армия:</b> {rosterInfo?.allegiance}</p>
-        {playerInfo.game_1_opp
-            ? <>
-                <b id={Styles.title}>Игры</b>
-                    <div id={Styles.tableContainer}>
-                    {renderPlayRow('№', 'Оппонент', 'Результат', 'ТО', true)}
-                    {map([1, 2, 3, 4, 5], renderPlay)}
-                </div>
-            </>
-            : null
-        }
-        {roster
-            ? <>
-                <b id={Styles.title}>Ростер</b>
-                <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
-                    <p id={Styles.checkboxText}>Easy View</p>
-                    <Checkbox onClick={noop} checked={rosterViewType.easy} />
-                </div>
-                {rosterViewType.easy
-                    ? <RosterEasy roster={roster} info={rosterInfo} />
-                    : <Roster roster={roster} info={rosterInfo} />
-                }
-                <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
-            </>
-            : null
-        }
-        {size(photos) && _player.isJudge
+
+    // Вкладка «Обзор»
+    const renderOverview = () => card
+        ? <>
+            <PlayerHero card={card} isFinished={isFinished} />
+            <PlayerResults card={card} />
+            <PlayerBadges badges={card.badges} />
+            <PlayerGames rounds={card.rounds} onOpenPlayer={handleClickPlayer} />
+        </>
+        : <>
+            <p id={Styles.title}><b>Город:</b> {player.city}</p>
+            <p id={Styles.title}><b>Гранд Альянс:</b> {rosterInfo?.grandAlliance}</p>
+            <p id={Styles.title}><b>Армия:</b> {rosterInfo?.allegiance}</p>
+        </>
+
+    // Вкладка «Ростер»
+    const renderRoster = () => roster
+        ? <>
+            <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
+                <p id={Styles.checkboxText}>Easy View</p>
+                <Checkbox onClick={noop} checked={rosterViewType.easy} />
+            </div>
+            {rosterViewType.easy
+                ? <RosterEasy roster={roster} info={rosterInfo} />
+                : <Roster roster={roster} info={rosterInfo} />
+            }
+            <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
+        </>
+        : <p className={CardStyles.rosterMissing}>Ростер не сдан</p>
+
+    // Вкладка «Судье»
+    const renderJudge = () => <div className={CardStyles.judgeBlock}>
+        <p className={CardStyles.judgeStatus}>Статус игрока: <b>{isPlayerActive ? 'Активен' : 'Не активен'}</b></p>
+        {size(photos)
             ? <PhotoGallery photos={photos} />
             : null
         }
-        {_player.isJudge
-            ? <> 
-                <button id={Styles.rulesButton} onClick={handleClickPhotovalidation}>{paintChecked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}</button>
-                <button id={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</button>
-                <button id={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</button>
-                {renderSendMessage()}
-            </>
-            : null
-        }
+        <button id={Styles.rulesButton} onClick={handleClickPhotovalidation}>{paintChecked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}</button>
+        <button id={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</button>
+        <button id={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</button>
+        {renderSendMessage()}
+    </div>
+
+    return <div id='column' className='Chapter'>
+        {isPlayerDrop ? <p id={Styles.isPlayerDrop}>Игрок удалён с турнира</p> : null}
+        {renderTabs()}
+        {tab === 'roster' ? renderRoster() : null}
+        {tab === 'judge' && isJudge ? renderJudge() : null}
+        {tab === 'overview' ? renderOverview() : null}
+        {card ? <PlayerShareCard ref={shareRef} card={card} isFinished={isFinished} /> : null}
         <Modal {...modalData} onClose={handleCloseModal} />
         <ToastContainer />
     </div>

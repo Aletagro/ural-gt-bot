@@ -595,6 +595,37 @@ const Constants = {
             "title": "Power of the Realms"
         }
     ],
+    unitKeywords: {
+        "Beasts of Chaos": [],
+        "Blades of Khorne": ['Daemon', 'Bloodbound'],
+        "Disciples of Tzeentch": ['Daemon', 'Arcanite', 'Warflock'],
+        "Hedonites of Slaanesh": ['Daemon', 'Sybarite'],
+        "Helsmiths of Hashut": ['Duardin', 'Automaton'],
+        "Maggotkin of Nurgle": ['Rotbringers', 'Daemon'],
+        "Skaven": ['Skryre', 'Verminus', 'Eshin', 'Masterclan', 'Moulder', 'Pestilens', 'Daemon'],
+        "Slaves to Darkness": ['Warriors of Chaos', 'Daemon', 'Darkoath', 'Pledged to Tzeentch'],
+        "Flesh-eater Courts": ['Abhorrant', 'Noble', 'Knights', 'Serfs'],
+        "Nighthaunt": [],
+        "Ossiarch Bonereapers": [],
+        "Soulblight Gravelords": ['Vampire', 'Deadwalkers', 'Deathrattle'],
+        "Bonesplitterz": [],
+        "Gloomspite Gitz": ['Troggoth', 'Gitmob', 'Moonclan', 'Squig', 'Spiderfang'],
+        "Ironjawz": ['Maw-krusha', 'Maw‑grunta', 'Brute'],
+        "Kruleboyz": [],
+        "Ogor Mawtribes": ['Gutbusters', 'Beastclaw Raiders'],
+        "Sons of Behemat": ['Big', 'Little'],
+        'Cities of Sigmar': ['Aelf', 'Duardin', 'Sigmarite'],
+        'Daughters of Khaine': ['Aelf'],
+        'Fyreslayers': ['Magmadroth'],
+        'Idoneth Deepkin': ['Akhelian', 'Eidolon', 'Isharann', 'Namarti'],
+        'Kharadron Overlords': ['Skyfarer', 'Skyvessel', 'Auto-Endrin'],
+        'Lumineth Realm-lords': ['Alarith', 'Vanari', 'Scinari', 'Hurakan', 'Ydrilan'],
+        'Seraphon': ['Slann', 'Skink', 'Saurus', 'Kroxigor'],
+        'Stormcast Eternals': ['Extremis Chamber', 'Warrior Chamber', 'Ruination Chamber', 'Vanguard Chamber'],
+        'Sylvaneth': ['Kurnothi', 'Forest Elder', 'Revenant']
+    },
+    generalKeywords: ['HERO', 'HEROES', 'INFANTRY', 'MONSTER', 'MONSTERS', 'CAVALRY', 'BEAST', 'WAR MACHINE', 'MANIFESTATION', 'WIZARD', 'WIZARDS', 'PRIEST', 'PRIESTS', 'UNIQUE', 'FLY', 'WARFLOCK', 'HOBGROT', 'SKRYRE'],
+    hiddenKeywords: ['', 'CORE', 'non-CORE', 'ATTACK', 'RAMPAGE', 'HERO', 'HEROES', 'non-HERO', 'non-HERO INFANTRY', 'UNIQUE', 'MONSTER', 'MONSTERS', 'non-MONSTER', 'INFANTRY', 'CAVALRY', 'BEAST', 'BEASTS', 'WAR MACHINE', 'MANIFESTATION', 'MANIFESTATIONS', 'SPELL', 'SPELLS', 'PRAYER', 'PRAYERS', 'X', 'WIZARD', 'WIZARDS', 'PRIEST', 'PRIESTS', 'FACTION TERRAIN', 'non-FACTION TERRAIN', 'STRIKE-LAST', 'STRIKE-FIRST', 'UNLIMITED', 'BLOOD TITHE', 'MOVE', 'SUMMON', 'SUMMON SPELL', 'non-SUMMON SPELL', 'BANISH', 'FLY', 'non-FLY', 'BURNING', 'EUPHORIC', 'non-EUPHORIC', 'HOBGROT', 'DISEASED', 'DELUSION', 'SENTENCED', 'non-UNIQUE DEATH', 'DEATH', 'UR-GOLD RUNE', 'TIDAL', 'IDONETH DEEPKIN MANIFESTATIONS', 'FLAGSHIP', 'AELSLING', 'ASTERISM', 'SACROSANCT CHAMBER', 'SOULBURNED', 'HUNTED', 'non-KURNOTHI', 'DESTRUCTION HERO', 'EXALTED'],
     myTgId: 530569849,
     judgesIds: [530569849, 200821933, 589760439]
 }

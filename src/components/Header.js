@@ -82,6 +82,7 @@ const Header = ({onShare}) => {
                 return <button id={Styles.rightButton} onClick={handleNavigateToExport}><img src={Export} alt='' /></button>
             case '/play':
             case '/rosters':
+            case '/playerInfo':
                 return <button id={Styles.rightButton} onClick={onShare}><img src={Export} alt='' /></button>
             default:
                 return <div id={Styles.rightButtons}>

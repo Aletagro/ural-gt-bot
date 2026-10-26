@@ -1,12 +1,15 @@
-import React from 'react'
+import React, {useState, useMemo} from 'react'
+import {useNavigate} from 'react-router-dom'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
-import {replaceAsterisks, removeAsterisks, toTelegramSafe} from '../utilities/utils'
+import Modal from './Modal'
+import {replaceAsterisks, removeAsterisks, findKeywordsInAbility, setKeywordInfo, toTelegramSafe} from '../utilities/utils'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
 import join from 'lodash/join'
+import size from 'lodash/size'
 import filter from 'lodash/filter'
 
 import Styles from './styles/Ability.module.css'
@@ -14,12 +17,15 @@ import Styles from './styles/Ability.module.css'
 const dataBase = require('../dataBase.json')
 
 const Ability = ({ability, abilityKeywordsName, abilityIdName, isRegimentOfRenown, onClick}) => {
+    const navigate = useNavigate()
+    const [modalData, setModalData] = useState({visible: false, title: '', text: ''})
     const _abilityKeywordsName = abilityKeywordsName || 'warscroll_ability_keyword'
     const _abilityIdName = abilityIdName || 'warscrollAbilityId'
     const keywordsIds = map(filter(dataBase.data[_abilityKeywordsName], keyword => keyword[_abilityIdName] === ability.id), item => item.keywordId)
     const keywords = map(keywordsIds, keywordId => find(dataBase.data.keyword, keyword => keyword.id === keywordId))
     const keywordsLength = keywords.length
     const borderColor = Constants.abilitiesTypes[ability.phase]
+    const usedKeywords = useMemo(() => findKeywordsInAbility(ability), [ability])
     // У абилок, которые привязаны к Regiment Of Renown сложность каста приходит в cpCost
     const castingValue = ability.castingValue || ability.cost || (isRegimentOfRenown && ability.cpCost)
 
@@ -36,7 +42,34 @@ ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), 
         }
     }
 
+    const handleCloseModal = () => {
+        setModalData({visible: false, title: '', text: ''})
+    }
+
+    const handlleClickUsedKeyword = (keyword) => (e) => {
+        e.stopPropagation()
+        const data = setKeywordInfo(keyword)
+        switch (data?.type) {
+            case 'units':
+                navigate(`/units`, {state: data.params})
+                break
+            case 'ability':
+                setModalData({visible: true, title: '', ability: data.ability})
+                break
+            case 'warscroll':
+                navigate(`/warscroll`, {state: data.params})
+                break
+            case 'faction':
+                navigate(`/units`, {state: data.params})
+                break
+            default:
+                return null
+        }
+    }
+
     const renderKeyword = (keyword, index) => <p id={Styles.keyword} key={keyword.id}>{keyword.name}{keywordsLength === index + 1 ? '' : ','}&nbsp;</p>
+
+    const renderUsedKeyword = (keyword, index) => <p id={Styles.usedKeyword} key={index} onClick={handlleClickUsedKeyword(keyword)}>{keyword}</p>
 
     return <>
         <button id={Styles.ability} onClick={handlleClick} style={{border: `1px solid ${borderColor}`}}>
@@ -66,9 +99,19 @@ ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), 
                     </div>
                     : null
                 }
+                {size(usedKeywords)
+                    ? <>
+                        <b id={Styles.keyword}>Keywords Used:</b>
+                        <div id={Styles.usedKeywords}>
+                            {map(usedKeywords, renderUsedKeyword)}
+                        </div>
+                    </>
+                    : null
+                }
             </div>
         </button>
         <ToastContainer />
+        <Modal {...modalData} onClose={handleCloseModal} />
     </>
 }
 

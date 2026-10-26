@@ -46,7 +46,7 @@ const Leaders = () => {
 
     if (!leader) {
         return <div id='column' className='Chapter'>
-            <p className={Styles.empty}>Лидеры появятся после первого раунда</p>
+            <p className={Styles.empty}>Турнир еще не начался</p>
         </div>
     }
 

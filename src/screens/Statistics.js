@@ -117,7 +117,7 @@ const Statistics = () => {
 
     const maxDrops = Math.max(...map(drops.histogram, 'count'), 1)
 
-    return <div id='column' className='Chapter'>
+    return <div>
         <p className={Styles.summary}>Всего участников: <b>{total}</b></p>
         <Section title='Гранд Альянсы'>
             <BarList rows={grandAllianceRows} />

@@ -39,7 +39,7 @@ import Tactic from './screens/Tactic'
 import Developer from './screens/Developer'
 import LinkAccounts from './screens/LinkAccounts'
 import Leaders from './screens/Leaders'
-import Statistics from './screens/Statistics'
+import StatisticsTabs from './screens/StatisticsTabs'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
 import ChooseGrandAlliance from './builder/ChooseGrandAlliance'
@@ -83,7 +83,7 @@ function App() {
       <Route path={'photovalidation'} element={<Photovalidation />} />
       <Route path={'challenges'} element={<Challenges />} />
       <Route path={'players'} element={<Players />} />
-      <Route path={'playerInfo'} element={<PlayerInfo />} />
+      <Route path={'playerInfo'} element={<PlayerInfo setShareAction={setShareAction} />} />
       <Route path={'rosters'} element={<Rosters setShareAction={setShareAction} />} />
       <Route path={'rounds'} element={<Rounds />} />
       <Route path={'play'} element={<Play setShareAction={setShareAction} />} />
@@ -126,7 +126,7 @@ function App() {
       <Route path={'pasteList'} element={<PasteList />} />
       <Route path={'linkAccounts'} element={<LinkAccounts />} />
       <Route path={'leaders'} element={<Leaders />} />
-      <Route path={'statistics'} element={<Statistics />} />
+      <Route path={'statisticsTabs'} element={<StatisticsTabs />} />
     </Routes>
   </div>
 }

@@ -169,7 +169,7 @@ const RostersPdf = ({entries, tournamentName = ''}) => (
                         fixed
                         style={s.footer}
                         render={({pageNumber, totalPages}) =>
-                            `${tournamentName ? `${tournamentName} · ` : ''}${fullName} · ${pageNumber}/${totalPages}`}
+                            `${tournamentName ? `${tournamentName} / ` : ''}${fullName} / ${pageNumber}/${totalPages}`}
                     />
                 </Page>
             )
