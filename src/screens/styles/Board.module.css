@@ -1,0 +1,260 @@
+/* Большой экран для проектора. Все размеры считаются от --u, чтобы экран одинаково выглядел на любом мониторе 16:9 */
+.board {
+    --u: min(1vw, 1.78vh);
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    padding: calc(var(--u) * 1.6) calc(var(--u) * 2);
+    box-sizing: border-box;
+    background: radial-gradient(circle at 30% 20%, #1c1608 0%, #0a0805 70%);
+    color: #efe6cc;
+    overflow: hidden;
+    user-select: none;
+}
+
+.board p {
+    margin: 0;
+    color: inherit;
+}
+
+.top {
+    display: flex;
+    justify-content: center;
+    padding-bottom: calc(var(--u) * 1.2);
+}
+
+.brand {
+    font-size: calc(var(--u) * 2.2);
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    color: #d9c98f;
+}
+
+.main {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: calc(var(--u) * 2);
+    flex: 1;
+    min-height: 0;
+}
+
+/* ---------- Таймер ---------- */
+.timer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--u) * 1.4);
+    border: calc(var(--u) * 0.3) solid #b0953f;
+    border-radius: calc(var(--u) * 2.4);
+    background: linear-gradient(135deg, #2a2210 0%, #14100a 100%);
+    text-align: center;
+}
+
+.timerLabel {
+    font-size: calc(var(--u) * 2.6);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #c9bd98;
+}
+
+.timerDigits {
+    font-family: 'Minion Pro Bold';
+    font-size: calc(var(--u) * 14.5);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: #f0d98a;
+}
+
+.timerNote {
+    font-size: calc(var(--u) * 2.8);
+    color: #efe6cc;
+}
+
+.idleTitle {
+    font-family: 'Minion Pro Bold';
+    font-size: calc(var(--u) * 8);
+    line-height: 1.1;
+    padding: 0 calc(var(--u) * 2);
+    color: #f0d98a;
+}
+
+.warning {
+    border-color: #e0a030;
+}
+
+.warning .timerDigits {
+    color: #ffc760;
+}
+
+.critical,
+.over {
+    border-color: #d4503c;
+    background: linear-gradient(135deg, #3a1510 0%, #170a07 100%);
+}
+
+.critical .timerDigits,
+.over .timerDigits {
+    color: #ff8e7a;
+}
+
+.over .timerDigits {
+    font-size: calc(var(--u) * 10);
+}
+
+/* ---------- Лидеры ---------- */
+.right {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--u) * 1.4);
+    min-height: 0;
+}
+
+.empty {
+    margin: auto;
+    font-size: calc(var(--u) * 3);
+    text-align: center;
+    color: #c9bd98;
+}
+
+.leader,
+.champion {
+    position: relative;
+    overflow: hidden;
+    background: #000;
+}
+
+.leader {
+    flex: 1;
+    min-height: 0;
+    border: calc(var(--u) * 0.25) solid #b0953f;
+    border-radius: calc(var(--u) * 2);
+}
+
+.leaderImage,
+.championImage {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 22%;
+}
+
+.leaderShade,
+.championShade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.45) 38%, rgba(0, 0, 0, 0) 66%);
+}
+
+.leaderLabel {
+    position: absolute;
+    top: calc(var(--u) * 1.4);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: calc(var(--u) * 0.5) calc(var(--u) * 2);
+    border-radius: 999px;
+    background: #b0953f;
+    color: #1a1408 !important;
+    font-size: calc(var(--u) * 1.9);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.leaderBottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 calc(var(--u) * 2) calc(var(--u) * 1.8);
+    text-align: center;
+}
+
+.leaderName {
+    font-family: 'Minion Pro Bold';
+    font-size: calc(var(--u) * 4.4);
+    line-height: 1.1;
+    color: #f0d98a !important;
+}
+
+.leaderArmy {
+    margin-top: calc(var(--u) * 0.4) !important;
+    font-size: calc(var(--u) * 2.4);
+    color: #efe6cc;
+}
+
+.leaderPoints {
+    margin-top: calc(var(--u) * 0.2) !important;
+    font-size: calc(var(--u) * 2.6);
+    color: #d9c98f;
+}
+
+.champions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: calc(var(--u) * 1.2);
+    flex: 1.3;
+    min-height: 0;
+}
+
+.champion {
+    border: calc(var(--u) * 0.2) solid var(--accent, #b0953f);
+    border-radius: calc(var(--u) * 1.6);
+}
+
+.alliance {
+    position: absolute;
+    top: calc(var(--u) * 0.9);
+    left: calc(var(--u) * 1.2);
+    padding: calc(var(--u) * 0.2) calc(var(--u) * 1.2);
+    border-radius: 999px;
+    background: var(--accent, #b0953f);
+    color: #fff !important;
+    font-size: calc(var(--u) * 1.5);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.championBottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 calc(var(--u) * 1.2) calc(var(--u) * 1);
+    text-align: center;
+    min-width: 0;
+}
+
+.championName {
+    font-family: 'Minion Pro Bold';
+    font-size: calc(var(--u) * 2.1);
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #f0d98a !important;
+}
+
+.championMeta {
+    margin-top: calc(var(--u) * 0.2) !important;
+    font-size: calc(var(--u) * 1.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #efe6cc;
+}
+
+/* Вертикальный экран или планшет: блоки друг под другом */
+@media (max-aspect-ratio: 1/1) {
+    .main {
+        grid-template-columns: 1fr;
+        grid-template-rows: 0.8fr 1.2fr;
+    }
+    .board {
+        --u: min(1.9vw, 1vh);
+    }
+}

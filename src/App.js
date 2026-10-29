@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {Route, Routes} from 'react-router-dom'
+import {Route, Routes, useLocation} from 'react-router-dom'
 import useSwipeBack from './utilities/useSwipeBack'
 import Registration from './screens/Registration'
 import RosterScreen from './screens/RosterScreen'
@@ -39,6 +39,7 @@ import Tactic from './screens/Tactic'
 import Developer from './screens/Developer'
 import LinkAccounts from './screens/LinkAccounts'
 import Leaders from './screens/Leaders'
+import Board from './screens/Board'
 import StatisticsTabs from './screens/StatisticsTabs'
 import Header from './components/Header'
 import ScrollToTop from './components/ScrollToTop'
@@ -60,17 +61,23 @@ const tg = window.Telegram?.WebApp
 
 function App() {
   useSwipeBack()
+  const isBoard = useLocation().pathname === '/board'
   const [shareAction, setShareAction] = useState(null)
 
   useEffect(() => {
     tg?.ready()
-    if (!tg.isExpanded) {
-      tg.expand()
+    if (!tg?.isExpanded) {
+      tg?.expand()
     }
-    if (!tg.isClosingConfirmationEnabled) {
-      tg.enableClosingConfirmation()
+    if (!tg?.isClosingConfirmationEnabled) {
+      tg?.enableClosingConfirmation()
     }
   }, [])
+
+  // Большой экран для проектора открывается в обычном браузере: без шапки и без Telegram
+  if (isBoard) {
+    return <Board />
+  }
 
   return <div>
     <Header onShare={shareAction} />

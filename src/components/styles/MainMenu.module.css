@@ -1,0 +1,250 @@
+/* Главное меню: тёмная шапка, золото и тонкие линии, как на экранах лидеров и карточки игрока */
+
+/* ---------- Шапка ---------- */
+.hero {
+    position: relative;
+    overflow: hidden;
+    margin: 8px 8px 0;
+    border: 2px solid #b0953f;
+    border-radius: 20px;
+    background: #000;
+}
+
+.heroImage {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.heroShade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0) 30%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.9) 100%);
+}
+
+.heroBottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0 12px 12px;
+    text-align: center;
+}
+
+.statusPill {
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 999px;
+    background: #b0953f;
+    color: #1a1408;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.rolePill {
+    display: block;
+    margin-top: 6px;
+    color: #d9c98f;
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+}
+
+/* ---------- Список ---------- */
+.menu {
+    padding: 8px 12px 32px;
+}
+
+.section {
+    margin-top: 10px;
+}
+
+/* Заголовок группы: разрядка и золотые линии по бокам */
+.sectionTitle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 6px;
+    font-family: 'Minion Pro Regular';
+    font-size: 13px;
+    font-weight: normal;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #8a6d1f;
+}
+
+.sectionTitle::before,
+.sectionTitle::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(176, 149, 63, 0), rgba(176, 149, 63, 0.75));
+}
+
+.sectionTitle::after {
+    background: linear-gradient(to left, rgba(176, 149, 63, 0), rgba(176, 149, 63, 0.75));
+}
+
+/* Пункт: строка без карточки, разделена тонкой линией */
+.row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 4px 14px 2px;
+    border: 0;
+    border-bottom: 1px solid #e6dcc0;
+    background: none;
+    box-sizing: border-box;
+    text-align: start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease, padding-left 0.15s ease;
+}
+
+.section .row:last-child {
+    border-bottom: 0;
+}
+
+.row:active {
+    padding-left: 8px;
+    background: linear-gradient(to right, rgba(176, 149, 63, 0.14), rgba(176, 149, 63, 0));
+}
+
+.body {
+    flex: 1;
+    min-width: 0;
+}
+
+.title {
+    display: block;
+    font-family: 'Minion Pro Bold';
+    font-size: 18px;
+    line-height: 1.2;
+    color: #1d1810;
+}
+
+.hint {
+    display: block;
+    margin-top: 3px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: #8a7a4a;
+}
+
+/* Стрелка из линий, без символов и эмодзи */
+.chevron {
+    flex: 0 0 auto;
+    width: 9px;
+    height: 9px;
+    margin-right: 6px;
+    border-top: 2px solid #b0953f;
+    border-right: 2px solid #b0953f;
+    transform: rotate(45deg);
+}
+
+/* Главное действие сейчас: тёмная панель с золотой рамкой */
+.row.primary {
+    margin: 8px 0 4px;
+    padding: 16px 16px;
+    border: 2px solid #b0953f;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2a2210 0%, #14100a 100%);
+}
+
+.row.primary:active {
+    padding-left: 16px;
+    background: #2a2210;
+}
+
+.primary .title {
+    font-size: 21px;
+    color: #f0d98a;
+}
+
+.primary .hint {
+    color: #c9bd98;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+}
+
+.primary .chevron {
+    border-color: #f0d98a;
+}
+
+/* Вызов судьи: сдержанный красный */
+.danger .title {
+    color: #8c2a1d;
+}
+
+.danger .chevron {
+    border-color: #8c2a1d;
+}
+
+/* Пункт виден только судьям: золотая полоса слева и плашка */
+.row.judgeOnly {
+    padding-left: 14px;
+    background: linear-gradient(to right, rgba(176, 149, 63, 0.12), rgba(176, 149, 63, 0));
+}
+
+.row.judgeOnly::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 2px;
+    background: #b0953f;
+}
+
+.judgeChip {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 1px 10px;
+    border: 1px solid #b0953f;
+    border-radius: 999px;
+    color: #8a6d1f;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+/* ---------- Сообщения ---------- */
+.notice {
+    margin: 10px 0 0;
+    padding: 12px 14px;
+    border-radius: 16px;
+    font-size: 15px;
+    text-align: center;
+}
+
+.noticeWarning {
+    border: 1px solid #b0953f;
+    background: #fbf3dc;
+    color: #6b5316;
+}
+
+.noticeError {
+    border: 1px solid #c9877d;
+    background: #fdf1ef;
+    color: #8c2a1d;
+}
+
+/* ---------- Отказ от участия ---------- */
+.dropButton {
+    display: block;
+    width: 100%;
+    margin-top: 28px;
+    padding: 10px;
+    border: 0;
+    background: none;
+    color: #9a9a9a;
+    font-family: inherit;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-decoration: underline;
+    cursor: pointer;
+}

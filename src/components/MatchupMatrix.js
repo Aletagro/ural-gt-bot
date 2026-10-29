@@ -11,7 +11,6 @@ const getCellBackground = (cell) => {
     if (!cell.games || cell.winRate === null) return '#f3f3f3'
     const strength = Math.min(Math.abs(cell.winRate - 50) / 50, 1)
     const alpha = 0.1 + strength * 0.55
-    console.log({cell, alpha})
     return cell.winRate >= 50 ? `rgba(184, 150, 46, ${alpha})` : `rgba(90, 110, 140, ${alpha})`
 }
 

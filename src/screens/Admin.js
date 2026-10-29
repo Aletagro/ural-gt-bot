@@ -6,6 +6,9 @@ import {setTournamentStatus} from '../utilities/utils'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import {players, meta} from '../utilities/appState'
 import {buildRostersPdf, deliverPdf} from '../utilities/exportRostersPdf'
+import {fetchMeta} from '../utilities/applyMeta'
+import {getNewEndsAt, getShiftedEndsAt, ADJUST_STEP_MIN} from '../utilities/roundTimer'
+import RoundTimer from '../components/RoundTimer'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -25,6 +28,7 @@ const Admin = () => {
     const isChangeButtonDisabled = size(playersForChange) !== 2
     const [message, setMessage] = useState('')
     const [pdfLoading, setPdfLoading] = useState(false)
+    const [boardLink, setBoardLink] = useState('')
 
     const handleCreateParings = useCallback(async () => {
         await fetch(`${Constants.domain}/parings/?next_round=${meta.round + 1}`)
@@ -53,39 +57,77 @@ const Admin = () => {
     }, [pairings, playersForChange])
 
     const handleGetMeta = useCallback(async () => {
-        fetch(`${Constants.domain}/tournament-meta/`)
-            .then(response => response.json())
-            .then(data => {
-                meta.round = data.round
-                meta.isRoundActive = data.isRoundActive
-                meta.rostersBeingAccepted = data.rostersBeingAccepted
-                meta.isRostersShow = data.isRostersShow
-                meta.isTournamentRulesShow = data.isTournamentRulesShow
-                meta.isPlayersListShow = data.isPlayersListShow
-                meta.isChallengesOpen = data.isChallengesOpen
-                meta.isRegOpen = data.isRegOpen
-                meta.battleplan = data.battleplan
-                meta.playersLimit = data.playersLimit
-                forceUpdate()
-            })
-            .catch(error => console.error(error))
+        await fetchMeta()
+        forceUpdate()
     }, [])
 
     const handleChangeRoundActiveMeta = useCallback(async () => {
+        const isStarting = !meta.isRoundActive
         await fetch(`${Constants.domain}/tournament-meta/`, {
             method: 'PUT',
-            body: JSON.stringify({isRoundActive: !meta.isRoundActive}),
+            body: JSON.stringify({isRoundActive: isStarting}),
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': "application/json, text/javascript, /; q=0.01"
             }
         })
-            .then(() => {
-                toast.success(meta.isRoundActive ? 'Раунд окончен' : 'Раунд начался', Constants.toastParams)
+            .then(async () => {
+                toast.success(isStarting ? 'Раунд начался' : 'Раунд окончен', Constants.toastParams)
+                // Таймер ставим отдельным запросом: если сервер его пока не поддерживает, сам старт раунда это не сломает
+                try {
+                    const response = await fetch(`${Constants.domain}/tournament-meta/`, {
+                        method: 'PUT',
+                        body: JSON.stringify({roundEndsAt: isStarting ? getNewEndsAt(meta.clockOffset) : null}),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': "application/json, text/javascript, /; q=0.01"
+                        }
+                    })
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+                } catch (error) {
+                    console.error(error)
+                    toast.warning('Таймер раунда не обновился', Constants.toastParams)
+                }
                 handleGetMeta()
             })
             .catch(error => console.error(error))
     }, [handleGetMeta])
+
+    // Судья добавляет или убирает минуты (deltaMin) либо запускает таймер, если раунд идёт без него
+    const handleChangeTimer = (deltaMin) => async () => {
+        const roundEndsAt = meta.roundEndsAt
+            ? getShiftedEndsAt(meta.roundEndsAt, deltaMin)
+            : getNewEndsAt(meta.clockOffset)
+        try {
+            const response = await fetch(`${Constants.domain}/tournament-meta/`, {
+                method: 'PUT',
+                body: JSON.stringify({roundEndsAt}),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': "application/json, text/javascript, /; q=0.01"
+                }
+            })
+            if (!response.ok) throw new Error(`HTTP ${response.status}`)
+            toast.success(meta.roundEndsAt ? 'Время раунда изменено' : 'Таймер запущен', Constants.toastParams)
+            await handleGetMeta()
+        } catch (error) {
+            console.error(error)
+            toast.error('Не удалось изменить время', Constants.toastParams)
+        }
+    }
+
+    // Ссылка на большой экран. Берём адрес приложения без хвоста Telegram (после #)
+    const handleCopyBoardLink = async () => {
+        const link = `${window.location.href.split('#')[0]}#/board`
+        try {
+            await navigator.clipboard.writeText(link)
+            toast.success('Ссылка на большой экран скопирована', Constants.toastParams)
+            setBoardLink('')
+        } catch (error) {
+            // в некоторых окнах Telegram буфер недоступен: показываем ссылку, её можно скопировать вручную
+            setBoardLink(link)
+        }
+    }
 
     const handleSetOppPower = useCallback(async () => {
         fetch(`${Constants.domain}/rounds/opp_power/`, {
@@ -317,7 +359,22 @@ const Admin = () => {
                 <button id={Styles.button} onClick={handleStartRound}>Принять паринги</button>
             </>
         }
+        <button id={Styles.button} onClick={handleCopyBoardLink}>Скопировать ссылку на большой экран</button>
+        {boardLink ? <input id={Styles.boardLink} value={boardLink} readOnly onFocus={(e) => e.target.select()} /> : null}
         <button id={Styles.button} onClick={handleChangeRoundActive}>{meta.isRoundActive ? 'Закончить раунд' : 'Начать раунд для игроков'}</button>
+        {meta.isRoundActive
+            ? <>
+                <RoundTimer />
+                {meta.roundEndsAt
+                    ? <div id={Styles.timerButtons}>
+                        <button id={Styles.button} onClick={handleChangeTimer(-ADJUST_STEP_MIN)}>−{ADJUST_STEP_MIN} мин</button>
+                        <button id={Styles.button} onClick={handleChangeTimer(ADJUST_STEP_MIN)}>+{ADJUST_STEP_MIN} мин</button>
+                    </div>
+                    : <button id={Styles.button} onClick={handleChangeTimer(0)}>Запустить таймер раунда</button>
+                }
+            </>
+            : null
+        }
         {renderSendMessage()}
         <b id={Styles.text}>Установить активную миссию</b>
         <div id={Styles.battleplansContainer}>

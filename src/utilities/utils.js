@@ -1049,7 +1049,6 @@ export const getArmyImage = (allegiance) => {
     } else {
         const parentFactionKeywordId = find(dataBase.data.faction_keyword, ['name', allegiance])?.parentFactionKeywordId
         const faction = find(dataBase.data.faction_keyword, ['id', parentFactionKeywordId])?.name
-        console.log(upperFirst(camelCase(faction)))
         if (faction) {
             return armyImages[upperFirst(camelCase(faction))]
         }

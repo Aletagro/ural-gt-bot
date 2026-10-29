@@ -6,9 +6,10 @@ import CircularProgress from '@mui/joy/CircularProgress'
 import Constants from '../Constants'
 import {player, players, fetching, meta} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
-import Row from '../components/Row'
+import MainMenu from '../components/MainMenu'
 import HeaderImage from '../components/HeaderImage'
 import Modal from '../components/Modal'
+import {fetchMeta} from '../utilities/applyMeta'
 import Image from '../images/IceHammer.png'
 
 import size from 'lodash/size'
@@ -183,22 +184,7 @@ const Registration = () => {
     }, [handleGetPlayers])
 
     const handleGetMeta = useCallback(() => {
-        fetch(`${Constants.domain}/tournament-meta/`)
-            .then(response => response.json())
-            .then(data => {
-                meta.round = data.round
-                meta.isRoundActive = data.isRoundActive
-                meta.rostersBeingAccepted = data.rostersBeingAccepted
-                meta.isRostersShow = data.isRostersShow
-                meta.isTournamentRulesShow = data.isTournamentRulesShow
-                meta.isPlayersListShow = data.isPlayersListShow
-                meta.isChallengesOpen = data.isChallengesOpen
-                meta.isRegOpen = data.isRegOpen
-                meta.battleplan = data.battleplan
-                meta.playersLimit = data.playersLimit
-                forceUpdate()
-            })
-            .catch(error => console.error(error))
+        fetchMeta().then(() => forceUpdate())
     }, [])
 
     useEffect(() => {
@@ -309,15 +295,6 @@ const Registration = () => {
         </div>
     </div>
 
-    const renderNotice = (title, type) => <div id={type === 'error'
-        ? Styles.errorNotice
-        : type === 'warning'
-            ? Styles.warningNotice
-            : Styles.notice
-        }>
-        <h3 id={type === 'warning' ? Styles.title : Styles.noticeText}>{title}</h3>
-    </div>
-
     if (player.isDrop) {
         return <>
             <HeaderImage src={Image} alt='Core Documents' />
@@ -327,57 +304,28 @@ const Registration = () => {
         </>
     }
 
+    const isLoading = fetching.main && meta.isRegOpen
+    const showMenu = !isLoading && (player.reg || player.isJudge || !meta.isRegOpen || player.isGuest)
+
     return <>
-        <HeaderImage src={Image} alt='Core Documents' />
-        {fetching.main && meta.isRegOpen
-            ? <div id={Styles.loaderContainer}>
-                <CircularProgress variant="soft"/>
-            </div>
-            : player.reg || player.isJudge || !meta.isRegOpen || player.isGuest
-                ? <div id='column' className='Chapter'>
-                    {isPlayerInWaitingList ? renderNotice('Вы находитесь в листе ожидания, организаторы свяжутся с вами', 'warning') : null}
-                    {player.isJudge
-                        ? renderNotice('Вы организатор этого турнира')
-                        : player.reg
-                            ? renderNotice('Вы зарегистированы на Ice Hammer 2026')
-                            : renderNotice('Вы еще не зарегистированы, попробуйте еще раз или обратитесь к организаторам', 'error')
-                    }
-                    {player.isJudge ? <Row title='Кабинет Организатора' navigateTo='admin' /> : null}
-                    {(player.reg && meta.isRoundActive) ? <Row title='Ваша Игра' navigateTo='play' /> : null}
-                    {player.reg && player.roster
-                        ? <Row title='Ваш ростер' navigateTo='roster' state={{isInfo: true}} />
-                        : null
-                    }
-                    {meta.rostersBeingAccepted && player.reg && !isPlayerInWaitingList
-                        ? <Row title={player.roster ? 'Поменять ростер' : 'Подать ростер'} navigateTo='chooseGrandAlliance' />
-                        : null
-                    }
-                    {meta.isRostersShow || player.isJudge ? <Row title='Ростера' navigateTo='rosters' /> : null}
-                    {meta.round ? <Row title='Раунды' navigateTo='rounds' state={{title: 'Ice Hammer 2026', round: meta.round}} /> : null}
-                    {player.isJudge || meta.isPlayersListShow ? <Row title={meta.round ? 'Турнирная Таблица' : 'Список участников'} navigateTo='players' /> : null}
-                    {player.isJudge || meta.round ? <Row title='Лидеры турнира' navigateTo='leaders' /> : null}
-                    {meta.isRostersShow || player.isJudge ? <Row title='Статистика Турнира' navigateTo='statisticsTabs' /> : null}
-                    {player.reg && meta.round === 5 && !player?.info?.sport_voted
-                        ? <Row title='Голосование За Спортивность' navigateTo='vote' />
-                        : null
-                    }
-                    {player.reg && ((meta.round === 4 && !meta.isRoundActive) || meta.round === 5) && !player?.info?.paint_voted
-                        ? <Row title='Голосование За Покрас' navigateTo='paintVote' />
-                        :null
-                    }
-                    {player.isJudge || (meta.rostersBeingAccepted && player.reg) ? <Row title='Фотовалидация Армии' navigateTo='photovalidation' /> : null}
-                    {player.isJudge || meta.isChallengesOpen ? <Row title='Челленджи' navigateTo='challenges' /> : null}
-                    {player.reg ? <Row title='Подать заявку в конкурс Покраса' navigateTo='paintVoteReg' /> : null}
-                    <Row title='Правила' navigateTo='mainRules' />
-                    <Row title='Калькулятор Урона' navigateTo='calculator' />
-                    {player.isJudge || meta.isTournamentRulesShow ? <Row title='Регламент Ice Hammer 2026' navigateTo='tournamentRules' /> : null}
-                    <Row title='Подсказка во время игры' navigateTo='help' />
-                    {/* {player.info?.id && (!player.info?.tgId || !player.info?.vkId) ? <Row title='Связать аккаунты Телеграмма и ВК' navigateTo='linkAccounts' /> : null} */}
-                    {meta.isRoundActive && player.reg ? <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button> : null}
-                    {meta.round || !player.reg ? null : <button id={Styles.button} onClick={handleOpenDropModal}>Отказаться от участия на турнире</button>}
-                    <ToastContainer />
-                </div>
-                : renderRegForm()
+        {showMenu
+            ? <>
+                <MainMenu
+                    isPlayerInWaitingList={isPlayerInWaitingList}
+                    onCallJudge={handleJudgeCall}
+                    onOpenDrop={handleOpenDropModal}
+                />
+                <ToastContainer />
+            </>
+            : <>
+                <HeaderImage src={Image} alt='Core Documents' />
+                {isLoading
+                    ? <div id={Styles.loaderContainer}>
+                        <CircularProgress variant="soft"/>
+                    </div>
+                    : renderRegForm()
+                }
+            </>
         }
         <Modal {...modalData} onClose={handleCloseModal} />
     </>

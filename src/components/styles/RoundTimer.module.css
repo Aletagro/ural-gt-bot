@@ -1,0 +1,100 @@
+/* Таймер раунда. Золото в обычном режиме, потом янтарный и красный */
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 14px;
+    padding: 14px 16px 16px;
+    border: 2px solid #b0953f;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #2a2210 0%, #14100a 100%);
+    color: #f0d98a;
+    text-align: center;
+}
+
+.label {
+    font-size: 12px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #c9bd98;
+}
+
+.big {
+    font-family: 'Minion Pro Bold';
+    font-size: 46px;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: #f0d98a;
+}
+
+.note {
+    margin-top: 4px;
+    font-size: 14px;
+    color: #efe6cc;
+}
+
+.pill {
+    display: inline-block;
+    padding: 4px 16px;
+    border: 2px solid #b0953f;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2a2210 0%, #14100a 100%);
+    color: #f0d98a;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.digits {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Меньше 15 минут */
+.warning.panel {
+    border-color: #e0a030;
+}
+
+.warning .big {
+    color: #ffc760;
+}
+
+.warning.pill {
+    border-color: #e0a030;
+    color: #ffc760;
+}
+
+/* Меньше 5 минут */
+.critical.panel {
+    border-color: #d4503c;
+    background: linear-gradient(135deg, #3a1510 0%, #170a07 100%);
+}
+
+.critical .big {
+    color: #ff8e7a;
+}
+
+.critical.pill {
+    border-color: #d4503c;
+    background: linear-gradient(135deg, #3a1510 0%, #170a07 100%);
+    color: #ff8e7a;
+}
+
+/* Время вышло */
+.over.panel {
+    border-color: #d4503c;
+    background: linear-gradient(135deg, #4a1810 0%, #1c0a07 100%);
+}
+
+.over .big {
+    font-size: 32px;
+    color: #ff8e7a;
+}
+
+.over.pill {
+    border-color: #d4503c;
+    background: linear-gradient(135deg, #4a1810 0%, #1c0a07 100%);
+    color: #ff8e7a;
+}

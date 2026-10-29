@@ -89,7 +89,6 @@ const Leaders = () => {
             leaderId={leader.id}
             onOpen={openPlayer}
         />
-        {console.log(_player)}
         {_player?.isJudge
             ? <SecondaryNominations standing={players.standing} onOpen={openPlayer} />
             : null

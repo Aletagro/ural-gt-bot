@@ -5,6 +5,7 @@ import {player, players, meta} from '../utilities/appState'
 import {getArmyImage} from '../utilities/utils'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import Checkbox from '../components/Checkbox'
+import RoundTimer from '../components/RoundTimer'
 import armyImages from '../images/armies'
 import Constants from '../Constants'
 
@@ -197,6 +198,7 @@ const Play = ({setShareAction}) => {
     }
 
     return <div id='column' className='Chapter'>
+        <RoundTimer />
         <b id={Styles.table}>Стол {info?.table}</b>
         {renderImageBlock()}
         {info?.results_submitted
