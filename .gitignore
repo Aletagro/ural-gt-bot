@@ -22,3 +22,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# исходники картинок армий (2048px PNG), в сборку не входят
+/assets-original
