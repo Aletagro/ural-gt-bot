@@ -14,6 +14,7 @@ import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
 import Styles from './styles/Rosters.module.css'
+import SearchBar from '../components/SearchBar'
 
 const Rosters = ({setShareAction}) => {
     const navigate = useNavigate()
@@ -90,9 +91,7 @@ const Rosters = ({setShareAction}) => {
     }
     
     return <>
-        <div id={Styles.searchContainer}>
-            <input id={Styles.input} onChange={handleSearch} placeholder='Поиск' autoFocus type='search' name='search' />
-        </div>
+        <SearchBar onChange={handleSearch} />
         <div id='column' className='Chapter'>
             {isEmpty(search.rosters) && searchValue
                 ? <p id={Styles.empty}>Игроков, соответствующий поиску не найдено</p>

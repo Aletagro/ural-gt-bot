@@ -21,18 +21,6 @@
     font: inherit;
     background: inherit;
 }
-#input {
-    margin-bottom: 16px;
-    margin-top: 2px;
-    height: 40px;
-    padding: 8px 8px;
-    border-radius: 8px;
-    width: 100%;
-}
-#searchContainer {
-    background: darkred;
-    padding: 0px 8px;
-}
 #empty {
     font-size: 20px;
     font-weight: bold;

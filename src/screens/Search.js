@@ -4,6 +4,7 @@ import {sortByName, getUnitsRowRightText} from '../utilities/utils'
 import {search} from '../utilities/appState'
 import Constants from '../Constants'
 import Row from '../components/Row'
+import SearchBar from '../components/SearchBar'
 import Accordion from '../components/Accordion'
 import Ability from '../components/Ability'
 
@@ -15,7 +16,6 @@ import uniqBy from 'lodash/uniqBy'
 import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
-import Styles from './styles/Search.module.css'
 
 const dataBase = require('../dataBase.json')
 
@@ -118,9 +118,7 @@ const Search = () => {
     />
 
     return <>
-        <div id={Styles.container}>
-            <input id={Styles.input} onChange={handleChange} autoFocus placeholder='Start Typing' type='search' name='search' size={40} />
-        </div>
+        <SearchBar onChange={handleChange} placeholder='Поиск' />
         <div id='column' className='Chapter'>
             {size(search.Warscrolls) ? renderAccordion('Warscrolls', renderWarscroll) : null}
             {size(search.Rules) ? renderAccordion('Rules', renderRule) : null}

@@ -20,7 +20,7 @@ const inputStyle = {
     'fontFamily': 'Minion Pro Regular'
 }
 
-const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
+const RoundPlay = ({play, table, round, onResultChange}) => {
     const [isChangeResultBlockShow, setIsChangeResultBlockShow] = useState(false)
     const navigate = useNavigate()
     const playerOne = find(players.data, ['id', play[0]])
@@ -44,16 +44,22 @@ const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
     }
 
     const handleChangeResult = useCallback(async () => {
-        setIsChangeResultBlockShow(false)
-        await fetch(`${Constants.domain}/rounds/play/?cur_round=${round}&cur_table=${table}&vp_first=${firstValue}&vp_second=${secondValue}&minor_win=${minorWin || 0}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .catch(error => console.error(error))
-    }, [round, table, firstValue, secondValue, minorWin])
+        try {
+            const response = await fetch(`${Constants.domain}/rounds/play/?cur_round=${round}&cur_table=${table}&vp_first=${firstValue}&vp_second=${secondValue}&minor_win=${minorWin || 0}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': "application/json, text/javascript, /; q=0.01"
+                }
+            })
+            if (!response.ok) throw new Error(`HTTP ${response.status}`)
+            setIsChangeResultBlockShow(false)
+            if (onResultChange) onResultChange(true)
+        } catch (error) {
+            console.error(error)
+            if (onResultChange) onResultChange(false)
+        }
+    }, [round, table, firstValue, secondValue, minorWin, onResultChange])
 
     const handleClickCheckbox = (value) => () => {
         setMinorWin(value)
@@ -102,6 +108,9 @@ const RoundPlay = ({play, table, round, onOpenModal, onCloseModal}) => {
             setIsChangeResultBlockShow(!isChangeResultBlockShow)
         }
     }
+
+    // список игроков может ещё загружаться, не падаем на пустом значении
+    if (!playerOne || !playerTwo) return null
 
     return <div style={{'background': `${table % 2 ? '' : '#ECECEC'}`}}>
         <div key={table} id={Styles.row}>

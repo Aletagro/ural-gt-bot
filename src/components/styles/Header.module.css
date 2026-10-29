@@ -1,8 +1,9 @@
+/* Шапка в стиле новых экранов: тёмный фон, золотая линия и светло-золотой заголовок */
 #header {
   position: sticky;
   top: 0;
   padding: 8px 8px;
-  background: darkred;
+  background: linear-gradient(to bottom, #231b0a 0%, #120e07 100%);
   justify-content: space-between;
   align-items: center;
   display: flex;
@@ -10,10 +11,11 @@
   z-index: 9999;
 }
 #title {
-  color: white;
+  color: #f0d98a;
   margin: 0px;
   font-family: 'Minion Pro Bold';
   font-size: 18px;
+  letter-spacing: 0.03em;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: center;
@@ -21,25 +23,25 @@
   overflow: hidden;
   display: block;
 }
-#leftButton {
-  background: darkred;
-  color: white;
-  font-size: 14px;
-  border: 0;
-  padding: 0px;
-  padding-right: 12px;
-  top: 3px;
-  position: relative;
-}
+#leftButton,
 #rightButton {
-  background: darkred;
-  color: white;
-  font-size: 14px;
-  border: 0;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
   padding: 0px;
-  padding-left: 12px;
-  top: 3px;
-  position: relative;
+  border: 0;
+  border-radius: 12px;
+  background: none;
+  color: #f0d98a;
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+}
+#leftButton:active,
+#rightButton:active {
+  background: rgba(176, 149, 63, 0.3);
 }
 #rightButtons {
   display: flex;

@@ -13,6 +13,7 @@ import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
 import Styles from './styles/Players.module.css'
+import SearchBar from '../components/SearchBar'
 
 const lastColumnValues = {
     'TO': 'tp_sum',
@@ -113,9 +114,7 @@ const Players = () => {
     }
 
     return <>
-        <div id={Styles.searchContainer}>
-            <input id={Styles.input} onChange={handleSearch} placeholder='Поиск' autoFocus type='search' name='search' />
-        </div>
+        <SearchBar onChange={handleSearch} />
         {player.isJudge
             ? <p id={Styles.lastColumnContainer} onClick={handleChangeLastColumn}>Что отображать в последнем столбце: <b>{lastColumn}</b></p>
             : null

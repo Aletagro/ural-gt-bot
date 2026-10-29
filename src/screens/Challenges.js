@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import useDebounce from '../utilities/useDebounce'
 import Constants from '../Constants'
 import Modal from '../components/Modal'
+import SearchBar from '../components/SearchBar'
 
 import map from 'lodash/map'
 import size from 'lodash/size'
@@ -230,9 +231,7 @@ const Challenges = () => {
                     ? null
                     : showPLayers
                         ? <div>
-                            <div id={Styles.searchContainer}>
-                                <input id={Styles.input} onChange={handleSearch} placeholder='Введите имя' autoFocus type='search' name='search' />
-                            </div>
+                            <SearchBar onChange={handleSearch} placeholder='Введите имя' variant='inline' />
                             {map(playersList, renderSearchPlayer)}
                         </div>
                         : <button id={Styles.button} onClick={handleMakeChallenge}>Бросить Вызов!</button>
