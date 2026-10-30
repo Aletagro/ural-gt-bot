@@ -93,19 +93,21 @@ const Players = () => {
         setLastColumn(newValue)
     }
 
-    const renderRow = (place, _player, city, army, w, d, tp, last, isOddRow, withRoster, paintChecked, hasPhoto) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+    const renderRow = (place, _player, city, army, w, d, tp, last, isOddRow, withRoster, paintChecked, hasPhoto, isHeader) => <div className={`${Styles.row} ${isHeader ? Styles.header : isOddRow ? Styles.odd : ''} ${!isHeader && place <= 3 ? Styles[`place${place}`] : ''}`}>
         <p id={Styles.smallColumn}>{place}</p>
         <div id={Styles.playerInfo}>
             <p id={Styles.сolumn}>{_player}</p>
             {city ? <p id={Styles.subtitle}>{city}</p> : null}
         </div>
-        {meta.round || meta.isRostersShow
+        {meta.round || !meta.isRostersShow
             ? <>
-                <p id={Styles.сolumn}>{army}</p>
-                <p id={Styles.extraSmallColumn}>{w || 0}</p>
-                <p id={Styles.extraSmallColumn}>{d || 0}</p>
-                <p id={Styles.smallColumn}>{tp || 0}</p>
-                <p id={Styles.smallColumn}>{last || 0}</p>
+                <p className={Styles.armyCell}>{army}</p>
+                <p id={Styles.winsColumn} className={!isHeader && !w && !d ? Styles.zero : ''}>
+                    {isHeader ? 'W' : w || 0}
+                    {!isHeader && d ? <span className={Styles.draws}>({d})</span> : null}
+                </p>
+                <p id={Styles.smallColumn} className={isHeader ? '' : tp ? Styles.score : Styles.zero}>{tp || 0}</p>
+                <p id={Styles.smallColumn} className={!isHeader && !last ? Styles.zero : ''}>{last || 0}</p>
             </>
             : <>
                 {withRoster
@@ -138,8 +140,8 @@ const Players = () => {
         <div id='column' className='Chapter'>
             {isEmpty(list) && query
                 ? <p id={Styles.empty}>Игроков, соответствующий поиску не найдено</p>
-                : <div>
-                    {renderRow('№', 'Игрок', undefined, 'Армия', 'W', 'D', 'ИО', lastColumn, true)}
+                : <div className={Styles.table}>
+                    {renderRow('№', 'Игрок', undefined, 'Армия', 'W', 'D', 'ИО', lastColumn, false, undefined, undefined, undefined, true)}
                     {map(list, renderPlayer)}
                 </div>
             }

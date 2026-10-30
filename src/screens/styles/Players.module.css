@@ -1,6 +1,80 @@
-#row {
+/* Турнирная таблица: карточка с тёмной шапкой и золотой окантовкой */
+.table {
+    overflow: hidden;
+    border: 1.5px solid #d8c88a;
+    border-radius: 20px;
+    background: #fffdf8;
+}
+.row {
     display: flex;
-    padding: 12px 0px;
+    align-items: center;
+    padding: 11px 8px;
+    border-bottom: 1px solid #efe6c6;
+    background: #fffdf8;
+    color: #1d1810;
+    font-size: 15px;
+}
+.odd {
+    background: #fbf6e6;
+}
+.header {
+    padding: 10px 8px;
+    border-bottom: none;
+    background: linear-gradient(180deg, #2a2210, #14100a);
+    box-shadow: inset 0 -2px 0 #b0953f;
+    color: #f0d98a;
+    font-family: 'Minion Pro Bold';
+    font-size: 13px;
+    letter-spacing: 0.3px;
+}
+#playerContainer:last-child .row {
+    border-bottom: none;
+}
+/* Заголовок: тексту нужен свой цвет, иначе его перебивает цвет абзацев */
+.header p,
+.header span,
+.header .draws {
+    color: #f0d98a;
+}
+#playerContainer:active .row:not(.header) {
+    background: #f3e9c4;
+}
+/* Первые три места: цветная полоска слева и лёгкая подсветка строки */
+.place1 {
+    background: linear-gradient(90deg, rgba(240, 217, 138, 0.38), rgba(240, 217, 138, 0) 70%);
+    box-shadow: inset 4px 0 0 #b0953f;
+}
+.place2 {
+    background: linear-gradient(90deg, rgba(190, 196, 204, 0.38), rgba(190, 196, 204, 0) 70%);
+    box-shadow: inset 4px 0 0 #9aa3ad;
+}
+.place3 {
+    background: linear-gradient(90deg, rgba(214, 156, 104, 0.34), rgba(214, 156, 104, 0) 70%);
+    box-shadow: inset 4px 0 0 #b5784a;
+}
+.armyCell {
+    display: flex;
+    flex: 1;
+    text-align: start;
+    gap: 8px;
+    min-width: 0;
+}
+.armyThumb {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 1.5px solid #d8c88a;
+    background: #14100a;
+}
+.zero {
+    color: #b9ad88;
+}
+.score {
+    font-family: 'Minion Pro Bold';
+    color: #8a6d1f;
 }
 #сolumn {
     display: flex;
@@ -14,22 +88,33 @@
     justify-content: center;
     align-items: center;
 }
+#winsColumn {
+    display: flex;
+    min-width: 11%;
+    justify-content: center;
+    align-items: baseline;
+    gap: 2px;
+    white-space: nowrap;
+}
+.draws {
+    font-size: 11px;
+    color: #8a7a4f;
+}
 #extraSmallColumn {
     display: flex;
     min-width: 6%;
     justify-content: center;
     align-items: center;
 }
-#player {
-    font-size: 14px;
-    padding-bottom: 8px;
-}
 #playerContainer {
+    display: block;
     width: 100%;
     padding: 0;
     border: none;
     font: inherit;
-    background: inherit;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 #rosterIcon {
     margin-right: 12px;
@@ -40,7 +125,13 @@
     margin-right: 12px;
 }
 #lastColumnContainer {
-    padding: 12px;
+    padding: 10px 16px 4px;
+    font-size: 14px;
+    color: #8a7a4f;
+}
+#lastColumnContainer b {
+    color: #8a6d1f;
+    border-bottom: 1px dashed #b0953f;
 }
 #playerInfo {
     flex: 1;
@@ -51,7 +142,7 @@
 }
 #subtitle {
     padding-top: 2px;
-    color: darkgray;
+    color: #8a7a4f;
     font-size: 12px;
 }
 #empty {
@@ -59,4 +150,5 @@
     font-weight: bold;
     padding-top: 60px;
     text-align: center;
+    color: #8a7a4f;
 }
