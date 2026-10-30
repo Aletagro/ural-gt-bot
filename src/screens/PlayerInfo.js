@@ -7,6 +7,7 @@ import Roster from '../components/Roster'
 import RosterEasy from '../components/RosterEasy'
 import Checkbox from '../components/Checkbox'
 import Modal from '../components/Modal'
+import {ModalActions, ModalButton} from '../components/ModalActions'
 import PhotoGallery from '../components/PhotoGallery'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import PlayerHero from '../components/PlayerHero'
@@ -215,15 +216,15 @@ const PlayerInfo = ({setShareAction}) => {
             })
       }, [player, handleSendMessage, paintChecked])
 
-    const renderDropModalConent = () => <div id={Styles.modal}>
-        <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
-        <button id={Styles.modalButton} onClick={handleDropPlayer}>Да, удалить</button>
-    </div>
+    const renderDropModalConent = () => <ModalActions>
+        <ModalButton onClick={handleCloseModal}>Нет</ModalButton>
+        <ModalButton variant='danger' onClick={handleDropPlayer}>Да, удалить</ModalButton>
+    </ModalActions>
 
-    const renderStatusModalConent = () => <div id={Styles.modal}>
-        <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
-        <button id={Styles.modalButton} onClick={handlChangeStatus}>Да, изменить</button>
-    </div>
+    const renderStatusModalConent = () => <ModalActions>
+        <ModalButton onClick={handleCloseModal}>Нет</ModalButton>
+        <ModalButton variant='primary' onClick={handlChangeStatus}>Да, изменить</ModalButton>
+    </ModalActions>
 
     const renderSendMessage = () => <div id={Styles.sendMessageContainer}>
         <FloatingLabelInput

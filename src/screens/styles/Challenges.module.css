@@ -48,15 +48,6 @@
     padding-top: 16px;
     padding-bottom: 12px
 }
-#modalButton {
-    background: rgb(46, 46, 49);
-    color: white; 
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 8px;
-    width: 100%;
-    margin-top: 12px;
-}
 #playerChallengesContainer {
     padding-bottom: 16px;
 }

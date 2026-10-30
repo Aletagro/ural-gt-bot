@@ -9,6 +9,7 @@ import FloatingLabelInput from '../components/FloatingLabelInput'
 import MainMenu from '../components/MainMenu'
 import HeaderImage from '../components/HeaderImage'
 import Modal from '../components/Modal'
+import {ModalActions, ModalButton} from '../components/ModalActions'
 import {fetchMeta} from '../utilities/applyMeta'
 import Image from '../images/IceHammer.png'
 
@@ -254,10 +255,10 @@ const Registration = () => {
         forceUpdate()
     }
 
-    const renderModalConent = () => <div id={Styles.modal}>
-        <button id={Styles.modalButton} onClick={handleCloseModal}>Нет</button>
-        <button id={Styles.modalButton} onClick={handleDrop}>Да</button>
-    </div>
+    const renderModalConent = () => <ModalActions>
+        <ModalButton onClick={handleCloseModal}>Нет</ModalButton>
+        <ModalButton variant='danger' onClick={handleDrop}>Да</ModalButton>
+    </ModalActions>
 
     const renderRegForm = () => <div>
         <h2 id={Styles.title}>Регистрация на Ice Hammer 2026</h2>

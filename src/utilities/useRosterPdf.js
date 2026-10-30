@@ -3,6 +3,7 @@ import {toast} from 'react-toastify'
 
 import Constants from '../Constants'
 import Modal from '../components/Modal'
+import {ModalActions, ModalButton} from '../components/ModalActions'
 import {players} from './appState'
 import {buildRostersPdf} from './exportRostersPdf'
 import {shareFile, saveFile, canShareFile, getShareMessage} from './shareFile'
@@ -69,25 +70,18 @@ export const useRosterPdf = () => {
         toast.info('Если файл не появился, откройте приложение в обычном браузере', Constants.toastParams)
     }, [ready])
 
-    const renderContent = () => <div style={{display: 'flex', flexDirection: 'column', gap: 8}}>
-        <p>Ростеров в файле: {ready?.count}</p>
-        {ready && canShareFile(ready.file)
-            ? <button style={buttonStyle} onClick={handleShare}>Поделиться файлом</button>
-            : null
-        }
-        <button style={buttonStyle} onClick={handleSave}>Скачать файл</button>
-    </div>
+    const renderContent = () => <>
+        <p style={{textAlign: 'center'}}>Ростеров в файле: {ready?.count}</p>
+        <ModalActions>
+            {ready && canShareFile(ready.file)
+                ? <ModalButton variant='primary' onClick={handleShare}>Поделиться</ModalButton>
+                : null
+            }
+            <ModalButton onClick={handleSave}>Скачать файл</ModalButton>
+        </ModalActions>
+    </>
 
     const readyModal = <Modal visible={Boolean(ready)} title='PDF с ростерами готов' Content={renderContent} onClose={handleClose} />
 
     return {start, isBuilding, readyModal}
-}
-
-const buttonStyle = {
-    background: 'rgb(46, 46, 49)',
-    color: 'white',
-    border: 0,
-    borderRadius: 4,
-    padding: 12,
-    fontSize: 16,
 }

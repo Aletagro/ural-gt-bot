@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import useDebounce from '../utilities/useDebounce'
 import Constants from '../Constants'
 import Modal from '../components/Modal'
+import {ModalActions, ModalButton} from '../components/ModalActions'
 import SearchBar from '../components/SearchBar'
 
 import map from 'lodash/map'
@@ -167,20 +168,20 @@ const Challenges = () => {
         }
     }
 
-    const renderChallengeModalConent = (_player) => () => <div>
-        <button id={Styles.modalButton} onClick={handleClickCreateChallenge(_player)}>Да, я сокрушу его!</button>
-        <button id={Styles.modalButton} onClick={handleCloseModal}>Не, не, не! Этого воина я опасаюсь!</button>
-    </div>
+    const renderChallengeModalConent = (_player) => () => <ModalActions>
+        <ModalButton variant='primary' onClick={handleClickCreateChallenge(_player)}>Да, я сокрушу его!</ModalButton>
+        <ModalButton onClick={handleCloseModal}>Не, не, не! Этого воина я опасаюсь!</ModalButton>
+    </ModalActions>
 
-    const renderAcceptChallengeModalConent = (_player) => () => <div>
-        <button id={Styles.modalButton} onClick={handleClickAcceptChallenge(_player)}>Да, я сокрушу его!</button>
-        <button id={Styles.modalButton} onClick={handleCloseModal}>Нет, мне нужно еще подумать!</button>
-    </div>
+    const renderAcceptChallengeModalConent = (_player) => () => <ModalActions>
+        <ModalButton variant='primary' onClick={handleClickAcceptChallenge(_player)}>Да, я сокрушу его!</ModalButton>
+        <ModalButton onClick={handleCloseModal}>Нет, мне нужно еще подумать!</ModalButton>
+    </ModalActions>
 
-    const renderDeclineChallengeModalConent = (_player) => () => <div>
-        <button id={Styles.modalButton} onClick={handleClickDeclineChallenge(_player)}>Да, я не готов к этому бою!</button>
-        <button id={Styles.modalButton} onClick={handleCloseModal}>Нет, мне нужно еще подумать!</button>
-    </div>
+    const renderDeclineChallengeModalConent = (_player) => () => <ModalActions>
+        <ModalButton variant='danger' onClick={handleClickDeclineChallenge(_player)}>Да, я не готов к этому бою!</ModalButton>
+        <ModalButton onClick={handleCloseModal}>Нет, мне нужно еще подумать!</ModalButton>
+    </ModalActions>
 
     const renderRow = () => <div id={Styles.row} style={{'background': '#ECECEC'}}>
         <p id={Styles.smallColumn}>№</p>
