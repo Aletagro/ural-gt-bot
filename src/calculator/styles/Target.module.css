@@ -1,37 +1,45 @@
+#abilities,
 #checkedAbilities {
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
     margin-right: 8px;
     padding: 12px 0px;
     flex: 1;
+    border-radius: 999px;
+    font-family: 'Minion Pro Bold';
     font-size: 18px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s ease, transform 0.15s ease;
 }
-
 #abilities {
-    background: #ECECEC;
-    border-width: 0px;
-    border-radius: 4px;
-    margin-right: 8px;
-    padding: 12px 0px;
-    flex: 1;
-    font-size: 18px;
+    border: 1.5px solid #d8c88a;
+    background: #fffdf8;
+    color: #1d1810;
 }
-
+#checkedAbilities {
+    border: 1.5px solid #b0953f;
+    background: #b0953f;
+    color: #fbf3dc;
+}
+#abilities:active,
+#checkedAbilities:active {
+    transform: scale(0.97);
+}
 #title {
     font-size: 18px;
     line-height: 24px;
+    color: #1d1810;
 }
-
 #characteristicsContainer {
     display: flex;
-    padding-top: 4px
+    padding-top: 8px;
 }
-
+#characteristicsContainer button:last-child {
+    margin-right: 0;
+}
 #container {
     margin-bottom: 16px;
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid #B4B4B4;
+    padding: 14px 16px;
+    border: 1.5px solid #c9b36a;
+    border-radius: 20px;
+    background: #f6ecc9;
 }

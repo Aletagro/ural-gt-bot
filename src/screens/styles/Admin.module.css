@@ -152,4 +152,19 @@
     border-radius: 4px;
     font-size: 14px;
 }
-
+#errorBox {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border: 1.5px solid #d8b0a8;
+    border-radius: 16px;
+    background: #fbefec;
+    color: #8c2a1d;
+}
+#errorBox b {
+    color: #8c2a1d;
+}
+#errorBox p {
+    padding-top: 4px;
+    color: #8c2a1d;
+    word-break: break-word;
+}

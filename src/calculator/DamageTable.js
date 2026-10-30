@@ -107,23 +107,23 @@ const DamageTable = ({units, target}) => {
     }
 
     const renderCell = (text, index) => {
-        const isFirstColumn = (index + 1) % (results.length + 1) === 1
-        const isEvenRow = index % ((results.length + 1) * 2) < results.length + 1
+        const columns = results.length + 1
+        const isFirstColumn = index % columns === 0
+        const row = Math.floor(index / columns)
+        const rowClass = row === 0 ? Styles.header : row % 2 ? Styles.odd : ''
         return <p
             id={Styles.text}
-            style={{
-                'text-align': `${isFirstColumn ? 'start' : 'end'}`,
-                'padding-left': `${isFirstColumn ? '4px' : '0px'}`,
-                'padding-right': `${isFirstColumn ? '0px' : '4px'}`,
-                'background': `${isEvenRow ? '#ECECEC' : ''}`
-            }}
+            className={`${rowClass} ${isFirstColumn ? Styles.first : Styles.value}`}
         >
             {text || 0}
         </p>
     }
 
-    return <div id={Styles.container} onClick={handleCopy} style={{display: 'grid', 'grid-template-columns': `repeat(${results.length + 1}, 1fr)`}}>
-        {data.map(renderCell)}
+    return <div id={Styles.container}>
+        <div className={Styles.table} onClick={handleCopy} style={{display: 'grid', 'grid-template-columns': `minmax(0, 0.55fr) repeat(${results.length}, minmax(0, 1fr))`}}>
+            {data.map(renderCell)}
+        </div>
+        <p className={Styles.hint}>Нажмите на таблицу, чтобы скопировать</p>
         <ToastContainer />
     </div>
 }

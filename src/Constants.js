@@ -417,13 +417,13 @@ const Constants = {
     accordionStyle: {
         borderRadius: 'md',
         [`& .${accordionSummaryClasses.button}:hover`]: {
-            'background-color': '#2E2D32'
+            'background-color': 'transparent'
         },
         '& button:not([aria-selected="true"]):active': {
-            background: '#2E2D32',
+            background: 'transparent',
         },
         '& button:not([aria-selected="true"]):hover': {
-            background: '#2E2D32',
+            background: 'transparent',
         }
     },
     defaultIsCollapseUnitsTypes: {

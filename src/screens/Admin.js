@@ -1,6 +1,7 @@
 import React, {useState, useCallback, useReducer} from 'react'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import {getApiErrorMessage} from '../utilities/apiError'
 import Constants from '../Constants'
 import {setTournamentStatus} from '../utilities/utils'
 import FloatingLabelInput from '../components/FloatingLabelInput'
@@ -30,14 +31,25 @@ const Admin = () => {
     const [message, setMessage] = useState('')
     const {start: handleDownloadRosters, isBuilding: pdfLoading, readyModal} = useRosterPdf()
     const [boardLink, setBoardLink] = useState('')
+    const [pairingsError, setPairingsError] = useState('')
 
     const handleCreateParings = useCallback(async () => {
-        await fetch(`${Constants.domain}/parings/?next_round=${meta.round + 1}`)
-            .then(response => response.json())
-            .then(data => {
-                setPairings(data)
-            })
-            .catch(error => console.error(error))
+        setPairingsError('')
+        try {
+            const response = await fetch(`${Constants.domain}/parings/?next_round=${meta.round + 1}`)
+            if (!response.ok) {
+                const message = await getApiErrorMessage(response)
+                setPairingsError(message)
+                toast.error(`Паринги не созданы: ${message}`, {...Constants.toastParams, autoClose: 10000})
+                return
+            }
+            setPairings(await response.json())
+        } catch (error) {
+            console.error(error)
+            const message = 'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз'
+            setPairingsError(message)
+            toast.error(message, Constants.toastParams)
+        }
     }, [])
 
     const handleChangePlayers = useCallback(() => {
@@ -336,6 +348,13 @@ const Admin = () => {
         <Button type='soft' className={Styles.button} onClick={handleCopyBoardLink}>Скопировать ссылку на большой экран</Button>
         {boardLink ? <input id={Styles.boardLink} value={boardLink} readOnly onFocus={(e) => e.target.select()} /> : null}
         <Button type='primary' className={Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</Button>
+        {pairingsError
+            ? <div id={Styles.errorBox}>
+                <b>Не удалось создать паринги</b>
+                <p>{pairingsError}</p>
+            </div>
+            : null
+        }
         {isEmpty(pairings)
             ? null
             : <>

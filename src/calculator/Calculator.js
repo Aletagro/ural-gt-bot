@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {getCalcUnit} from '../utilities/utils'
 import {calc} from '../utilities/appState'
+import Button from '../components/Button'
 import CalcUnit from './CalcUnit'
 import DamageTable from './DamageTable'
 import Target from './Target'
@@ -51,7 +52,7 @@ const Calculator = () => {
         <DamageTable units={calc.units} target={target} />
         <Target target={target} onChange={handleChangeTarget} />
         {calc.units.map(renderUnit)}
-        <button id={Styles.addWeapon} onClick={handleAddUnit}>Add Unit</button>
+        <Button className={Styles.addUnit} onClick={handleAddUnit}>Add Unit</Button>
     </div>
 }
 

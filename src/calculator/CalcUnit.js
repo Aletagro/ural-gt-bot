@@ -9,6 +9,7 @@ import {calc} from '../utilities/appState'
 import {getCalcWeapon, getCalcUnit} from '../utilities/utils'
 import Weapon from './Weapon'
 import FloatingLabelInput from '../components/FloatingLabelInput'
+import Button from '../components/Button'
 
 import Styles from './styles/CalcUnit.module.css'
 
@@ -100,7 +101,7 @@ const CalcUnit = ({index, unit, onDelete, onUpdate}) => {
                 />
                 {unit.weapons.map(renderWeapon)}
                 <div id={Styles.separator} />
-                <button id={Styles.addWeaponButton} onClick={handleAddWeapon}>Add Weapon</button>
+                <Button type='secondary' className={Styles.addWeaponButton} onClick={handleAddWeapon}>Add Weapon</Button>
             </AccordionDetails>
         </Accordion>
     </div>
