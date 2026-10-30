@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 
 import Styles from './styles/Help.module.css'
+import Button from '../components/Button'
 
 const predictions = {
     'charge': ['Всенепременно!', 'Обожди пока', 'Будущее туманно', 'Конечно, давай, не сдерживай себя!', 'Если напротив тебя Крагнос, то не стоит. В любой другом случаи - атакуй!', 'Если ты не Крагнос, то пока погоди. А если ты Крагнос, то зачем ты меня вообще о таком спрашиваешь?', 'Я бы не чарджил, но дело твоё ...', 'Сокруши его!', 'Делай как кайф, брат!', 'Ни в коем случае!'],
@@ -24,19 +25,19 @@ const Help = () => {
 
     return <div id='column' className='Chapter'>
         {prediction
-            ? <>
+            ? <React.Fragment key='answer'>
                 <div id={Styles.answerContainer}>
                     <p id={Styles.answer}>{prediction}</p>
                 </div>
-                <button id={Styles.button} onClick={handleClear}>Еще вопрос?</button>
-            </>
-            : <>
-                <button id={Styles.button} onClick={handlePrediction('charge')}>Чарджить?</button>
-                <button id={Styles.button} onClick={handlePrediction('double')}>Брать дабл?</button>
-                <button id={Styles.button} onClick={handlePrediction('divide')}>Делить атаки?</button>
-                <button id={Styles.button} onClick={handlePrediction('doubleRoll')}>Что кидать на ролл офф?</button>
-                <button id={Styles.button} onClick={handlePrediction('justification')}>Как объяснить, почему проиграл игру</button>
-            </>
+                <Button type='soft' className={Styles.button} onClick={handleClear}>Еще вопрос?</Button>
+            </React.Fragment>
+            : <React.Fragment key='questions'>
+                <Button type='soft' className={Styles.button} onClick={handlePrediction('charge')}>Чарджить?</Button>
+                <Button type='soft' className={Styles.button} onClick={handlePrediction('double')}>Брать дабл?</Button>
+                <Button type='soft' className={Styles.button} onClick={handlePrediction('divide')}>Делить атаки?</Button>
+                <Button type='soft' className={Styles.button} onClick={handlePrediction('doubleRoll')}>Что кидать на ролл офф?</Button>
+                <Button type='soft' className={Styles.button} onClick={handlePrediction('justification')}>Как объяснить, почему проиграл игру</Button>
+            </React.Fragment>
         }
     </div>
 }

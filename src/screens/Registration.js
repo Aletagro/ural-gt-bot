@@ -18,6 +18,7 @@ import includes from 'lodash/includes'
 import findIndex from 'lodash/findIndex'
 
 import Styles from './styles/Registration.module.css'
+import Button from '../components/Button'
 
 const tg = window.Telegram?.WebApp
 const href = window.location?.href
@@ -257,7 +258,7 @@ const Registration = () => {
 
     const renderModalConent = () => <ModalActions>
         <ModalButton onClick={handleCloseModal}>Нет</ModalButton>
-        <ModalButton variant='danger' onClick={handleDrop}>Да</ModalButton>
+        <ModalButton type='danger' onClick={handleDrop}>Да</ModalButton>
     </ModalActions>
 
     const renderRegForm = () => <div>
@@ -285,18 +286,14 @@ const Registration = () => {
             freeSolo={true}
         />
         <div id={Styles.buttonContainer}>
-            <button
-                id={isDisableButton ? Styles.disableRegButton : Styles.regButton}
-                onClick={handleClickButton}
-                disabled={isDisableButton}
-            >
+            <Button className={Styles.regButton} onClick={handleClickButton} disabled={isDisableButton}>
                 Зарегистрироваться
-            </button>
+            </Button>
         </div>
         <div id={Styles.buttonContainer}>
-            <button id={Styles.regButton} onClick={handleClickGuest}>
+            <Button className={Styles.regButton} onClick={handleClickGuest}>
                 Войти как гость
-            </button>
+            </Button>
         </div>
     </div>
 
@@ -305,7 +302,7 @@ const Registration = () => {
             <HeaderImage src={Image} alt='Core Documents' />
             <h2 id={Styles.title}>Вы были удалены из списка участников турнира</h2>
             <h2 id={Styles.title}>Вы сможете в любой момент подать регистрацию снова</h2>
-            <button id={Styles.regButton} onClick={handleRetry}>Зарегистрироваться</button>
+            <Button className={Styles.regButton} onClick={handleRetry}>Зарегистрироваться</Button>
         </>
     }
 

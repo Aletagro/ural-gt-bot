@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import find from 'lodash/find'
 
 import Styles from './styles/TournamentRules.module.css'
+import Button from '../components/Button'
 
 const TournamentRules = () => {
     const navigate = useNavigate()
@@ -35,7 +36,7 @@ const TournamentRules = () => {
     }
 
     const renderBattleplan = (battleplan) =>
-        <button key={battleplan?.id} id={Styles.battleplan} onClick={handleClickBattleplan(battleplan)}>{battleplan?.title}</button>
+        <Button type='soft' size='sm' className={Styles.battleplan} key={battleplan?.id} onClick={handleClickBattleplan(battleplan)}>{battleplan?.title}</Button>
 
     return <div id='column' className='Chapter'>
         <p id={Styles.text}>Турнир проводится по системе «Warhammer Age of Sigmar Pitched Battles» 7-8 ноября 2026.</p>
@@ -172,9 +173,9 @@ const TournamentRules = () => {
         <p id={Styles.text}>После турнира в специальном разделе нашего ТГ-бота вам будет предложено проголосовать за одного из пяти противников, с которым вам было максимально комфортно играть; также в обед второго дня в нем вы сможете отметить номера 3 (трех) армий (не обязательно из числа турнирных соперников), которые, по вашему мнению, наиболее отвечают характеристике «вау, какая красивая, изумительная и просто отличная армия, срочно в топ-3 из представленных на турнире!».</p>
         <br/>
         <h3 id={Styles.text}>Дополнительные правила</h3>
-        <button id={Styles.button} onClick={handleClickAppendix(1, 'Правила использования шахматных часов')}>Правила использования шахматных часов</button>
-        <button id={Styles.button} onClick={handleClickAppendix(2, 'Этика скорости')}>Этика скорости</button>
-        <button id={Styles.button} onClick={handleClickAppendix(3, 'Нарушения и наказания')}>Нарушения и наказания</button>
+        <Button type='soft' className={Styles.button} onClick={handleClickAppendix(1, 'Правила использования шахматных часов')}>Правила использования шахматных часов</Button>
+        <Button type='soft' className={Styles.button} onClick={handleClickAppendix(2, 'Этика скорости')}>Этика скорости</Button>
+        <Button type='soft' className={Styles.button} onClick={handleClickAppendix(3, 'Нарушения и наказания')}>Нарушения и наказания</Button>
         <h2 id={Styles.text}>С нетерпением ждём вас на турнире 7-8 ноября!</h2>
         <ToastContainer />
     </div>

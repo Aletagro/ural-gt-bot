@@ -7,6 +7,7 @@ import {player} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 
 import Styles from './styles/LinkAccounts.module.css'
+import Button from '../components/Button'
 
 const LinkAccounts = () => {
     const navigate = useNavigate()
@@ -64,12 +65,12 @@ const LinkAccounts = () => {
                     label='Введите код'
                     value={code}
                 />
-                <div onClick={handleSetCode} id={Styles.button}>Отправить код</div>
+                <Button className={Styles.button} onClick={handleSetCode}>Отправить код</Button>
             </>
             : <>
                 <p id={Styles.text}>Чтобы связать аккаунты Телеграма и ВК, нажмите на кнопку "Получить код"</p>
                 <p id={Styles.text}>В боте вам придёт короткий код. Откройте приложение в той соц сети, где вы еще не зарегистрированы. Нажмите кнопку, "Войти как гость" и на таком же экранее, введите код</p>
-                <div onClick={handleGetCode} id={Styles.button}>Получить код</div>
+                <Button className={Styles.button} onClick={handleGetCode}>Получить код</Button>
             </>
 
         }

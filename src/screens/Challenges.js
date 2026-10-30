@@ -16,6 +16,7 @@ import includes from 'lodash/includes'
 import lowerCase from 'lodash/lowerCase'
 
 import Styles from './styles/Challenges.module.css'
+import Button from '../components/Button'
 
 const Challenges = () => {
     const navigate = useNavigate()
@@ -169,17 +170,17 @@ const Challenges = () => {
     }
 
     const renderChallengeModalConent = (_player) => () => <ModalActions>
-        <ModalButton variant='primary' onClick={handleClickCreateChallenge(_player)}>Да, я сокрушу его!</ModalButton>
+        <ModalButton type='primary' onClick={handleClickCreateChallenge(_player)}>Да, я сокрушу его!</ModalButton>
         <ModalButton onClick={handleCloseModal}>Не, не, не! Этого воина я опасаюсь!</ModalButton>
     </ModalActions>
 
     const renderAcceptChallengeModalConent = (_player) => () => <ModalActions>
-        <ModalButton variant='primary' onClick={handleClickAcceptChallenge(_player)}>Да, я сокрушу его!</ModalButton>
+        <ModalButton type='primary' onClick={handleClickAcceptChallenge(_player)}>Да, я сокрушу его!</ModalButton>
         <ModalButton onClick={handleCloseModal}>Нет, мне нужно еще подумать!</ModalButton>
     </ModalActions>
 
     const renderDeclineChallengeModalConent = (_player) => () => <ModalActions>
-        <ModalButton variant='danger' onClick={handleClickDeclineChallenge(_player)}>Да, я не готов к этому бою!</ModalButton>
+        <ModalButton type='danger' onClick={handleClickDeclineChallenge(_player)}>Да, я не готов к этому бою!</ModalButton>
         <ModalButton onClick={handleCloseModal}>Нет, мне нужно еще подумать!</ModalButton>
     </ModalActions>
 
@@ -211,8 +212,8 @@ const Challenges = () => {
             <p id={Styles.subtitle}>{_player.city}</p>
         </div>
         <div>
-            <button id={Styles.playerChallengeButton} onClick={handleOpenAcceptChallengeModal(_player)}>Принять</button>
-            <button id={Styles.playerChallengeButton} onClick={handleOpenDeclineChallengeModal(_player)}>Отказать</button>
+            <Button size='sm' className={Styles.playerChallengeButton} onClick={handleOpenAcceptChallengeModal(_player)}>Принять</Button>
+            <Button size='sm' className={Styles.playerChallengeButton} onClick={handleOpenDeclineChallengeModal(_player)}>Отказать</Button>
         </div>
     </div>
     
@@ -226,16 +227,16 @@ const Challenges = () => {
                             {map(playerChallenges, renderPlayerChallenge)}
                         </div>
                         : <p>Вам еще никто не бросил челлендж, возможно, что вас просто боятся!</p>
-                    : <button id={Styles.button} onClick={handleGetPlayerChallenges}>Посмотреть кто бросил вам Челлендж</button>
+                    : <Button className={Styles.button} onClick={handleGetPlayerChallenges}>Посмотреть кто бросил вам Челлендж</Button>
                 }
                 {player.info?.challenge_status === 'sent'
                     ? null
                     : showPLayers
                         ? <div>
-                            <SearchBar onChange={handleSearch} placeholder='Введите имя' variant='inline' />
+                            <SearchBar onChange={handleSearch} placeholder='Введите имя' type='inline' />
                             {map(playersList, renderSearchPlayer)}
                         </div>
-                        : <button id={Styles.button} onClick={handleMakeChallenge}>Бросить Вызов!</button>
+                        : <Button className={Styles.button} onClick={handleMakeChallenge}>Бросить Вызов!</Button>
                 }
             </>
         }

@@ -20,13 +20,8 @@
 #changeContainer {
   padding: 12px;
 }
-#changeButton {
-  background: #2E2D32;
-  color: white;
-  border-width: 0px;
-  border-radius: 4px;
-  padding: 12px;
-  width: 100%;
+.changeButton {
+    width: 100%;
 }
 #checkboxRow {
   display: flex;
@@ -42,3 +37,4 @@
   font-size: 20px;
   padding-bottom: 4px;
 }
+

@@ -12,15 +12,15 @@ const STATUS_CLASS = {
     over: Styles.over,
 }
 
-// variant 'hero': компактная плашка на шапке главного меню (пока таймера нет, показывает fallback)
-// variant 'panel': крупный блок для экрана игры и кабинета организатора (без таймера не показывается)
-const RoundTimer = ({variant = 'panel', fallback = null}) => {
+// type 'hero': компактная плашка на шапке главного меню (пока таймера нет, показывает fallback)
+// type 'panel': крупный блок для экрана игры и кабинета организатора (без таймера не показывается)
+const RoundTimer = ({type = 'panel', fallback = null}) => {
     const timer = useRoundTimer()
     if (timer.status === 'off') return fallback
 
     const statusClass = STATUS_CLASS[timer.status]
 
-    if (variant === 'hero') {
+    if (type === 'hero') {
         return <span className={`${Styles.pill} ${statusClass}`}>
             {meta.round ? `Раунд ${meta.round} · ` : ''}
             <span className={Styles.digits}>{timer.status === 'over' ? 'время вышло' : timer.text}</span>

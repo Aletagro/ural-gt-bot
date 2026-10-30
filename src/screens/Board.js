@@ -104,8 +104,7 @@ const Board = () => {
         <p className={Styles.leaderLabel}>{meta.isFinished ? 'Чемпион турнира' : 'Лидер турнира'}</p>
         <div className={Styles.leaderBottom}>
             <p className={Styles.leaderName}>{leader.surname} {leader.name}</p>
-            <p className={Styles.leaderArmy}>{leaderStat.allegiance}</p>
-            <p className={Styles.leaderPoints}>{leader.tp_sum} ТО</p>
+            <p className={Styles.leaderArmy}>{leaderStat.allegiance} · {leader.tp_sum} ТО</p>
         </div>
     </section>
 

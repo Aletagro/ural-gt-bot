@@ -7,46 +7,4 @@
 
 .button {
     flex: 1 1 140px;
-    padding: 12px 14px;
-    border: 2px solid #b0953f;
-    border-radius: 999px;
-    font-family: 'Minion Pro Bold';
-    font-size: 16px;
-    line-height: 1.2;
-    text-align: center;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 0.15s ease, background 0.15s ease;
-}
-
-.button:active {
-    transform: scale(0.98);
-}
-
-.secondary {
-    background: #fff;
-    color: #8a6d1f;
-}
-
-.secondary:active {
-    background: #fbf3dc;
-}
-
-.primary {
-    background: #b0953f;
-    color: #fbf3dc;
-}
-
-.primary:active {
-    background: #9c8335;
-}
-
-.danger {
-    border-color: #8c2a1d;
-    background: #8c2a1d;
-    color: #fff;
-}
-
-.danger:active {
-    background: #741f14;
 }

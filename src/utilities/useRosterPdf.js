@@ -74,7 +74,7 @@ export const useRosterPdf = () => {
         <p style={{textAlign: 'center'}}>Ростеров в файле: {ready?.count}</p>
         <ModalActions>
             {ready && canShareFile(ready.file)
-                ? <ModalButton variant='primary' onClick={handleShare}>Поделиться</ModalButton>
+                ? <ModalButton type='primary' onClick={handleShare}>Поделиться</ModalButton>
                 : null
             }
             <ModalButton onClick={handleSave}>Скачать файл</ModalButton>

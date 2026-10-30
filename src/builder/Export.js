@@ -13,6 +13,7 @@ import forEach from 'lodash/forEach'
 import includes from 'lodash/includes'
 
 import Styles from './styles/Export.module.css'
+import Button from '../components/Button'
 
 const Export = () => {
     // eslint-disable-next-line
@@ -221,7 +222,7 @@ ${roster.points.all}/${roster.pointsLimit} Pts
         {meta.rostersBeingAccepted
             ? <>
                 <div id={Styles.buttonContainer}>
-                    <button id={disableButton ? Styles.disableButton : Styles.button} disabled={disableButton} onClick={handleSendRoster}>Отправить ростер</button>
+                    <Button className={disableButton ? Styles.disableButton : Styles.button} disabled={disableButton} onClick={handleSendRoster}>Отправить ростер</Button>
                 </div>
                 {disableButton
                     ? <p id={Styles.errorText}>Пока не будут исправлены все ошибки, ростер нельзя отправить</p>
@@ -231,7 +232,9 @@ ${roster.points.all}/${roster.pointsLimit} Pts
             : null
         }
         <div id={Styles.buttonContainer}>
-            <button id={Styles.button} onClick={handleExportList}>{isCopy ? 'Лист скопирован' : 'Копировать лист'}</button>
+            <Button className={Styles.button} onClick={handleExportList} type='secondary'>
+                {isCopy ? 'Лист скопирован' : 'Копировать лист'}
+            </Button>
         </div>
         {errors.length > 0
             ? <div id={Styles.errorsContainer}>

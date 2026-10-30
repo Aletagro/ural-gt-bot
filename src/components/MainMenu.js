@@ -173,7 +173,7 @@ const MainMenu = ({isPlayerInWaitingList, onCallJudge, onOpenDrop}) => {
             <img className={Styles.heroImage} src={Image} alt='Ice Hammer 2026' />
             <div className={Styles.heroShade} />
             <div className={Styles.heroBottom}>
-                <RoundTimer variant='hero' fallback={<span className={Styles.statusPill}>{getStatusLabel()}</span>} />
+                <RoundTimer type='hero' fallback={<span className={Styles.statusPill}>{getStatusLabel()}</span>} />
                 <span className={Styles.rolePill}>{getRoleLabel()}</span>
             </div>
         </div>

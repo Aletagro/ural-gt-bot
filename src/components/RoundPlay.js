@@ -9,6 +9,7 @@ import get from 'lodash/get'
 import find from 'lodash/find'
 
 import Styles from './styles/RoundPlay.module.css'
+import Button from './Button'
 
 const inputStyle = {
     '--Input-minHeight': '48px',
@@ -99,7 +100,7 @@ const RoundPlay = ({play, table, round, onResultChange}) => {
                 </div>
                 : null
             }
-            <button id={Styles.changeButton} onClick={handleChangeResult}>Изменить результаты</button>
+            <Button className={Styles.changeButton} onClick={handleChangeResult}>Изменить результаты</Button>
         </div>
     }
 

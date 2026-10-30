@@ -10,6 +10,7 @@ import isEmpty from 'lodash/isEmpty'
 import includes from 'lodash/includes'
 
 import Styles from './styles/PaintVote.module.css'
+import Button from '../components/Button'
 
 const PaintVote = () => {
     const navigate = useNavigate()
@@ -76,13 +77,9 @@ const PaintVote = () => {
         <div id={Styles.gridContainer}>
             {map(data, renderItem)}
         </div>
-        <button 
-            id={isButtonDisabled ? Styles.disabledSendButton : Styles.sendButton}
-            disabled={isButtonDisabled}
-            onClick={handleClickVote}
-        >
+        <Button className={Styles.sendButton} disabled={isButtonDisabled} onClick={handleClickVote}>
             {isButtonDisabled ? 'Выберите хотя бы одну армию' : 'Проголосовать'}
-        </button>
+        </Button>
     </div>
 }
 

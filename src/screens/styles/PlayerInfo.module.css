@@ -13,15 +13,8 @@
 #roster {
     white-space: pre-wrap;
 }
-#rulesButton {
+.rulesButton {
     margin-top: 16px;
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 16px 12px;
-    font-size: 16px;
-    font-family: 'Minion Pro Bold';
 }
 #row {
     display: flex;
@@ -66,21 +59,13 @@
     padding: 16px 0px;
 }
 
-
-
 #sendMessageContainer {
     padding-top: 16px;
     display: flex;
 }
 
-#sendMessageButton {
+.sendMessageButton {
     height: 48px;
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 12px;
-    font-size: 16px;
-    font-family: 'Minion Pro Bold';
     margin-left: 16px;
 }
+

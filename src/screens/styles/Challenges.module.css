@@ -28,14 +28,7 @@
     color: darkgray;
     font-size: 12px;
 }
-#button {
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 16px 12px;
-    font-size: 16px;
-    font-family: 'Minion Pro Bold';
+.button {
     margin-bottom: 16px;
 }
 #searchPlayerContainer {
@@ -62,12 +55,7 @@
     flex-direction: column;
     flex: 1;
 }
-#playerChallengeButton {
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 6px;
+.playerChallengeButton {
     margin-left: 4px;
-    font-size: 12px;
 }
+

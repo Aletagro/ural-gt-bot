@@ -30,6 +30,7 @@ import size from 'lodash/size'
 
 import Styles from './styles/PlayerInfo.module.css'
 import CardStyles from '../components/styles/PlayerCard.module.css'
+import Button from '../components/Button'
 
 const TABS = [
     {key: 'overview', title: 'Обзор'},
@@ -218,12 +219,12 @@ const PlayerInfo = ({setShareAction}) => {
 
     const renderDropModalConent = () => <ModalActions>
         <ModalButton onClick={handleCloseModal}>Нет</ModalButton>
-        <ModalButton variant='danger' onClick={handleDropPlayer}>Да, удалить</ModalButton>
+        <ModalButton type='danger' onClick={handleDropPlayer}>Да, удалить</ModalButton>
     </ModalActions>
 
     const renderStatusModalConent = () => <ModalActions>
         <ModalButton onClick={handleCloseModal}>Нет</ModalButton>
-        <ModalButton variant='primary' onClick={handlChangeStatus}>Да, изменить</ModalButton>
+        <ModalButton type='primary' onClick={handlChangeStatus}>Да, изменить</ModalButton>
     </ModalActions>
 
     const renderSendMessage = () => <div id={Styles.sendMessageContainer}>
@@ -233,7 +234,7 @@ const PlayerInfo = ({setShareAction}) => {
             label='Cообщение игроку (от бота)'
             value={message}
         />
-        <button id={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</button>
+        <Button className={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</Button>
     </div>
 
     const renderTabs = () => {
@@ -276,7 +277,9 @@ const PlayerInfo = ({setShareAction}) => {
                 ? <RosterEasy roster={roster} info={rosterInfo} />
                 : <Roster roster={roster} info={rosterInfo} />
             }
-            <button id={Styles.rulesButton} onClick={handleClickAllegiance}>Правила Армии</button>
+            <Button className={Styles.rulesButton} onClick={handleClickAllegiance} type='secondary'>
+                Правила Армии
+            </Button>
         </>
         : <p className={CardStyles.rosterMissing}>Ростер не сдан</p>
 
@@ -287,9 +290,9 @@ const PlayerInfo = ({setShareAction}) => {
             ? <PhotoGallery photos={photos} />
             : null
         }
-        <button id={Styles.rulesButton} onClick={handleClickPhotovalidation}>{paintChecked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}</button>
-        <button id={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</button>
-        <button id={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</button>
+        <Button className={Styles.rulesButton} onClick={handleClickPhotovalidation}>{paintChecked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}</Button>
+        <Button className={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</Button>
+        <Button className={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</Button>
         {renderSendMessage()}
     </div>
 

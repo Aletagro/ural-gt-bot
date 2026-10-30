@@ -19,6 +19,7 @@ import find from 'lodash/find'
 import isNull from 'lodash/isNull'
 
 import Styles from './styles/Play.module.css'
+import Button from '../components/Button'
 
 const inputStyle = {
     '--Input-minHeight': '48px',
@@ -271,14 +272,10 @@ const Play = ({setShareAction}) => {
             : null
         }
         <p id={Styles.noticed}>Будьте внимательны, вводятся ваши VP, набранные за игру, а не TO </p>
-        <button
-            id={disableButton ? Styles.disableButton : Styles.button}
-            onClick={handleSendResult}
-            disabled={disableButton}
-        >
+        <Button className={Styles.button} onClick={handleSendResult} disabled={disableButton}>
             Отправить Результаты
-        </button>
-        <button id={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</button>
+        </Button>
+        <Button className={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</Button>
     </div>
 }
 

@@ -1,39 +1,15 @@
 #text {
     padding-bottom: 12px;
 }
-#button {
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 16px 12px;
-    font-size: 16px;
-    font-family: 'Minion Pro Bold';
-    margin-bottom: 16px;
-}
-#disableButton {
-    background: rgb(201, 200, 199);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 16px 12px;
-    font-size: 16px;
-    font-family: 'Minion Pro Bold';
+.button {
     margin-bottom: 16px;
 }
 #sendMessageContainer {
     display: flex;
     margin-bottom: 16px;
 }
-#sendMessageButton {
+.sendMessageButton {
     height: 46px;
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 12px;
-    font-size: 16px;
-    font-family: 'Minion Pro Bold';
     margin-left: 16px;
 }
 #battleplansContainer {
@@ -42,20 +18,7 @@
     gap: 8px;
     width: 100%;
 }
-#battleplan {
-    background: rgb(46, 46, 49);
-    color: white;
-    border-radius: 4px;
-    padding: 6px;
-    text-align: center;
-}
-#activeBattleplan {
-    background: rgb(201, 200, 199);
-    color: black;
-    border-radius: 4px;
-    padding: 6px;
-    text-align: center;
-}
+
 /* паринги */
 #pairingsGrid {
     display: grid;
@@ -188,3 +151,4 @@
     border-radius: 4px;
     font-size: 14px;
 }
+

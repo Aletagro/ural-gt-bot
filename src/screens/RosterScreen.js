@@ -10,6 +10,7 @@ import find from 'lodash/find'
 import noop from 'lodash/noop'
 
 import Styles from './styles/RosterScreen.module.css'
+import Button from '../components/Button'
 
 const RosterScreen = () => {
     const navigate = useNavigate()
@@ -57,8 +58,8 @@ const RosterScreen = () => {
         {playerIndex === undefined
             ? null
             : <div id={Styles.buttonContainer}>
-                <button onClick={handleClickPrevRoster} id={Styles.nextButton}>Предыдущий</button>
-                <button onClick={handleClickNextRoster} id={Styles.nextButton}>Следующий</button>
+                <Button className={Styles.nextButton} onClick={handleClickPrevRoster}>Предыдущий</Button>
+                <Button className={Styles.nextButton} onClick={handleClickNextRoster}>Следующий</Button>
             </div>
         }
         <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
@@ -69,7 +70,7 @@ const RosterScreen = () => {
             ? <RosterEasy roster={_roster} info={rosterInfo} />
             : <Roster roster={_roster} info={rosterInfo} />
         }
-        <button id={Styles.button} onClick={handleClickAllegiance}>Правила Армии</button>
+        <Button className={Styles.button} onClick={handleClickAllegiance} type='secondary'>Правила Армии</Button>
     </div>
 }
 

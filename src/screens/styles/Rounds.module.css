@@ -17,24 +17,7 @@
     justify-content: center;
     align-items: center;
 }
-#nextButton {
-    background: rgb(46, 46, 49);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 12px 12px;
-    font-size: 14px;
-    font-family: 'Minion Pro Bold';
-    flex: 1;
-}
-#disableNextButton {
-    background: rgb(201, 200, 199);
-    color: white;
-    border-width: 0px;
-    border-radius: 4px;
-    padding: 12px 12px;
-    font-size: 14px;
-    font-family: 'Minion Pro Bold';
+.nextButton {
     flex: 1;
 }
 #buttonContainer {
@@ -45,3 +28,4 @@
     margin-top: 8px;
     gap: 16px;
 }
+

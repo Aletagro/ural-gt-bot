@@ -8,27 +8,15 @@
   justify-content: center;
 }
 
-#button {
-  background: rgb(245, 201, 80);
-  color: black;
-  border-radius: 4px;
-  border-width: 0px;
-  padding: 12px;
-  font-size: 16px;
-  margin-bottom: 16px;
-  width: 100%;
+.button {
+    margin-bottom: 16px;
+    width: 100%;
 }
 
-#disableButton {
-  background: rgb(201, 200, 199);
-  color: white;
-  border-radius: 4px;
-  border-width: 0px;
-  padding: 12px;
-  font-size: 16px;
-  margin-top: 16px;
-  margin-bottom: 8px;
-  width: 100%;
+.disableButton {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    width: 100%;
 }
 
 #disabledButton {
@@ -118,3 +106,4 @@
 #errorText {
   color: red;
 }
+

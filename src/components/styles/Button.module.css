@@ -1,0 +1,68 @@
+.button {
+    padding: 14px 16px;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    font-family: 'Minion Pro Bold';
+    font-size: 16px;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.button:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+.small {
+    padding: 7px 14px;
+    font-size: 14px;
+}
+
+.primary {
+    border-color: #b0953f;
+    background: #b0953f;
+    color: #fbf3dc;
+}
+
+.primary:active:not(:disabled) {
+    background: #9c8335;
+}
+
+.secondary {
+    border-color: #b0953f;
+    background: #fff;
+    color: #8a6d1f;
+}
+
+.secondary:active:not(:disabled) {
+    background: #fbf3dc;
+}
+
+.soft {
+    border: 1.5px solid #d8c88a;
+    background: #fffdf8;
+    color: #5c4a14;
+}
+
+.soft:active:not(:disabled) {
+    background: #fbf3dc;
+}
+
+.danger {
+    border-color: #8c2a1d;
+    background: #8c2a1d;
+    color: #fff;
+}
+
+.danger:active:not(:disabled) {
+    background: #741f14;
+}
+
+.button:disabled {
+    border-color: #ddd5bb;
+    background: #efeadb;
+    color: #a39a80;
+    cursor: default;
+}

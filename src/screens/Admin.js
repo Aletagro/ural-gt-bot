@@ -19,6 +19,7 @@ import isEmpty from 'lodash/isEmpty'
 import includes from 'lodash/includes'
 
 import Styles from './styles/Admin.module.css'
+import Button from '../components/Button'
 
 const Admin = () => {
     // eslint-disable-next-line
@@ -306,32 +307,35 @@ const Admin = () => {
             label='Cообщение всем игрокам'
             value={message}
         />
-        <button id={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</button>
+        <Button className={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</Button>
     </div>
 
     const renderBattleplan = (battleplan) =>
-        <div
+        <Button
             key={battleplan.id}
-            id={meta.battleplan === battleplan.title ? Styles.activeBattleplan : Styles.battleplan}
+            type={meta.battleplan === battleplan.title ? 'primary' : 'secondary'}
+            size='sm'
             onClick={handleClickBattleplan(battleplan.title)}
         >
             {battleplan.title}
-        </div>
+        </Button>
 
     return <div id='column' className='Chapter'>
         <b id={Styles.text}>Состояние турнира</b>
         <p id={Styles.text}>Статус: {setTournamentStatus(meta.isRoundActive, meta.round)}</p>
         {meta.round === 0
-            ? <button id={Styles.button} onClick={handleChangeMetaParam('rostersBeingAccepted')}>{meta.rostersBeingAccepted ? 'Прекратить приём ростеров' : 'Начать принимать ростера'}</button>
+            ? <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('rostersBeingAccepted')}>{meta.rostersBeingAccepted ? 'Прекратить приём ростеров' : 'Начать принимать ростера'}</Button>
             : null
         }
-        <button id={Styles.button} onClick={handleChangeMetaParam('isRostersShow')}>{meta.isRostersShow ? 'Скрыть ростера' : 'Открыть ростера для всех'}</button>
-        <button id={Styles.button} onClick={handleDownloadRosters} disabled={pdfLoading}>{pdfLoading ? 'Готовлю PDF…' : 'Скачать все ростеры (PDF)'}</button>
-        <button id={Styles.button} onClick={handleChangeMetaParam('isTournamentRulesShow')}>{meta.isTournamentRulesShow ? 'Скрыть регламент' : 'Открыть регламент для всех'}</button>
-        <button id={Styles.button} onClick={handleChangeMetaParam('isPlayersListShow')}>{meta.isPlayersListShow ? 'Скрыть список участников' : 'Открыть список участников для всех'}</button>
-        <button id={Styles.button} onClick={handleChangeMetaParam('isChallengesOpen')}>{meta.isChallengesOpen ? 'Закрыть челленджи' : 'Открыть челленджи'}</button>
-        <button id={Styles.button} onClick={handleChangeMetaParam('isRegOpen')}>{meta.isRegOpen ? 'Закрыть регистрацию' : 'Открыть регистрацию'}</button>
-        <button id={meta.isRoundActive ? Styles.disableButton : Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</button>
+        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isRostersShow')}>{meta.isRostersShow ? 'Скрыть ростера' : 'Открыть ростера для всех'}</Button>
+        <Button type='soft' className={Styles.button} onClick={handleDownloadRosters} disabled={pdfLoading}>{pdfLoading ? 'Готовлю PDF…' : 'Скачать все ростеры (PDF)'}</Button>
+        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isTournamentRulesShow')}>{meta.isTournamentRulesShow ? 'Скрыть регламент' : 'Открыть регламент для всех'}</Button>
+        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isPlayersListShow')}>{meta.isPlayersListShow ? 'Скрыть список участников' : 'Открыть список участников для всех'}</Button>
+        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isChallengesOpen')}>{meta.isChallengesOpen ? 'Закрыть челленджи' : 'Открыть челленджи'}</Button>
+        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isRegOpen')}>{meta.isRegOpen ? 'Закрыть регистрацию' : 'Открыть регистрацию'}</Button>
+        <Button type='soft' className={Styles.button} onClick={handleCopyBoardLink}>Скопировать ссылку на большой экран</Button>
+        {boardLink ? <input id={Styles.boardLink} value={boardLink} readOnly onFocus={(e) => e.target.select()} /> : null}
+        <Button type='primary' className={Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</Button>
         {isEmpty(pairings)
             ? null
             : <>
@@ -339,24 +343,22 @@ const Admin = () => {
                 <div id={Styles.pairingsGrid}>
                     {map(pairings, renderTable)}
                 </div>
-                <button id={isChangeButtonDisabled ? Styles.disableButton : Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
+                <Button type='soft' className={Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
                     Запарить выбранных игроков друг на друга
-                </button>
-                <button id={Styles.button} onClick={handleStartRound}>Принять паринги</button>
+                </Button>
+                <Button type='soft' className={Styles.button} onClick={handleStartRound}>Принять паринги</Button>
             </>
         }
-        <button id={Styles.button} onClick={handleCopyBoardLink}>Скопировать ссылку на большой экран</button>
-        {boardLink ? <input id={Styles.boardLink} value={boardLink} readOnly onFocus={(e) => e.target.select()} /> : null}
-        <button id={Styles.button} onClick={handleChangeRoundActive}>{meta.isRoundActive ? 'Закончить раунд' : 'Начать раунд для игроков'}</button>
+        <Button type='primary' className={Styles.button} onClick={handleChangeRoundActive}>{meta.isRoundActive ? 'Закончить раунд' : 'Начать раунд для игроков'}</Button>
         {meta.isRoundActive
             ? <>
                 <RoundTimer />
                 {meta.roundEndsAt
                     ? <div id={Styles.timerButtons}>
-                        <button id={Styles.button} onClick={handleChangeTimer(-ADJUST_STEP_MIN)}>−{ADJUST_STEP_MIN} мин</button>
-                        <button id={Styles.button} onClick={handleChangeTimer(ADJUST_STEP_MIN)}>+{ADJUST_STEP_MIN} мин</button>
+                        <Button type='soft' className={Styles.button} onClick={handleChangeTimer(-ADJUST_STEP_MIN)}>−{ADJUST_STEP_MIN} мин</Button>
+                        <Button type='soft' className={Styles.button} onClick={handleChangeTimer(ADJUST_STEP_MIN)}>+{ADJUST_STEP_MIN} мин</Button>
                     </div>
-                    : <button id={Styles.button} onClick={handleChangeTimer(0)}>Запустить таймер раунда</button>
+                    : <Button type='soft' className={Styles.button} onClick={handleChangeTimer(0)}>Запустить таймер раунда</Button>
                 }
             </>
             : null

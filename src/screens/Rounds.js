@@ -10,6 +10,7 @@ import map from 'lodash/map'
 import size from 'lodash/size'
 
 import Styles from './styles/Rounds.module.css'
+import Button from '../components/Button'
 
 const MIN_REFRESH_GAP_MS = 30 * 1000 // не чаще одного обновления в 30 секунд при возврате в приложение
 let lastRefreshAt = 0
@@ -106,13 +107,13 @@ const Rounds = () => {
 
     return <div id='column' className='Chapter'>
         <div id={Styles.buttonContainer}>
-            <button disabled={disablePrevButton} onClick={handleClickPrevRound} id={disablePrevButton ? Styles.disableNextButton : Styles.nextButton}>
+            <Button className={Styles.nextButton} disabled={disablePrevButton} onClick={handleClickPrevRound}>
                 Предыдущий
-            </button>
+            </Button>
             <b>Раунд {rounds.selected}</b>
-            <button disabled={disableNextButton} onClick={handleClickNextRound} id={disableNextButton ? Styles.disableNextButton : Styles.nextButton}>
+            <Button className={Styles.nextButton} disabled={disableNextButton} onClick={handleClickNextRound}>
                 Следующий
-            </button>
+            </Button>
         </div>
         <div>
             <div id={Styles.row} style={{'background': '#ECECEC'}}>

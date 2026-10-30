@@ -1,6 +1,6 @@
 #voteContainer {
   padding: 16px;
-  background-color: #0b0b0b;
+  background-color: #14100a;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -10,16 +10,16 @@
   text-align: center;
 }
 #subtitle {
-  color: #aaaaaa;
+  color: #cbbf98;
   font-size: 14px;
   margin-bottom: 8px;
 }
 #counter {
   font-size: 14px;
-  color: #aaaaaa;
+  color: #cbbf98;
 }
 #counter span {
-  color: #05abff;
+  color: #f0d98a;
 }
 #gridContainer {
   display: grid;
@@ -28,10 +28,10 @@
   width: 100%;
 }
 .card {
-  background-color: #141414;
+  background-color: #1d1810;
   border-radius: 8px;
   overflow: hidden;
-  border: 2px solid #222222;
+  border: 2px solid #3a3118;
   cursor: pointer;
   position: relative;
   transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
@@ -41,8 +41,8 @@
   transform: scale(0.97);
 }
 .cardSelected {
-  border-color: #05abff;
-  box-shadow: 0 0 6px #0554ff;
+  border-color: #b0953f;
+  box-shadow: 0 0 8px rgba(176, 149, 63, 0.55);
   transform: scale(1.02);
 }
 #imageContainer {
@@ -74,7 +74,7 @@
   white-space: nowrap;
 }
 #playerFaction {
-  color: #888888;
+  color: #a39a80;
   font-size: 10px;
 }
 #checkBadge {
@@ -83,8 +83,8 @@
   right: 8px;
   width: 24px;
   height: 24px;
-  background-color: #05abff;
-  color: #ffffff;
+  background-color: #b0953f;
+  color: #fbf3dc;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -98,37 +98,11 @@
   0% { transform: scale(0); }
   100% { transform: scale(1); }
 }
-#sendButton {
+.sendButton {
   position: fixed;
   bottom: 16px;
   left: 16px;
   right: 16px;
-  background: #05abff;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: 'Minion Pro Bold', sans-serif;
-  cursor: pointer;
-  box-shadow: 0 4px 15px 0554ff;
   z-index: 100;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.18);
 }
-#disabledSendButton {
-  position: fixed;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
-  background: #2a2a2c;
-  color: #555555;
-  border: none;
-  border-radius: 6px;
-  padding: 12px;
-  font-size: 16px;
-  font-weight: bold;
-  font-family: 'Minion Pro Bold', sans-serif;
-  cursor: not-allowed;
-  z-index: 100;
-}
-  
