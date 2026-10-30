@@ -109,6 +109,9 @@ export const meta = {
     isRoundActive: 0
 }
 
+// Вкладка и прокрутка экрана игрока по id игрока: чтобы вернуться из ростера или варскролла туда же, где ушли
+export const playerInfoView = {}
+
 export const rosterViewType = {
     easy: false
 }

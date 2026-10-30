@@ -1,5 +1,5 @@
-import React, {useReducer, useState, useCallback, useMemo, useEffect} from 'react'
-import {useNavigate, useLocation} from 'react-router-dom'
+import React, {useReducer, useState, useCallback, useMemo, useEffect, useLayoutEffect, useRef} from 'react'
+import {useNavigate, useLocation, useNavigationType} from 'react-router-dom'
 import {ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
@@ -14,7 +14,7 @@ import PlayerResults from '../components/PlayerResults'
 import PlayerBadges from '../components/PlayerBadges'
 import PlayerGames from '../components/PlayerGames'
 import PlayerShareCard from '../components/PlayerShareCard'
-import {players, player as _player, rosterViewType, meta} from '../utilities/appState'
+import {players, player as _player, rosterViewType, meta, playerInfoView} from '../utilities/appState'
 import {useFreshPlayers} from '../utilities/useFreshPlayers'
 import {getShareMessage} from '../utilities/shareFile'
 import {usePlayerShare} from '../utilities/usePlayerShare'
@@ -63,7 +63,39 @@ const PlayerInfo = ({setShareAction}) => {
     const rosterInfo = safeParse(player.roster_stat || playerInfo.roster_stat) || {}
     const roster = safeParse(player.roster || playerInfo.roster)
 
-    const [tab, setTab] = useState('overview')
+    // Возвращаемся назад (из ростера, варскролла и т.д.): открываем ту же вкладку и ту же позицию
+    const navigationType = useNavigationType()
+    const savedView = useRef(null)
+    if (savedView.current === null) {
+        const saved = navigationType === 'POP' ? playerInfoView[player.id] : null
+        if (!saved) delete playerInfoView[player.id]
+        savedView.current = saved || {}
+    }
+    const [tab, setTab] = useState(savedView.current.tab || 'overview')
+    const tabRef = useRef(tab)
+    tabRef.current = tab
+
+    useLayoutEffect(() => {
+        const target = savedView.current.scrollY
+        if (!target) return undefined
+        let frame
+        let attempts = 0
+        const restore = () => {
+            window.scrollTo(0, target)
+            attempts += 1
+            if (Math.abs(window.scrollY - target) > 2 && attempts < 15) frame = requestAnimationFrame(restore)
+        }
+        restore()
+        return () => cancelAnimationFrame(frame)
+    // eslint-disable-next-line
+    }, [])
+
+    // Запоминаем вкладку и прокрутку в момент ухода с экрана
+    useLayoutEffect(() => () => {
+        playerInfoView[player.id] = {tab: tabRef.current, scrollY: window.scrollY}
+    // eslint-disable-next-line
+    }, [])
+
     const [modalData, setModalData] = useState({visible: false, title: ''})
     const [isPlayerDrop, setIsPlayerDrop] = useState(false)
     const [isPlayerActive, setIsPlayerActive] = useState(Boolean(playerInfo?.status))

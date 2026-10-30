@@ -23,8 +23,12 @@ const href = window.location?.href
 const urlParams = new URLSearchParams(href.split('?')[1])
 player.tgId = tg?.initDataUnsafe?.user?.id
 player.vkId = urlParams.get('vk_user_id')
-// player.tgId = 530569849
-// player.vkId = 45749262
+// Для локальных тестов: id из .env.development.local (в git не попадает) подставляется только при npm start.
+// В боевую сборку (npm run build / deploy) этот блок не попадает, поэтому запушить его по ошибке нельзя
+if (process.env.NODE_ENV === 'development') {
+    if (process.env.REACT_APP_DEV_TG_ID) player.tgId = Number(process.env.REACT_APP_DEV_TG_ID)
+    if (process.env.REACT_APP_DEV_VK_ID) player.vkId = process.env.REACT_APP_DEV_VK_ID
+}
 
 const user = tg?.initDataUnsafe?.user
 

@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useReducer} from 'react'
+import React, {useState, useEffect, useMemo} from 'react'
 import {useNavigate} from 'react-router-dom'
-import useDebounce from '../utilities/useDebounce'
+import {useScrollRestore} from '../utilities/useScrollRestore'
 import {players, search, player, meta} from '../utilities/appState'
 import General from '../icons/blackGeneral.svg'
 import PaintIcon from '../icons/PaintIcon'
@@ -21,40 +21,55 @@ const lastColumnValues = {
     'Sport': 'my_sport',
 }
 
+const parseStat = (value) => {
+    try {
+        return JSON.parse(value) || {}
+    } catch (e) {
+        return {}
+    }
+}
+
 const Players = () => {
     const navigate = useNavigate()
-    const [searchValue, setSearchValue] = useState(search.playersValue)
-    const [lastColumn, setLastColumn] = useState('ТО')
-    // eslint-disable-next-line
-    const [_, forceUpdate] = useReducer((x) => x + 1, 0)
-
-    useDebounce(() => {
-        if (searchValue) {
-            const _players = filter(players.standing, (player) => {
-                const rosterInfo = JSON.parse(player.roster_stat) || {}
-                return includes(lowerCase(`${player.surname} ${player.name}`), lowerCase(searchValue)) ||
-                    includes(lowerCase(rosterInfo?.allegiance), lowerCase(searchValue)) ||
-                    includes(lowerCase(rosterInfo.grandAlliance), lowerCase(searchValue)) ||
-                    includes(lowerCase(player.city), lowerCase(searchValue))
-            })
-            search.players = _players
-        } else {
-            search.players = players.standing
-        }
-        forceUpdate()
-      }, [searchValue], 300
-    )
+    // вернулись с карточки игрока: возвращаем прокрутку
+    useScrollRestore('players')
+    const [searchValue, setSearchValue] = useState(search.playersValue || '')
+    // по запросу фильтруем с задержкой, пока человек печатает. При возврате на экран запрос применяется сразу
+    const [query, setQuery] = useState(search.playersValue || '')
+    const [lastColumn, setLastColumn] = useState(search.playersLastColumn || 'ТО')
+    const [standing, setStanding] = useState(players.standing)
 
     useEffect(() => {
+        const timeout = setTimeout(() => setQuery(searchValue), 300)
+        return () => clearTimeout(timeout)
+    }, [searchValue])
+
+    // Список считается из таблицы и запроса, а не хранится отдельно: новая таблица с сервера не сбрасывает фильтр и ничего не мигает
+    const list = useMemo(() => {
+        const text = lowerCase(query)
+        if (!text) return standing
+        return filter(standing, (item) => {
+            const rosterInfo = parseStat(item.roster_stat)
+            return includes(lowerCase(`${item.surname} ${item.name}`), text) ||
+                includes(lowerCase(rosterInfo.allegiance), text) ||
+                includes(lowerCase(rosterInfo.grandAlliance), text) ||
+                includes(lowerCase(item.city), text)
+        })
+    }, [standing, query])
+
+    useEffect(() => {
+        let stopped = false
         fetch(`${Constants.domain}/players/ranking`)
             .then(response => response.json())
             .then(data => {
                 const _players = map(data.players, (_player, index) => ({..._player, place: index + 1}))
                 players.standing = _players
-                search.players = _players
-                forceUpdate()
+                if (!stopped) setStanding(_players)
             })
             .catch(error => console.error(error))
+        return () => {
+            stopped = true
+        }
     }, [])
 
     const handleClickPlayer = (_player) => () => {
@@ -74,6 +89,7 @@ const Players = () => {
             : lastColumn === 'Paint'
                 ? 'Sport'
                 : 'ТО'
+        search.playersLastColumn = newValue
         setLastColumn(newValue)
     }
 
@@ -107,24 +123,24 @@ const Players = () => {
     </div>
 
     const renderPlayer = (player, index) => {
-        const allegiance = JSON.parse(player.roster_stat)?.allegiance
+        const allegiance = parseStat(player.roster_stat).allegiance
         return <button key={index} id={Styles.playerContainer} onClick={handleClickPlayer(player)}>
             {renderRow(player.place, `${player.surname} ${player.name}`, player.city, allegiance, player.win, player.draw, player.final_formula, player[lastColumnValues[lastColumn]] || (player[lastColumnValues[lastColumn]] === 0 ? 0 : player.tp_sum), index % 2, player.roster_stat, player.paint_checked, player.has_photo)}
         </button>
     }
 
     return <>
-        <SearchBar onChange={handleSearch} />
+        <SearchBar onChange={handleSearch} defaultValue={searchValue || ''} />
         {player.isJudge
             ? <p id={Styles.lastColumnContainer} onClick={handleChangeLastColumn}>Что отображать в последнем столбце: <b>{lastColumn}</b></p>
             : null
         }
         <div id='column' className='Chapter'>
-            {isEmpty(search.players) && searchValue
+            {isEmpty(list) && query
                 ? <p id={Styles.empty}>Игроков, соответствующий поиску не найдено</p>
                 : <div>
                     {renderRow('№', 'Игрок', undefined, 'Армия', 'W', 'D', 'ИО', lastColumn, true)}
-                    {map(search.players, renderPlayer)}
+                    {map(list, renderPlayer)}
                 </div>
             }
         </div>
