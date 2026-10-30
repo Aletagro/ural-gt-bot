@@ -1,6 +1,35 @@
-#row {
+/* Таблица челленджей: тот же вид, что у турнирной таблицы */
+.table {
+    overflow: hidden;
+    border: 1.5px solid #d8c88a;
+    border-radius: 20px;
+    background: #fffdf8;
+}
+.row {
     display: flex;
-    padding: 16px 0px;
+    align-items: center;
+    padding: 11px 8px;
+    border-bottom: 1px solid #efe6c6;
+    background: #fffdf8;
+    color: #1d1810;
+}
+.row:last-child {
+    border-bottom: none;
+}
+.odd {
+    background: #fbf6e6;
+}
+.header {
+    padding: 10px 8px;
+    border-bottom: none;
+    background: linear-gradient(180deg, #2a2210, #14100a);
+    box-shadow: inset 0 -2px 0 #b0953f;
+    font-family: 'Minion Pro Bold';
+    font-size: 13px;
+    letter-spacing: 0.3px;
+}
+.header p {
+    color: #f0d98a;
 }
 #сolumn {
     display: flex;
@@ -25,37 +54,108 @@
 }
 #subtitle {
     padding-top: 2px;
-    color: darkgray;
+    color: #8a7a4f;
     font-size: 12px;
 }
 .button {
     margin-bottom: 16px;
 }
-#searchPlayerContainer {
-    padding: 8px;
-}
 #listTitle {
-    font-size: 18px;
+    font-size: 20px;
     font-family: 'Minion Pro Bold';
     text-align: center;
-    padding-top: 16px;
-    padding-bottom: 12px
+    color: #1d1810;
+    padding-top: 12px;
+    padding-bottom: 14px;
 }
-#playerChallengesContainer {
-    padding-bottom: 16px;
+#listTitle::after {
+    content: '';
+    display: block;
+    width: 64px;
+    height: 2px;
+    margin: 8px auto 0;
+    background: linear-gradient(90deg, transparent, #b0953f, transparent);
 }
-#playerChallenge {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 4px;
-}
-#playerChallengeTitleContainer {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-.playerChallengeButton {
-    margin-left: 4px;
+.note {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    border: 1.5px dashed #d8c88a;
+    border-radius: 16px;
+    color: #8a7a4f;
+    text-align: center;
 }
 
+/* Входящие челленджи */
+#playerChallengesContainer {
+    padding-bottom: 8px;
+}
+.incoming {
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1.5px solid #c9b36a;
+    border-radius: 20px;
+    background: #f6ecc9;
+}
+.incomingInfo {
+    padding: 0 4px 10px;
+}
+#incomingName {
+    font-family: 'Minion Pro Bold';
+    font-size: 17px;
+    color: #1d1810;
+}
+.incomingActions {
+    display: flex;
+    gap: 8px;
+}
+.playerChallengeButton {
+    flex: 1;
+}
+
+/* Поиск соперника */
+.searchList {
+    overflow: hidden;
+    margin-bottom: 16px;
+    border: 1.5px solid #d8c88a;
+    border-radius: 20px;
+    background: #fffdf8;
+}
+.searchPlayer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 11px 14px;
+    border: none;
+    border-bottom: 1px solid #efe6c6;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+.searchPlayer:last-child {
+    border-bottom: none;
+}
+.searchPlayer:active {
+    background: #f3e9c4;
+}
+.searchPlayerIndex {
+    flex: none;
+    min-width: 20px;
+    color: #8a6d1f;
+    font-family: 'Minion Pro Bold';
+    text-align: center;
+}
+.searchPlayerInfo {
+    display: flex;
+    flex-direction: column;
+}
+.searchPlayerName {
+    color: #1d1810;
+    font-size: 16px;
+}
+.searchPlayerCity {
+    color: #8a7a4f;
+    font-size: 12px;
+}

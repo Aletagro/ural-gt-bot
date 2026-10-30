@@ -184,10 +184,10 @@ const Challenges = () => {
         <ModalButton onClick={handleCloseModal}>Нет, мне нужно еще подумать!</ModalButton>
     </ModalActions>
 
-    const renderRow = () => <div id={Styles.row} style={{'background': '#ECECEC'}}>
+    const renderRow = () => <div className={`${Styles.row} ${Styles.header}`}>
         <p id={Styles.smallColumn}>№</p>
-        <p id={Styles.сolumn}>Первый Игрок</p>
-        <p id={Styles.сolumn}>Второй Игрок</p>
+        <p id={Styles.сolumn}>Первый игрок</p>
+        <p id={Styles.сolumn}>Второй игрок</p>
     </div>
 
     const renderPlayer = (_player) => <div id={Styles.playerContainer} onClick={handleNavigateToPlayerInfo(_player)}>
@@ -195,28 +195,31 @@ const Challenges = () => {
         {_player.city ? <p id={Styles.subtitle}>{_player.city}</p> : null}
     </div>
 
-    const renderSearchPlayer = (_player, index) => <div key={_player.id} onClick={handleClickPlayer(_player)} id={Styles.searchPlayerContainer} style={{'background': `${index % 2 ? '#ECECEC' : ''}`}}>
-        <p id={Styles.title}>{index + 1}. {_player.surname} {_player.name}</p>
-        <p id={Styles.subtitle}>{_player.city}</p>
-    </div>
+    const renderSearchPlayer = (_player, index) => <button key={_player.id} onClick={handleClickPlayer(_player)} className={Styles.searchPlayer}>
+        <span className={Styles.searchPlayerIndex}>{index + 1}</span>
+        <span className={Styles.searchPlayerInfo}>
+            <span className={Styles.searchPlayerName}>{_player.surname} {_player.name}</span>
+            {_player.city ? <span className={Styles.searchPlayerCity}>{_player.city}</span> : null}
+        </span>
+    </button>
 
-    const renderChallenge = (сhallenge, index) => <div key={index} id={Styles.row} style={{'background': `${index % 2 ? '#ECECEC' : ''}`}}>
+    const renderChallenge = (сhallenge, index) => <div key={index} className={`${Styles.row} ${index % 2 ? Styles.odd : ''}`}>
         <p id={Styles.smallColumn}>{index + 1}</p>
         {renderPlayer(сhallenge.player1)}
         {renderPlayer(сhallenge.player2)}
     </div>
 
-    const renderPlayerChallenge = (_player, index) => <div key={_player.id} id={Styles.playerChallenge} style={{'background': `${index % 2 ? '' : '#ECECEC'}`}}>
-        <div id={Styles.playerChallengeTitleContainer}>
-            <p id={Styles.title}>{index + 1}. {_player.surname} {_player.name}</p>
-            <p id={Styles.subtitle}>{_player.city}</p>
+    const renderPlayerChallenge = (_player) => <div key={_player.id} className={Styles.incoming}>
+        <div className={Styles.incomingInfo}>
+            <p id={Styles.incomingName}>{_player.surname} {_player.name}</p>
+            {_player.city ? <p id={Styles.subtitle}>{_player.city}</p> : null}
         </div>
-        <div>
+        <div className={Styles.incomingActions}>
             <Button size='sm' className={Styles.playerChallengeButton} onClick={handleOpenAcceptChallengeModal(_player)}>Принять</Button>
-            <Button size='sm' className={Styles.playerChallengeButton} onClick={handleOpenDeclineChallengeModal(_player)}>Отказать</Button>
+            <Button size='sm' type='secondary' className={Styles.playerChallengeButton} onClick={handleOpenDeclineChallengeModal(_player)}>Отказать</Button>
         </div>
     </div>
-    
+
     return <div id='column' className='Chapter'>
         {player.info?.challenge_status === 'accepted' || !player.info?.id
             ? null
@@ -226,15 +229,18 @@ const Challenges = () => {
                         ? <div id={Styles.playerChallengesContainer}>
                             {map(playerChallenges, renderPlayerChallenge)}
                         </div>
-                        : <p>Вам еще никто не бросил челлендж, возможно, что вас просто боятся!</p>
-                    : <Button className={Styles.button} onClick={handleGetPlayerChallenges}>Посмотреть кто бросил вам Челлендж</Button>
+                        : <p className={Styles.note}>Вам еще никто не бросил челлендж, возможно, что вас просто боятся!</p>
+                    : <Button className={Styles.button} onClick={handleGetPlayerChallenges} type='secondary'>Посмотреть кто бросил вам Челлендж</Button>
                 }
                 {player.info?.challenge_status === 'sent'
                     ? null
                     : showPLayers
                         ? <div>
                             <SearchBar onChange={handleSearch} placeholder='Введите имя' type='inline' />
-                            {map(playersList, renderSearchPlayer)}
+                            {size(playersList)
+                                ? <div className={Styles.searchList}>{map(playersList, renderSearchPlayer)}</div>
+                                : null
+                            }
                         </div>
                         : <Button className={Styles.button} onClick={handleMakeChallenge}>Бросить Вызов!</Button>
                 }
@@ -243,8 +249,10 @@ const Challenges = () => {
         {size(players.сhallenges)
             ? <div>
                 <p id={Styles.listTitle}>Список Челленджей</p>
-                {renderRow('№', 'Первый Игрок', 'Второй Игрок', true)}
-                {map(players.сhallenges, renderChallenge)}
+                <div className={Styles.table}>
+                    {renderRow()}
+                    {map(players.сhallenges, renderChallenge)}
+                </div>
             </div>
             : <p id={Styles.listTitle}>Пока список челленджей пуст</p>
         }

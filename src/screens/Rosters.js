@@ -84,7 +84,6 @@ const Rosters = ({setShareAction}) => {
     </div>
 
     const renderRoster = (player, index) => {
-        console.log('player', player)
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={player.id} id={Styles.playerContainer} onClick={handleClickPlayer(player, index)}>
             {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, index % 2, player.city)}
