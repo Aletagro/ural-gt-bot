@@ -38,15 +38,17 @@ const TournamentRules = () => {
     const renderBattleplan = (battleplan) =>
         <Button type='soft' size='sm' className={Styles.battleplan} key={battleplan?.id} onClick={handleClickBattleplan(battleplan)}>{battleplan?.title}</Button>
 
-    return <div id='column' className='Chapter'>
+    return <div id='column' className={`Chapter ${Styles.rules}`}>
         <p id={Styles.text}>Турнир проводится по системе «Warhammer Age of Sigmar Pitched Battles» 7-8 ноября 2026.</p>
         <p id={Styles.text}><b>Место проведения турнира:</b> г. Новосибирск, Центр культуры и отдыха «Победа», ул. Ленина, дом 7, (метро «Площадь Ленина»).</p>
         <br/>
-        <p id={Styles.text}>Размер армий 2 000 pts</p>
-        <p id={Styles.text}>Размер столов 60 х 44</p>
-        <p id={Styles.text}>Продолжительность игры – 3 часа</p>
-        <p id={Styles.text}>Количество игр – 5</p>
-        <p id={Styles.text}>Взнос на турнир составит <b>4 000 рублей</b></p>
+        <div className={Styles.facts}>
+            <p id={Styles.text}>Размер армий 2 000 pts</p>
+            <p id={Styles.text}>Размер столов 60 х 44</p>
+            <p id={Styles.text}>Продолжительность игры – 3 часа</p>
+            <p id={Styles.text}>Количество игр – 5</p>
+            <p id={Styles.text}>Взнос на турнир составит <b>4 000 рублей</b></p>
+        </div>
         <br/>
         <p id={Styles.text}>Подтверждением регистрации является оплата турнирного взноса (4 000) переводом на номер <p id={Styles.link} onClick={handlleClickPhone}>+79138998162</p> (Сбер, без комментов, получатель - Владимир У.). Чек вкладываем в письмо с темой "Айс 26 взнос фамилия_игрока", отправляем на адрес <p id={Styles.link} onClick={handlleClickMail}>IceHammerAoS@gmail.com</p>, готово - вы великолепны!</p>
         <p id={Styles.text}><b>Подача листа:</b> Лист загружается в данном приложение</p>

@@ -1,20 +1,91 @@
+/* Страницы правил: читаемый текст, золотые заголовки, таблицы в нашем стиле */
+.rules {
+  color: #1d1810;
+  line-height: 1.45;
+}
 #text {
   padding-bottom: 8px;
 }
 #link {
   padding-bottom: 8px;
   word-break: break-all;
-}
-.battleplan {
-    width: 100%;
-    margin-bottom: 12px;
-}
-#link {
-  color: blue;
   display: inline;
+  color: #8a6d1f;
+  border-bottom: 1px dashed #b0953f;
+  cursor: pointer;
 }
-.button {
-    margin-top: 8px;
-    margin-bottom: 8px;
+.rules h2 {
+  margin: 8px 0 10px;
+  font-family: 'Minion Pro Bold';
+  font-size: 22px;
+  color: #1d1810;
+}
+.rules h3 {
+  margin: 12px 0 10px;
+  font-family: 'Minion Pro Bold';
+  font-size: 20px;
+  color: #1d1810;
+}
+.rules h3::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 2px;
+  margin-top: 6px;
+  background: linear-gradient(90deg, #b0953f, transparent);
+}
+.rules > h2:last-of-type {
+  margin-top: 16px;
+  text-align: center;
+  color: #8a6d1f;
 }
 
+/* Ключевые факты о турнире */
+.facts {
+  margin: 4px 0 8px;
+  padding: 12px 14px 4px;
+  border: 1.5px solid #c9b36a;
+  border-radius: 20px;
+  background: #f6ecc9;
+}
+
+/* Таблицы: расписание и подсчёт очков */
+.rules table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1.5px solid #d8c88a;
+  border-radius: 16px;
+  background: #fffdf8;
+}
+.rules th,
+.rules td {
+  padding: 9px 8px;
+  border: none;
+  border-bottom: 1px solid #efe6c6;
+  text-align: center;
+}
+.rules th {
+  background: linear-gradient(180deg, #2a2210, #14100a);
+  box-shadow: inset 0 -2px 0 #b0953f;
+  color: #f0d98a;
+  font-family: 'Minion Pro Bold';
+  font-size: 14px;
+}
+.rules tr:last-child td {
+  border-bottom: none;
+}
+.rules tr:nth-child(even) td {
+  background: #fbf6e6;
+}
+
+.battleplan {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.button {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}

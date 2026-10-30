@@ -52,7 +52,7 @@ const AppendixRules = () => {
         <p id={Styles.text}>Степень пренебрежения чистотой стола перед следующими игроками на нем (а также любые спорные ситуации) и правомерность штрафа выясняются в присутствии судьи.</p>
     </>
 
-    return <div id='column' className='Chapter'>
+    return <div id='column' className={`Chapter ${Styles.rules}`}>
         {index === 1
             ? renderСhessСlock()
             : index === 2
