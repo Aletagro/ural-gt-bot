@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import CircularProgress from '@mui/joy/CircularProgress'
 import Constants from '../Constants'
 import {player, players, fetching, meta} from '../utilities/appState'
-import FloatingLabelInput from '../components/FloatingLabelInput'
+import FloatingLabelInput, {fieldSx} from '../components/FloatingLabelInput'
 import MainMenu from '../components/MainMenu'
 import HeaderImage from '../components/HeaderImage'
 import Modal from '../components/Modal'
@@ -14,6 +14,7 @@ import {fetchMeta} from '../utilities/applyMeta'
 import Image from '../images/IceHammer.png'
 
 import size from 'lodash/size'
+import map from 'lodash/map'
 import includes from 'lodash/includes'
 import findIndex from 'lodash/findIndex'
 
@@ -36,6 +37,29 @@ const user = tg?.initDataUnsafe?.user
 
 const inputStyle = {
     'margin': '16px',
+}
+
+// Выпадающий список городов в нашем стиле
+const listboxSx = {
+    mt: '4px',
+    p: '6px',
+    border: '1.5px solid #d8c88a',
+    borderRadius: '16px',
+    background: '#fffdf8',
+    boxShadow: '0 8px 24px rgba(20, 16, 10, 0.18)',
+    fontFamily: 'Minion Pro Regular',
+    '--ListItem-radius': '10px',
+    '& .MuiAutocomplete-option': {
+        color: '#1d1810',
+        fontSize: '16px',
+    },
+    '& .MuiAutocomplete-option[aria-selected="true"]': {
+        background: '#fbf3dc',
+        fontFamily: 'Minion Pro Bold',
+    },
+    '& .MuiAutocomplete-option:hover, & .MuiAutocomplete-option.Mui-focused': {
+        background: '#f3e9c4',
+    },
 }
 
 const cities = [
@@ -84,7 +108,10 @@ const Registration = () => {
     }, [player.reg, players.data, meta.playersLimit])
 
     const isDisableButton = !name || !surname || !city
-    if (includes(Constants.judgesIds, player.tgId)) {
+    // Судья определяется по Telegram id или по VK id, хватает любого из них
+    const isJudgeByTg = includes(Constants.judgesIds, player.tgId)
+    const isJudgeByVk = Boolean(player.vkId) && includes(map(Constants.judgesVkIds, String), String(player.vkId))
+    if (isJudgeByTg || isJudgeByVk) {
         player.isJudge = true
     }
 
@@ -274,7 +301,8 @@ const Registration = () => {
             placeholder='Город'
             onInputChange={handleChangeCity}
             options={cities.sort()}
-            sx={inputStyle}
+            sx={[fieldSx, inputStyle]}
+            slotProps={{listbox: {sx: listboxSx}}}
             value={city}
             autoComplete={true}
             autoSelect={true}
@@ -286,7 +314,7 @@ const Registration = () => {
             </Button>
         </div>
         <div id={Styles.buttonContainer}>
-            <Button className={Styles.regButton} onClick={handleClickGuest}>
+            <Button className={Styles.regButton} onClick={handleClickGuest} type='secondary'>
                 Войти как гость
             </Button>
         </div>

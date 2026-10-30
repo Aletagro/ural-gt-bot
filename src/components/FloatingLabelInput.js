@@ -63,7 +63,7 @@ const InnerInput = (props) => {
 }
 
 // Общий вид поля: кремовый фон, золотая рамка и подсветка при фокусе. Через style экраны задают только расположение (ширина, отступы)
-const baseSx = {
+export const fieldSx = {
   '--Input-minHeight': '52px',
   '--Input-radius': '16px',
   '--Input-paddingInline': '16px',
@@ -87,7 +87,7 @@ const FloatingLabelInput = ({style, onChange, onBlur, placeholder, label, value,
     onBlur={onBlur}
     slots={{input: InnerInput}}
     slotProps={{input: {placeholder: placeholder || '', label, inputMode}}}
-    sx={[baseSx, style]}
+    sx={[fieldSx, style]}
     value={value}
     defaultValue={defaultValue}
   />

@@ -1,9 +1,18 @@
-#container {
-    padding: 0px 16px;
-}
 #title {
+    padding: 8px 16px 0;
+    font-family: 'Minion Pro Bold';
+    font-size: 24px;
+    line-height: 1.2;
     text-align: center;
-    padding: 0 16px;
+    color: #1d1810;
+}
+#title::after {
+    content: '';
+    display: block;
+    width: 64px;
+    height: 2px;
+    margin: 10px auto 16px;
+    background: linear-gradient(90deg, transparent, #b0953f, transparent);
 }
 #buttonContainer {
     display: flex;
@@ -13,48 +22,8 @@
     margin-bottom: 12px;
     width: 100%;
 }
-#button {
-    display: flex;
-    justify-content: space-between;
-    background-color: rgb(236, 236, 236);
-    color: black;
-    padding: 8px;
-    margin-bottom: 8px;
-    font-size: 16px;
-    font-family: 'Minion Pro Bold';
-    text-align: start;
-    cursor: pointer;
-    align-items: center;
-    border-radius: 8px;
-    width: 100%;
-    border: 1px solid rgb(211, 211, 211);
-}
 #loaderContainer {
     display: flex;
     justify-content: center;
     padding-top: 100px;
 }
-#notice {
-    background: green;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-}
-#warningNotice {
-    background: yellow;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-}
-#errorNotice {
-    background: red;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-}
-#noticeText {
-    text-align: center;
-    padding: 0 16px;
-    color: white;
-}
-
