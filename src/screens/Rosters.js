@@ -3,7 +3,7 @@ import useDebounce from '../utilities/useDebounce'
 import {useNavigate} from 'react-router-dom'
 import {ToastContainer} from 'react-toastify'
 import {players, search} from '../utilities/appState'
-import {sortByName} from '../utilities/utils'
+import {sortByName, getArmyImage} from '../utilities/utils'
 import {useRosterPdf} from '../utilities/useRosterPdf'
 import Constants from '../Constants'
 
@@ -68,16 +68,26 @@ const Rosters = ({setShareAction}) => {
         setSearchValue(e.target.value)
     }
 
-    const renderRow = (number, player, army, isOddRow) => <div id={Styles.row} style={{'background': `${isOddRow ? '#ECECEC' : ''}`}}>
+    const renderRow = (number, player, army, isOddRow, city, isHeader) => <div className={`${Styles.row} ${isHeader ? Styles.header : isOddRow ? Styles.odd : ''}`}>
         <p id={Styles.smallColumn}>{number}</p>
-        <p id={Styles.сolumn}>{player}</p>
-        <p id={Styles.сolumn}>{army}</p>
+        <div id={Styles.playerInfo}>
+            <p id={Styles.сolumn}>{player}</p>
+            {city ? <p id={Styles.subtitle}>{city}</p> : null}
+        </div>
+        <div className={Styles.armyCell}>
+            {!isHeader && getArmyImage(army)
+                ? <img className={Styles.armyThumb} src={getArmyImage(army)} loading='lazy' alt='' />
+                : null
+            }
+            <span>{army}</span>
+        </div>
     </div>
 
     const renderRoster = (player, index) => {
+        console.log('player', player)
         const allegiance = JSON.parse(player.roster_stat)?.allegiance
         return <button key={player.id} id={Styles.playerContainer} onClick={handleClickPlayer(player, index)}>
-            {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, index % 2)}
+            {renderRow(index + 1, `${player.surname} ${player.name}`, allegiance, index % 2, player.city)}
         </button>
     }
     
@@ -86,8 +96,8 @@ const Rosters = ({setShareAction}) => {
         <div id='column' className='Chapter'>
             {isEmpty(search.rosters) && searchValue
                 ? <p id={Styles.empty}>Игроков, соответствующий поиску не найдено</p>
-                : <div>
-                    {renderRow('№', 'Игрок', 'Армия', true)}
+                : <div className={Styles.table}>
+                    {renderRow('№', 'Игрок', 'Армия', false, undefined, true)}
                     {map(search.rosters, renderRoster)}
                 </div>
             }
