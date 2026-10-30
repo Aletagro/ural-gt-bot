@@ -16,6 +16,7 @@ import PlayerGames from '../components/PlayerGames'
 import PlayerShareCard from '../components/PlayerShareCard'
 import {players, player as _player, rosterViewType, meta} from '../utilities/appState'
 import {useFreshPlayers} from '../utilities/useFreshPlayers'
+import {getShareMessage} from '../utilities/shareFile'
 import {usePlayerShare} from '../utilities/usePlayerShare'
 import {ROUNDS_COUNT} from '../utilities/gamesCalc'
 import {addDomainForUrl} from '../utilities/utils'
@@ -75,7 +76,7 @@ const PlayerInfo = ({setShareAction}) => {
         [data, standing, isFinished]
     )
     const card = useMemo(() => calcPlayerCard(context, player.id, ROUNDS_COUNT), [context, player.id])
-    const handleUnsupported = useCallback(() => toast.error('На этом устройстве нельзя поделиться картинкой', Constants.toastParams), [])
+    const handleUnsupported = useCallback((status) => toast.error(getShareMessage(status, 'картинкой'), Constants.toastParams), [])
     const {shareRef, share} = usePlayerShare(card, isFinished, handleUnsupported)
 
     useEffect(() => {

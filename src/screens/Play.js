@@ -1,6 +1,9 @@
 import React, {useState, useEffect, useReducer, useCallback, useRef} from 'react'
 import {useNavigate} from 'react-router-dom'
 import html2canvas from 'html2canvas'
+import {ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import {shareFile, getShareMessage} from '../utilities/shareFile'
 import {player, players, meta} from '../utilities/appState'
 import {getArmyImage} from '../utilities/utils'
 import FloatingLabelInput from '../components/FloatingLabelInput'
@@ -134,36 +137,33 @@ const Play = ({setShareAction}) => {
         setMinorWin(value)
     }
 
+    const shareCache = useRef({key: null, file: null})
+
     const handleClickShare = useCallback(async () => {
+        if (!bannerRef.current) return
         try {
-          const canvas = await html2canvas(bannerRef.current, {
-            useCORS: true,
-            backgroundColor: '#000000'
-          })
-          canvas.toBlob(async (blob) => {
-            if (!blob) {
-              console.error('Не удалось создать файл картинки')
-              return
+            const key = JSON.stringify([info?.round, info?.first_player_tp, info?.second_player_tp, info?.results_submitted])
+            if (shareCache.current.key !== key) {
+                const canvas = await html2canvas(bannerRef.current, {
+                    useCORS: true,
+                    backgroundColor: '#000000'
+                })
+                const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/png'))
+                if (!blob) throw new Error('Не удалось создать файл картинки')
+                shareCache.current = {key, file: new File([blob], 'match-result.png', {type: 'image/png'})}
             }
-            const file = new File([blob], 'match-result.png', {type: 'image/png'})
             const shareText = info?.results_submitted
                 ? `IceHammer 2026. Раунд ${info?.round}. ${info?.firstPlayer?.surname} ${info?.firstPlayer?.name} (${info.first_player_vp}) ${info.first_player_tp} - ${info.second_player_tp} (${info.second_player_vp}) ${info?.secondPlayer?.surname} ${info?.secondPlayer?.name}`
                 : `IceHammer 2026. Раунд ${info?.round}. ${info?.firstPlayer?.surname} ${info?.firstPlayer?.name} vs ${info?.secondPlayer?.surname} ${info?.secondPlayer?.name}. Грядёт великая битва!`
-            if (navigator.canShare && navigator.canShare({files: [file]})) {
-              try {
-                await navigator.share({
-                    title: `IceHammer 2026. Раунд ${meta?.round}`,
-                    text: shareText, 
-                    files: [file]
-                })
-              } catch (error) {
-                console.error('Ошибка системного шеринга:', error);
-              }
-            }
-          }, 'image/png');
-    
+            const status = await shareFile(shareCache.current.file, {
+                title: `IceHammer 2026. Раунд ${meta?.round}`,
+                text: shareText
+            })
+            const message = getShareMessage(status, 'картинкой')
+            if (message) toast.error(message, Constants.toastParams)
         } catch (error) {
-          console.error('Ошибка системного шеринга:', error);
+            console.error('Ошибка при подготовке картинки:', error)
+            toast.error('Не получилось подготовить картинку', Constants.toastParams)
         }
     }, [info])
 
@@ -192,12 +192,14 @@ const Play = ({setShareAction}) => {
 
     if (isFinished) {
         return <div id='column' className='Chapter'>
+            <ToastContainer />
             <b id={Styles.result}>Результат вашей игры принят</b>
             {renderImageBlock()}
         </div>
     }
 
     return <div id='column' className='Chapter'>
+        <ToastContainer />
         <RoundTimer />
         <b id={Styles.table}>Стол {info?.table}</b>
         {renderImageBlock()}

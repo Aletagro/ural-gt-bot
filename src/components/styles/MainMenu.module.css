@@ -8,6 +8,8 @@
     border: 2px solid #b0953f;
     border-radius: 20px;
     background: #000;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 .heroImage {

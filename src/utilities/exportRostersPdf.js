@@ -33,27 +33,3 @@ export const buildRostersPdf = async (playersData, tournamentName) => {
     const blob = await pdf(<RostersPdf entries={entries} tournamentName={tournamentName} />).toBlob()
     return {blob, count: entries.length}
 }
-
-// Выдача файла: системное «Поделиться» -> обычное скачивание
-export const deliverPdf = async (blob, fileName) => {
-    const file = new File([blob], fileName, {type: 'application/pdf'})
-
-    if (navigator.canShare?.({files: [file]})) {
-        try {
-            await navigator.share({files: [file], title: fileName})
-            return 'shared'
-        } catch (e) {
-            if (e.name === 'AbortError') return 'cancelled'
-        }
-    }
-
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = fileName
-    document.body.appendChild(a)
-    a.click()
-    a.remove()
-    setTimeout(() => URL.revokeObjectURL(url), 10000)
-    return 'downloaded'
-}

@@ -1,10 +1,10 @@
-import React, {useEffect, useState, useReducer, useCallback} from 'react'
+import React, {useEffect, useState, useReducer} from 'react'
 import useDebounce from '../utilities/useDebounce'
 import {useNavigate} from 'react-router-dom'
-import {ToastContainer, toast} from 'react-toastify'
+import {ToastContainer} from 'react-toastify'
 import {players, search} from '../utilities/appState'
 import {sortByName} from '../utilities/utils'
-import {buildRostersPdf, deliverPdf} from '../utilities/exportRostersPdf'
+import {useRosterPdf} from '../utilities/useRosterPdf'
 import Constants from '../Constants'
 
 import map from 'lodash/map'
@@ -52,16 +52,7 @@ const Rosters = ({setShareAction}) => {
         }
     }, [])
 
-    const handleDownloadRosters = useCallback(async () => {
-        try {
-            const result = await buildRostersPdf(players.data, 'IceHammer 2026')
-            if (!result) return toast.info('Нет ни одного ростера')
-            await deliverPdf(result.blob, 'IceHammer 2026.pdf')
-        } catch (e) {
-            console.error(e)
-            toast.error('Не удалось собрать PDF')
-        }
-    }, [])
+    const {start: handleDownloadRosters, readyModal} = useRosterPdf()
 
     useEffect(() => {
         setShareAction(() => handleDownloadRosters)
@@ -102,6 +93,7 @@ const Rosters = ({setShareAction}) => {
             }
         </div>
         <ToastContainer />
+        {readyModal}
     </>
 }
 

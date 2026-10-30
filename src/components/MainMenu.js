@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef} from 'react'
 import {useNavigate} from 'react-router-dom'
 
 import {player, meta} from '../utilities/appState'
@@ -52,8 +52,25 @@ const MenuRow = ({item}) => {
     </button>
 }
 
+const SECRET_TAPS = 7 // столько нажатий подряд на баннер открывают экран разработчика
+const SECRET_TAP_GAP_MS = 1500 // пауза между нажатиями, после которой счёт начинается заново
+
 // Главное меню: шапка со статусом и пункты, собранные в группы. Условия показа те же, что были раньше
 const MainMenu = ({isPlayerInWaitingList, onCallJudge, onOpenDrop}) => {
+    const navigate = useNavigate()
+    const taps = useRef({count: 0, last: 0})
+
+    // Скрытый вход на /developer: SECRET_TAPS нажатий подряд на баннер
+    const handleBannerTap = () => {
+        const now = Date.now()
+        taps.current.count = now - taps.current.last > SECRET_TAP_GAP_MS ? 1 : taps.current.count + 1
+        taps.current.last = now
+        if (taps.current.count >= SECRET_TAPS) {
+            taps.current.count = 0
+            navigate('/developer', {state: {title: 'Разработчик'}})
+        }
+    }
+
     const sections = [
         {
             key: 'now',
@@ -152,7 +169,7 @@ const MainMenu = ({isPlayerInWaitingList, onCallJudge, onOpenDrop}) => {
     const canDrop = !meta.round && player.reg
 
     return <>
-        <div className={Styles.hero}>
+        <div className={Styles.hero} onClick={handleBannerTap}>
             <img className={Styles.heroImage} src={Image} alt='Ice Hammer 2026' />
             <div className={Styles.heroShade} />
             <div className={Styles.heroBottom}>
