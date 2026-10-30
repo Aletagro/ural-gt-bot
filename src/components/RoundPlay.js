@@ -12,13 +12,8 @@ import Styles from './styles/RoundPlay.module.css'
 import Button from './Button'
 
 const inputStyle = {
-    '--Input-minHeight': '48px',
     'width': '100%',
-    'borderRadius': '4px',
     'marginBottom': '16px',
-    'borderColor': '#B4B4B4',
-    'boxShadow': 'none',
-    'fontFamily': 'Minion Pro Regular'
 }
 
 const RoundPlay = ({play, table, round, onResultChange}) => {

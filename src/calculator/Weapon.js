@@ -8,32 +8,14 @@ import Styles from './styles/Weapon.module.css'
 
 const inputStyles = {
     name: {
-        '--Input-minHeight': '48px',
-        borderRadius: '4px',
-        'margin-bottom': '16px',
-        'border-color': '#B4B4B4',
-        color: '#000000',
-        'box-shadow': 'none',
-        'font-family': 'Minion Pro Bold'
+        'margin-bottom': '16px'
     },
     characteristic: {
-        '--Input-minHeight': '48px',
-        borderRadius: '4px',
         'margin-right': '16px',
-        flex: 1,
-        'border-color': '#B4B4B4',
-        color: '#000000',
-        'box-shadow': 'none',
-        'font-family': 'Minion Pro Bold'
+        flex: 1
     },
     custom: {
-        '--Input-minHeight': '48px',
-        borderRadius: '4px',
         flex: 2,
-        'border-color': '#B4B4B4',
-        color: '#000000',
-        'box-shadow': 'none',
-        'font-family': 'Minion Pro Bold'
     }
 }
 

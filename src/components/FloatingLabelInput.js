@@ -29,7 +29,7 @@ const StyledInput = styled('input')({
     fontSize: '0.75rem',
   },
   '&:focus ~ label': {
-    color: 'var(--Input-focusedHighlight)',
+    color: '#8a6d1f',
   },
   '&:-webkit-autofill': {
     alignSelf: 'stretch', // to fill the height of the root slot
@@ -48,8 +48,9 @@ const StyledLabel = styled('label')(({ theme }) => ({
   position: 'absolute',
   lineHeight: 1,
   top: 'calc((var(--Input-minHeight) - 1em) / 2)',
-  color: theme.vars.palette.text.tertiary,
-  fontWeight: theme.vars.fontWeight.md,
+  color: '#7a6a3a',
+  fontFamily: 'Minion Pro Regular',
+  pointerEvents: 'none',
   transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
 }));
 
@@ -61,13 +62,32 @@ const InnerInput = (props) => {
   </>
 }
 
-const FloatingLabelInput = ({style, onChange, onBlur, placeholder, label, value, defaultValue}) => {
+// Общий вид поля: кремовый фон, золотая рамка и подсветка при фокусе. Через style экраны задают только расположение (ширина, отступы)
+const baseSx = {
+  '--Input-minHeight': '52px',
+  '--Input-radius': '16px',
+  '--Input-paddingInline': '16px',
+  '--Input-focusedThickness': '2px',
+  '--Input-focusedHighlight': '#b0953f',
+  background: '#fff',
+  borderColor: '#c9b36a',
+  color: '#1d1810',
+  boxShadow: 'none',
+  fontFamily: 'Minion Pro Regular',
+  fontSize: '16px',
+  '&:hover': {
+    background: '#fff',
+    borderColor: '#b0953f',
+  },
+}
+
+const FloatingLabelInput = ({style, onChange, onBlur, placeholder, label, value, defaultValue, inputMode}) => {
   return <Input
     onChange={onChange}
     onBlur={onBlur}
     slots={{input: InnerInput}}
-    slotProps={{input: {placeholder: placeholder || '', label}}}
-    sx={style}
+    slotProps={{input: {placeholder: placeholder || '', label, inputMode}}}
+    sx={[baseSx, style]}
     value={value}
     defaultValue={defaultValue}
   />

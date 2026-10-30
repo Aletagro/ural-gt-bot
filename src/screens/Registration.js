@@ -35,12 +35,7 @@ if (process.env.NODE_ENV === 'development') {
 const user = tg?.initDataUnsafe?.user
 
 const inputStyle = {
-    '--Input-minHeight': '48px',
-    'borderRadius': '4px',
     'margin': '16px',
-    'borderColor': '#B4B4B4',
-    'boxShadow': 'none',
-    'fontFamily': 'Minion Pro Regular'
 }
 
 const cities = [

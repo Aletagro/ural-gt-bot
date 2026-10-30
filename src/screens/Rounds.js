@@ -107,11 +107,11 @@ const Rounds = () => {
 
     return <div id='column' className='Chapter'>
         <div id={Styles.buttonContainer}>
-            <Button className={Styles.nextButton} disabled={disablePrevButton} onClick={handleClickPrevRound}>
+            <Button className={Styles.nextButton} disabled={disablePrevButton} onClick={handleClickPrevRound} type='secondary'>
                 Предыдущий
             </Button>
             <b>Раунд {rounds.selected}</b>
-            <Button className={Styles.nextButton} disabled={disableNextButton} onClick={handleClickNextRound}>
+            <Button className={Styles.nextButton} disabled={disableNextButton} onClick={handleClickNextRound} type='secondary'>
                 Следующий
             </Button>
         </div>

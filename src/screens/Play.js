@@ -7,7 +7,6 @@ import {shareFile, getShareMessage} from '../utilities/shareFile'
 import {player, players, meta} from '../utilities/appState'
 import {getArmyImage} from '../utilities/utils'
 import FloatingLabelInput from '../components/FloatingLabelInput'
-import Checkbox from '../components/Checkbox'
 import RoundTimer from '../components/RoundTimer'
 import armyImages from '../images/armies'
 import Constants from '../Constants'
@@ -22,21 +21,18 @@ import Styles from './styles/Play.module.css'
 import Button from '../components/Button'
 
 const inputStyle = {
-    '--Input-minHeight': '48px',
     'width': '100%',
-    'borderRadius': '4px',
-    'marginBottom': '16px',
-    'borderColor': '#B4B4B4',
-    'boxShadow': 'none',
-    'fontFamily': 'Minion Pro Regular'
+    'marginBottom': '12px',
 }
 
 const Play = ({setShareAction}) => {
     const navigate = useNavigate()
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
-    const [firstPlayer, setFirstPlayer] = useState()
-    const [secondPlayer, setSecondPlayer] = useState()
+    const [firstPlayer, setFirstPlayer] = useState('')
+    const [secondPlayer, setSecondPlayer] = useState('')
+    const [isSending, setIsSending] = useState(false)
+    const [loadError, setLoadError] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
     const [info, setInfo] = useState()
     const [minorWin, setMinorWin] = useState(null)
@@ -44,22 +40,44 @@ const Play = ({setShareAction}) => {
     const [secondPlayerImage, setSecondPlayerImage] = useState(null)
     const bannerRef = useRef(null)
     const battleplan = find(Constants.tournamentBattleplans, ['title', meta.battleplan])
-    const disableButton = !firstPlayer || !secondPlayer || (firstPlayer === secondPlayer ? isNull(minorWin) : false)
+    const tiebreakOptions = [
+        {value: 1, label: info?.firstPlayer?.surname},
+        {value: 0, label: 'Равное количество'},
+        {value: 2, label: info?.secondPlayer?.surname}
+    ]
+    const disableButton = isSending || !firstPlayer || !secondPlayer || (firstPlayer === secondPlayer ? isNull(minorWin) : false)
+
+    const applyInfo = (data) => {
+        const firstPlayer = find(players.data, ['id', min([Number(data.first_player_id), Number(data.second_player_id)])])
+        const secondPlayer = find(players.data, ['id', max([Number(data.first_player_id), Number(data.second_player_id)])])
+        setInfo({
+            ...data,
+            firstPlayer,
+            secondPlayer
+        })
+    }
+
+    const loadInfo = useCallback(() => {
+        if (!player?.info?.id) {
+            setLoadError(true)
+            return
+        }
+        setLoadError(false)
+        fetch(`${Constants.domain}/rounds/play/?id=${player.info.id}&cur_round=${meta.round}`)
+            .then(response => {
+                if (!response.ok) throw new Error(`Ошибка загрузки игры: ${response.status}`)
+                return response.json()
+            })
+            .then(applyInfo)
+            .catch(error => {
+                console.error(error)
+                setLoadError(true)
+            })
+    }, [])
 
     useEffect(() => {
-        fetch(`${Constants.domain}/rounds/play/?id=${player?.info?.id}&cur_round=${meta.round}`)
-            .then(response => response.json())
-            .then(data => {
-                const firstPlayer = find(players.data, ['id',  min([Number(data.first_player_id), Number(data.second_player_id)])])
-                const secondPlayer = find(players.data, ['id', max([Number(data.first_player_id), Number(data.second_player_id)])])
-                setInfo({
-                    ...data,
-                    firstPlayer,
-                    secondPlayer
-                })
-            })
-            .catch(error => console.error(error))
-    }, [])
+        loadInfo()
+    }, [loadInfo])
 
     const setPlayerImage = useCallback((isFirst) => {
         let playerImage = isFirst ? armyImages.Ironjawz : armyImages.StormcastEternals
@@ -83,20 +101,27 @@ const Play = ({setShareAction}) => {
     useEffect(() => {
         if (!players.rosters.length) {
             fetch(`${Constants.domain}/rosters/`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) throw new Error(`Ошибка загрузки ростеров: ${response.status}`)
+                    return response.json()
+                })
                 .then(data => {
                     players.rosters = data
                     forceUpdate()
                 })
+                .catch(error => console.error(error))
         }
     }, [])
 
+    // VP: только цифры, без ведущих нулей (одиночный 0 допустим)
+    const normalizeVp = (value) => value.replace(/\D/g, '').replace(/^0+(?=\d)/, '')
+
     const handleChangeFirstPlayerResult = (e) => {
-        setFirstPlayer(e.target.value)
+        setFirstPlayer(normalizeVp(e.target.value))
     }
 
     const handleChangeSecondPlayerResult = (e) => {
-        setSecondPlayer(e.target.value)
+        setSecondPlayer(normalizeVp(e.target.value))
     }
 
     const handleClickFirstPlayerRoster = () => {
@@ -112,14 +137,22 @@ const Play = ({setShareAction}) => {
     }
 
     const handleSendResult = useCallback(async () => {
+        setIsSending(true)
         await fetch(`${Constants.domain}/rounds/play/?cur_round=${info?.round}&cur_table=${info?.table}&vp_first=${firstPlayer}&vp_second=${secondPlayer}&minor_win=${minorWin || 0}`, {
             method: 'PUT'
         })
-            .then(response => response.json())
-            .then(data => {
+            .then(response => {
+                if (!response.ok) throw new Error(`Ошибка отправки результата: ${response.status}`)
+                return response.json()
+            })
+            .then(() => {
                 setIsFinished(true)
             })
-            .catch(error => console.error(error))
+            .catch(error => {
+                console.error(error)
+                toast.error('Не удалось отправить результат. Попробуйте ещё раз', Constants.toastParams)
+                setIsSending(false)
+            })
     }, [firstPlayer, secondPlayer, info?.round, info?.table, minorWin])
 
     const handleJudgeCall = () => {
@@ -130,8 +163,14 @@ const Play = ({setShareAction}) => {
                 'Accept': "application/json, text/javascript, /; q=0.01"
             }
         })
-            .then(response => response.json())
-            .catch(error => console.error(error))
+            .then(response => {
+                if (!response.ok) throw new Error(`Ошибка вызова судьи: ${response.status}`)
+                toast.success('Судья вызван. Скоро подойдёт к вашему столу', Constants.toastParams)
+            })
+            .catch(error => {
+                console.error(error)
+                toast.error('Не удалось вызвать судью. Позовите его голосом', Constants.toastParams)
+            })
     }
 
     const handleClickCheckbox = (value) => () => {
@@ -202,12 +241,19 @@ const Play = ({setShareAction}) => {
     return <div id='column' className='Chapter'>
         <ToastContainer />
         <RoundTimer />
-        <b id={Styles.table}>Стол {info?.table}</b>
+        {loadError
+            ? <div id={Styles.loadError}>
+                <p>Не удалось загрузить данные игры</p>
+                <Button type='secondary' size='sm' onClick={loadInfo}>Повторить</Button>
+            </div>
+            : null
+        }
+        {info ? <b id={Styles.table}>Стол {info.table}</b> : null}
         {renderImageBlock()}
         {info?.results_submitted
             ? <div id={Styles.resultContainer}>
-                <b>Результат игры</b>
-                <p id={Styles.resultLabel}>{info.firstPlayer.surname} {info.firstPlayer.name} <b>({info.first_player_vp}) {info.first_player_tp} - {info.second_player_tp} ({info.second_player_vp})</b> {info.secondPlayer.surname} {info.secondPlayer.name}</p>
+                <b id={Styles.resultLabel}>Результат игры</b>
+                <p id={Styles.resultLabel}>{info.firstPlayer?.surname} {info.firstPlayer?.name} ({info.first_player_vp}) {info.first_player_tp} - {info.second_player_tp} ({info.second_player_vp}) {info.secondPlayer?.surname} {info.secondPlayer?.name}</p>
                 <p id={Styles.resultNotice}>Вы можете пересдать результаты игры. Для этого просто отправьте новые результаты</p>
             </div>
             : null
@@ -218,77 +264,57 @@ const Play = ({setShareAction}) => {
                     style={inputStyle}
                     onChange={handleChangeFirstPlayerResult}
                     label={info?.firstPlayer?.surname}
+                    inputMode='numeric'
                     value={firstPlayer}
                 />
-                <button
-                    id={Styles.rosterButton}
-                    onClick={handleClickFirstPlayerRoster}
-                >
+                <Button type='secondary' size='sm' className={Styles.rosterButton} onClick={handleClickFirstPlayerRoster} disabled={!info?.firstPlayer}>
                     Ростер
-                </button>
+                </Button>
             </div>
             <div id={Styles.playerContainer}>
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeSecondPlayerResult}
                     label={info?.secondPlayer?.surname}
+                    inputMode='numeric'
                     value={secondPlayer}
                 />
-                <button
-                    id={Styles.rosterButton}
-                    onClick={handleClickSecondPlayerRoster}
-                >
+                <Button type='secondary' size='sm' className={Styles.rosterButton} onClick={handleClickSecondPlayerRoster} disabled={!info?.secondPlayer}>
                     Ростер
-                </button>
+                </Button>
             </div>
         </div>
         {firstPlayer && firstPlayer === secondPlayer
-            ? <div>
-                <p id={Styles.checkboxTitle}>Кто выполнил больше тактик</p>
-                <div>
-                    <div id={Styles.checkboxRow} onClick={handleClickCheckbox(1)}>
-                        <Checkbox onClick={handleClickCheckbox(1)} checked={minorWin === 1} />
-                        <p id={Styles.checkboxText}>{info?.firstPlayer?.surname}</p>
-                    </div>
-                    <div id={Styles.checkboxRow} onClick={handleClickCheckbox(0)}>
-                        <Checkbox onClick={handleClickCheckbox(0)} checked={minorWin === 0} />
-                        <p id={Styles.checkboxText}>Равное количество</p>
-                    </div>
-                    <div id={Styles.checkboxRow} onClick={handleClickCheckbox(2)}>
-                        <Checkbox onClick={handleClickCheckbox(2)} checked={minorWin === 2} />
-                        <p id={Styles.checkboxText}>{info?.secondPlayer?.surname}</p>
-                    </div>
-                </div>
+            ? <div className={Styles.tiebreak}>
+                <p className={Styles.tiebreakTitle}>Кто выполнил больше тактик</p>
+                {tiebreakOptions.map(({value, label}) =>
+                    <button
+                        key={value}
+                        type='button'
+                        className={`${Styles.option} ${minorWin === value ? Styles.optionSelected : ''}`}
+                        onClick={handleClickCheckbox(value)}
+                    >
+                        <span className={Styles.radio} />
+                        {label}
+                    </button>
+                )}
             </div>
             : null
         }
         {battleplan
-            ? <button
-                id={Styles.rosterButton}
-                onClick={handleClickBattleplan}
-            >
-                Миссиия: {battleplan.title}
-            </button>
+            ? <Button type='secondary' className={Styles.mission} onClick={handleClickBattleplan}>
+                Миссия: {battleplan.title}
+            </Button>
             : null
         }
-        <p id={Styles.noticed}>Будьте внимательны, вводятся ваши VP, набранные за игру, а не TO </p>
+        <p id={Styles.noticed}>Будьте внимательны: вводятся ваши VP, набранные за игру, а не TО</p>
         <Button className={Styles.button} onClick={handleSendResult} disabled={disableButton}>
             Отправить Результаты
         </Button>
-        <Button className={Styles.button} onClick={handleJudgeCall}>Вызвать Судью</Button>
+        <Button className={Styles.button} onClick={handleJudgeCall} type='secondary'>
+            Вызвать Судью
+        </Button>
     </div>
 }
 
 export default Play
-
-// const _data = {
-//     first_player_id: 1,
-//     first_player_tp: 12,
-//     first_player_vp: 73,
-//     second_player_id: 2,
-//     second_player_tp: 8,
-//     second_player_vp: 72,
-//     round: 1,
-//     table: 20,
-//     results_submitted: true
-// }

@@ -13,12 +13,7 @@ import FloatingLabelInput from '../components/FloatingLabelInput'
 import Styles from './styles/CalcUnit.module.css'
 
 const inputStyle = {
-    '--Input-minHeight': '48px',
-    'borderRadius': '4px',
     'margin': '16px',
-    'border-color': '#B4B4B4',
-    'box-shadow': 'none',
-    'font-family': 'Minion Pro Regular'
 }
 
 const CalcUnit = ({index, unit, onDelete, onUpdate}) => {

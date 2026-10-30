@@ -58,8 +58,8 @@ const RosterScreen = () => {
         {playerIndex === undefined
             ? null
             : <div id={Styles.buttonContainer}>
-                <Button className={Styles.nextButton} onClick={handleClickPrevRoster}>Предыдущий</Button>
-                <Button className={Styles.nextButton} onClick={handleClickNextRoster}>Следующий</Button>
+                <Button className={Styles.nextButton} onClick={handleClickPrevRoster} type='secondary'>Предыдущий</Button>
+                <Button className={Styles.nextButton} onClick={handleClickNextRoster} type='secondary'>Следующий</Button>
             </div>
         }
         <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>

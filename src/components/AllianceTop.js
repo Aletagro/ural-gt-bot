@@ -1,5 +1,6 @@
 import React, {useMemo, useState} from 'react'
 import {getArmyImage} from '../utilities/utils'
+import {leadersView} from '../utilities/appState'
 import Constants from '../Constants'
 
 
@@ -29,7 +30,16 @@ const AllianceTop = ({standing, leaderId, onOpen}) => {
         }, {})
     }, [standing, leaderId])
 
-    const [active, setActive] = useState(() => find(Constants.grandAlliances, (a) => size(tops[a.name])) || Constants.grandAlliances[0].name)
+    const [active, setActive] = useState(() =>
+        (Constants.grandAlliances[leadersView.alliance] ? leadersView.alliance : null)
+        || find(Constants.grandAlliances, (a) => size(tops[a.name]))?.name
+        || Constants.grandAlliances[0].name
+    )
+
+    const handleSelectAlliance = (name) => () => {
+        leadersView.alliance = name
+        setActive(name)
+    }
     const accent = Constants.grandAlliances[active]?.color
 
     return <div className={Styles.container} style={{'--accent': accent}}>
@@ -39,7 +49,7 @@ const AllianceTop = ({standing, leaderId, onOpen}) => {
                     key={alliance.id}
                     className={`${Styles.tab} ${alliance.name === active ? Styles.tabActive : ''}`}
                     style={{'--tab-accent': Constants.grandAlliances[alliance.name]?.color}}
-                    onClick={() => setActive(alliance.name)}
+                    onClick={handleSelectAlliance(alliance.name)}
                 >
                     {alliance.name}
                 </button>

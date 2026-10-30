@@ -376,10 +376,5 @@ const Admin = () => {
 export default Admin
 
 const inputStyle = {
-    '--Input-minHeight': '48px',
     'width': '100%',
-    'borderRadius': '4px',
-    'borderColor': '#B4B4B4',
-    'boxShadow': 'none',
-    'fontFamily': 'Minion Pro Regular'
 }

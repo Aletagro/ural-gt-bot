@@ -112,6 +112,9 @@ export const meta = {
 // Вкладка и прокрутка экрана игрока по id игрока: чтобы вернуться из ростера или варскролла туда же, где ушли
 export const playerInfoView = {}
 
+// Выбранный Альянс в блоке «Топ-5 по Альянсам» на экране лидеров: чтобы после возврата из игрока он не сбрасывался
+export const leadersView = {alliance: null}
+
 export const rosterViewType = {
     easy: false
 }
