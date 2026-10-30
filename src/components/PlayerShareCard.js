@@ -3,7 +3,7 @@ import map from 'lodash/map'
 
 import Constants from '../Constants'
 import {getArmyImage} from '../utilities/utils'
-import {TOURNAMENT_NAME, pickShareBadges, getPlaceTitle} from '../utilities/playerShareText'
+import {TOURNAMENT_NAME, layoutShareBadges, getPlaceTitle} from '../utilities/playerShareText'
 
 import Styles from './styles/PlayerShare.module.css'
 
@@ -13,7 +13,7 @@ const PlayerShareCard = forwardRef(({card, isFinished}, ref) => {
     const image = getArmyImage(card.allegiance)
     const color = Constants.grandAlliances[card.grandAlliance]?.color
     const placeTitle = getPlaceTitle(card.place, isFinished)
-    const badges = pickShareBadges(card.badges.earned)
+    const {shown: badges, extra: badgesExtra} = layoutShareBadges(card.badges.earned)
     const {record} = card
 
     return <div ref={ref} className={Styles.card} style={color ? {'--accent': color} : undefined}>
@@ -49,12 +49,8 @@ const PlayerShareCard = forwardRef(({card, isFinished}, ref) => {
 
             {badges.length
                 ? <div className={Styles.badges}>
-                    {map(badges, (badge) =>
-                        <span key={badge.id} className={Styles.badge}>
-                            <span className={Styles.badgeIcon}>{badge.icon}</span>
-                            {badge.title}
-                        </span>
-                    )}
+                    {map(badges, (badge) => <span key={badge.id} className={Styles.badge}>{badge.title}</span>)}
+                    {badgesExtra ? <span className={Styles.badge}>+{badgesExtra}</span> : null}
                 </div>
                 : null
             }
