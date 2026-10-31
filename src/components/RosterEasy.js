@@ -6,7 +6,7 @@ import size from 'lodash/size'
 import filter from 'lodash/filter'
 import forEach from 'lodash/forEach'
 
-import Styles from './styles/Roster.module.css'
+import Styles from './styles/RosterEasy.module.css'
 
 const dataBase = require('../dataBase.json')
 
@@ -57,7 +57,7 @@ const RosterEasy = ({roster, info}) => {
         <br/>
     </div>
 
-    return <div id={Styles.container}>
+    return <div className={Styles.easy}>
         <p>Grand Alliance: {roster.grandAlliance}</p>
         <p>Faction: {roster.allegiance}</p>
         <p>Battle Formation: {roster.battleFormation}{points.battleFormation ? ` (${points.battleFormation} points)` : null}</p>

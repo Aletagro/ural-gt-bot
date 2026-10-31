@@ -13,6 +13,8 @@ import size from 'lodash/size'
 import filter from 'lodash/filter'
 import forEach from 'lodash/forEach'
 
+import {Facts, Fact, Group, SummaryCard, Stat} from './RosterParts'
+
 import Styles from './styles/Roster.module.css'
 
 const dataBase = require('../dataBase.json')
@@ -42,7 +44,7 @@ const Roster = ({roster, info}) => {
 
     const handleClickSpellsLore = () => {
         const lore = find(dataBase.data.lore, ['name', roster.spellsLore])
-        const spells = filter(dataBase.data.lore_ability, ['loreId', lore.id])
+        const spells = filter(dataBase.data.lore_ability, ['loreId', lore?.id])
         const data = {
             title: 'Spells Lore',
             abilities: [{...lore, abilities: spells}]
@@ -52,7 +54,7 @@ const Roster = ({roster, info}) => {
 
     const handleClickPrayersLore = () => {
         const lore = find(dataBase.data.lore, ['name', roster.prayersLore])
-        const spells = filter(dataBase.data.lore_ability, ['loreId', lore.id])
+        const spells = filter(dataBase.data.lore_ability, ['loreId', lore?.id])
         const data = {
             title: 'Prayers Lore',
             abilities: [{...lore, abilities: spells}]
@@ -101,6 +103,7 @@ const Roster = ({roster, info}) => {
             image={manifestation.rowImage}
             navigateTo='warscroll'
             state={{unit: manifestation}}
+            card
         />
     }
 
@@ -108,7 +111,7 @@ const Roster = ({roster, info}) => {
         unit={roster.regimentOfRenown}
         onClick={handleClickRegimentOfRenown}
         otherEnhancements={otherEnhancements}
-        alliganceId={roster.alliganceId}
+        alliganceId={roster.allegianceId}
         isRegimentsOfRenown
         withoutMargin
         isInfo
@@ -135,6 +138,7 @@ const Roster = ({roster, info}) => {
                 image={_unit?.rowImage}
                 navigateTo='warscroll'
                 state={{unit: _unit}}
+                card
             />
     }
 
@@ -143,7 +147,7 @@ const Roster = ({roster, info}) => {
         unit={unit}
         onClick={handleClickAuxiliaryUnit}
         unitIndex={index}
-        alliganceId={roster.alliganceId}
+        alliganceId={roster.allegianceId}
         onOpenModal={handleOpenModal}
         otherEnhancements={otherEnhancements}
         withoutMargin
@@ -156,7 +160,7 @@ const Roster = ({roster, info}) => {
         return <UnitRow
             unit={terrain}
             onClick={handleClickAuxiliaryUnit}
-            alliganceId={roster.alliganceId}
+            alliganceId={roster.allegianceId}
             withoutMargin
             isInfo
         />
@@ -165,72 +169,52 @@ const Roster = ({roster, info}) => {
         return null
     }
 
-    const renderBattleTacticCard = (card, index) => {
-        return <div key={index} id={Styles.block} onClick={handleClickTacticCard(card)}>
-            <p id={Styles.text}>{index === 0 ? 'First' : 'Second'} Tactics Cards: {card}</p>
-        </div>
-    }
+    const renderBattleTacticCard = (card, index) => <Fact
+        key={index}
+        label={`${index === 0 ? 'First' : 'Second'} Tactics Card`}
+        value={card}
+        onClick={handleClickTacticCard(card)}
+    />
 
-    return <div >
-        <div id={Styles.block} onClick={handleClickAllegiance}>
-            <p id={Styles.text}>Grand Alliance: {roster.grandAlliance}</p>
-            <p id={Styles.text}>Allegiance: {roster.allegiance}</p>
-            <p id={Styles.text}>Wounds: {info.wounds}</p>
-            <p id={Styles.text}>Drops: {info.drops}</p>
-            <p id={Styles.text}>Points: {roster.points?.all}/{roster.pointsLimit}</p>
-        </div>
-        <div id={Styles.block} onClick={handleClickFormation}>
-            <p id={Styles.text}>Battle Formation: {roster.battleFormation}</p>
-        </div>
-        {map(roster.tactics, renderBattleTacticCard)}
-        {roster.spellsLore
-            ? <div id={Styles.block} onClick={handleClickSpellsLore}>
-                <p id={Styles.text}>Spells Lore: {roster.spellsLore}</p>
-            </div>
-            : null
-        }
-        {roster.prayersLore
-            ? <div id={Styles.block} onClick={handleClickPrayersLore}>
-                <p id={Styles.text}>Prayers Lore: {roster.prayersLore}</p>
-            </div>
-            : null
-        }
+    const pointsAll = roster.points?.all
+    const isOverLimit = Boolean(roster.pointsLimit) && pointsAll > roster.pointsLimit
+
+    return <div className={Styles.roster}>
+        <SummaryCard alliance={roster.grandAlliance} army={roster.allegiance} onClick={handleClickAllegiance}>
+            <Stat label='Points' value={`${pointsAll ?? 0}/${roster.pointsLimit ?? '–'}`} isOver={isOverLimit} />
+            <Stat label='Wounds' value={info?.wounds ?? '–'} />
+            <Stat label='Drops' value={info?.drops ?? '–'} />
+        </SummaryCard>
+        <Facts>
+            <Fact label='Battle Formation' value={roster.battleFormation} onClick={handleClickFormation} />
+            {map(roster.tactics, renderBattleTacticCard)}
+            {roster.spellsLore ? <Fact label='Spells Lore' value={roster.spellsLore} onClick={handleClickSpellsLore} /> : null}
+            {roster.prayersLore ? <Fact label='Prayers Lore' value={roster.prayersLore} onClick={handleClickPrayersLore} /> : null}
+        </Facts>
         {map(roster.regiments, renderRegiment)}
         {size(roster.auxiliaryUnits)
-            ? <>
-                <div id={Styles.block}>
-                    <p id={Styles.text}>Auxiliary Units</p>
-                </div>
+            ? <Group title='Auxiliary Units'>
                 {map(roster.auxiliaryUnits, renderAuxiliaryUnit)}
-            </>
+            </Group>
             : null
         }
         {roster.regimentOfRenown
-            ? <>
-                <div id={Styles.block}>
-                    <p id={Styles.text}>Regiment Of Renown</p>
-                </div>
+            ? <Group title='Regiment Of Renown'>
                 {renderRegimentOfRenown()}
                 {map(roster.regimentsOfRenownUnits, renderRegimentOfRenownUnit)}
-            </>
+            </Group>
             : null
         }
         {roster.manifestationLore
-            ? <>
-                <div id={Styles.block}>
-                    <p id={Styles.text}>Manifestation Lore: {roster.manifestationLore}</p>
-                </div>
+            ? <Group title='Manifestation Lore' subtitle={roster.manifestationLore}>
                 {map(roster.manifestationsList, renderManifestation)}
-            </>
+            </Group>
             : null
         }
         {roster.factionTerrain
-            ? <>
-                <div id={Styles.block}>
-                    <p id={Styles.text}>Faction Terrain</p>
-                </div>
+            ? <Group title='Faction Terrain'>
                 {renderTerrain()}
-            </>
+            </Group>
             : null
         }
         <Modal {...modalData} onClose={handleCloseModal} />

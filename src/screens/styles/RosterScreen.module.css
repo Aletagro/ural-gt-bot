@@ -2,27 +2,11 @@
     margin-top: 16px;
 }
 .nextButton {
-    margin-top: 12px;
     flex: 1;
 }
 #buttonContainer {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
-    gap: 16px;
+    margin-bottom: 14px;
+    gap: 12px;
 }
-#checkboxContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid lightgray;
-    border-radius: 4px;
-    padding: 0px 12px;
-    margin-bottom: 12px;
-}
-  
-#checkboxText {
-    font-family: 'Minion Pro Bold';
-    padding: 16px 0px;
-}
-

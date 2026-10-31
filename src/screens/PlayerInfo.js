@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
 import Roster from '../components/Roster'
 import RosterEasy from '../components/RosterEasy'
-import Checkbox from '../components/Checkbox'
+import RosterViewSwitch from '../components/RosterViewSwitch'
 import Modal from '../components/Modal'
 import {ModalActions, ModalButton} from '../components/ModalActions'
 import Section from '../components/Section'
@@ -27,7 +27,6 @@ import {buildTournamentContext, calcPlayerCard} from '../utilities/playerCalc'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
-import noop from 'lodash/noop'
 import size from 'lodash/size'
 
 import Styles from './styles/PlayerInfo.module.css'
@@ -129,8 +128,8 @@ const PlayerInfo = ({setShareAction}) => {
         navigate('/playerInfo', {state: {player: opponent, title: `${opponent.surname} ${opponent.name}`}})
     }
 
-    const handleChangeViewType = () => {
-        rosterViewType.easy = !rosterViewType.easy
+    const handleChangeViewType = (easy) => {
+        rosterViewType.easy = easy
         forceUpdate()
     }
 
@@ -233,7 +232,7 @@ const PlayerInfo = ({setShareAction}) => {
         <FloatingLabelInput
             style={inputStyle}
             onChange={handleChangeMessage}
-            label='Cообщение игроку (от бота)'
+            label='Сообщение'
             value={message}
         />
         <Button className={Styles.sendMessageButton} disabled={!message.trim()} onClick={handleSendMessage}>Отправить</Button>
@@ -271,10 +270,7 @@ const PlayerInfo = ({setShareAction}) => {
     // Вкладка «Ростер»
     const renderRoster = () => roster
         ? <>
-            <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
-                <p id={Styles.checkboxText}>Easy View</p>
-                <Checkbox onClick={noop} checked={rosterViewType.easy} />
-            </div>
+            <RosterViewSwitch easy={rosterViewType.easy} onChange={handleChangeViewType} />
             {rosterViewType.easy
                 ? <RosterEasy roster={roster} info={rosterInfo} />
                 : <Roster roster={roster} info={rosterInfo} />

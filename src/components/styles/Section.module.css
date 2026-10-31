@@ -13,6 +13,7 @@
     padding: 12px 16px;
     background: linear-gradient(180deg, #2a2210, #14100a);
     text-align: left;
+    align-items: center;
 }
 /* Золотая линия под заголовком только у раскрытого блока: у свёрнутого её роль играет рамка карточки */
 .headOpen {
@@ -44,6 +45,7 @@
     flex: none;
     width: 9px;
     height: 9px;
+    margin-bottom: 2px;
     margin-right: 4px;
     border-right: 2px solid #f0d98a;
     border-bottom: 2px solid #f0d98a;

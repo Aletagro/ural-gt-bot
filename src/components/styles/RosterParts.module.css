@@ -1,0 +1,237 @@
+/* Общие блоки ростера и конструктора */
+.summary {
+    margin: 0 0 12px;
+    overflow: hidden;
+    border: 1.5px solid #b0953f;
+    border-radius: 18px;
+    background: #fffdf8;
+}
+
+.summaryHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 14px 16px 13px;
+    border: 0;
+    background: linear-gradient(135deg, #14100a, #2a2210);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.summaryTitle {
+    display: block;
+    min-width: 0;
+}
+
+.alliance {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #b0953f;
+}
+
+.army {
+    display: block;
+    margin-top: 2px;
+    font-family: 'Minion Pro Bold';
+    font-size: 23px;
+    line-height: 1.15;
+    color: #f0d98a;
+}
+
+.rulesHint {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 2px;
+    font-size: 13px;
+    white-space: nowrap;
+    color: #d8c88a;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+}
+
+.stat {
+    display: block;
+    padding: 10px 6px 9px;
+    border: 0;
+    border-left: 1px solid #e6d9a6;
+    background: transparent;
+    font-family: inherit;
+    text-align: center;
+}
+
+.stat:first-child {
+    border-left: 0;
+}
+
+.statButton {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.statButton:active {
+    background: #fbf3dc;
+}
+
+.statButton .statValue {
+    text-decoration: underline dotted #b0953f;
+    text-underline-offset: 4px;
+}
+
+.statValue {
+    display: block;
+    font-family: 'Minion Pro Bold';
+    font-size: 20px;
+    line-height: 1.2;
+    color: #1d1810;
+}
+
+.over {
+    color: #8c2a1d;
+}
+
+.statLabel {
+    display: block;
+    margin-top: 1px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: #8a7a4f;
+}
+
+.facts {
+    margin-bottom: 14px;
+    overflow: hidden;
+    border: 1.5px solid #d8c88a;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.fact {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid #efe3b8;
+}
+
+.fact:first-child {
+    border-top: 0;
+}
+
+.factMain {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 10px 14px;
+    border: 0;
+    background: transparent;
+    font-family: inherit;
+    text-align: left;
+    color: #b0953f;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.factMain:active {
+    background: #fbf3dc;
+}
+
+.factText {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.factLabel {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: #8a7a4f;
+}
+
+.factValue {
+    margin-top: 1px;
+    font-family: 'Minion Pro Bold';
+    font-size: 17px;
+    line-height: 1.25;
+    color: #1d1810;
+    overflow-wrap: anywhere;
+}
+
+.factEmpty {
+    color: #8a6d1f;
+}
+
+.chevron {
+    display: flex;
+    flex: 0 0 auto;
+}
+
+.infoButton {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: #8a6d1f;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.infoButton:active {
+    background: #fbf3dc;
+}
+
+.group {
+    margin-bottom: 16px;
+    overflow: hidden;
+    border: 1.5px solid #c9b36a;
+    border-radius: 18px;
+    background: #fbf6e6;
+}
+
+.groupHead {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 12px;
+    margin-bottom: 10px;
+    padding: 11px 14px;
+    background: linear-gradient(135deg, #14100a, #2a2210);
+}
+
+.groupTitle {
+    font-family: 'Minion Pro Bold';
+    font-size: 18px;
+    line-height: 24px;
+    color: #f0d98a;
+}
+
+.groupSubtitle {
+    font-size: 15px;
+    line-height: 24px;
+    color: #d8c88a;
+}
+
+.groupBody {
+    padding: 0 10px 2px;
+}
+
+.groupBody .facts {
+    margin-bottom: 8px;
+}

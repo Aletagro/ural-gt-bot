@@ -4,7 +4,7 @@ import RowImage from '../components/RowImage'
 
 import Styles from './styles/Row.module.css'
 
-const Row = ({title, subtitle, rightText, image, navigateTo, state, onClick}) => {
+const Row = ({title, subtitle, rightText, image, navigateTo, state, onClick, card}) => {
     const navigate = useNavigate()
 
     const handleClick = () => {
@@ -14,7 +14,7 @@ const Row = ({title, subtitle, rightText, image, navigateTo, state, onClick}) =>
         }
     }
 
-    return <button  id={Styles.container} onClick={handleClick}>
+    return <button id={Styles.container} className={card ? Styles.card : undefined} onClick={handleClick}>
         {image ?<RowImage src={image} alt={title} /> : null}
         <div id={Styles.titleContainer}>
             <b id={Styles.title}>{title}</b>

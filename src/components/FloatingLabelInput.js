@@ -50,6 +50,10 @@ const StyledLabel = styled('label')(({ theme }) => ({
   top: 'calc((var(--Input-minHeight) - 1em) / 2)',
   color: '#7a6a3a',
   fontFamily: 'Minion Pro Regular',
+  maxWidth: 'calc(100% - 2 * var(--Input-paddingInline))',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
   pointerEvents: 'none',
   transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
 }));

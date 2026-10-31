@@ -30,3 +30,21 @@
   margin: 0;
   color: #676767;
 }
+
+/* Карточный вариант (ростер): в цветах нового оформления */
+#container.card {
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border: 1px solid #d8c88a;
+  border-radius: 14px;
+  background-color: #fff;
+  -webkit-tap-highlight-color: transparent;
+}
+#container.card:active {
+  background-color: #fbf3dc;
+}
+#container.card #title {
+  font-family: 'Minion Pro Bold';
+  font-size: 17px;
+  color: #1d1810;
+}

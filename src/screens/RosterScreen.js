@@ -2,12 +2,11 @@ import React, {useReducer} from 'react'
 import {useNavigate, useLocation} from 'react-router-dom'
 import Roster from '../components/Roster'
 import RosterEasy from '../components/RosterEasy'
-import Checkbox from '../components/Checkbox'
+import RosterViewSwitch from '../components/RosterViewSwitch'
 import {player, players, rostersStuck, rosterViewType} from '../utilities/appState'
 
 import get from 'lodash/get'
 import find from 'lodash/find'
-import noop from 'lodash/noop'
 
 import Styles from './styles/RosterScreen.module.css'
 import Button from '../components/Button'
@@ -49,8 +48,8 @@ const RosterScreen = () => {
         goToOtherRoster(index)
     }
 
-    const handleChangeViewType = () => {
-        rosterViewType.easy = !rosterViewType.easy
+    const handleChangeViewType = (easy) => {
+        rosterViewType.easy = easy
         forceUpdate()
     }
 
@@ -62,10 +61,7 @@ const RosterScreen = () => {
                 <Button className={Styles.nextButton} onClick={handleClickNextRoster} type='secondary'>Следующий</Button>
             </div>
         }
-        <div id={Styles.checkboxContainer} onClick={handleChangeViewType}>
-            <p id={Styles.checkboxText}>Easy View</p>
-            <Checkbox onClick={noop} checked={rosterViewType.easy} />
-        </div>
+        <RosterViewSwitch easy={rosterViewType.easy} onChange={handleChangeViewType} />
         {rosterViewType.easy
             ? <RosterEasy roster={_roster} info={rosterInfo} />
             : <Roster roster={_roster} info={rosterInfo} />

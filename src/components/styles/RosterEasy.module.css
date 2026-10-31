@@ -1,3 +1,25 @@
-#container {
-  padding: 8px 8px;
+.easy {
+    padding: 14px 16px;
+    border: 1.5px solid #d8c88a;
+    border-radius: 16px;
+    text-align: left;
+}
+
+.easy p {
+    margin: 0;
+    color: #2b2416;
+    font-size: 15px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.easy b {
+    color: #1d1810;
+}
+
+.easy hr {
+    height: 1px;
+    margin: 12px 0;
+    border: 0;
+    background: linear-gradient(to right, #b0953f, rgba(176, 149, 63, 0.15));
 }

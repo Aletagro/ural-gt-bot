@@ -116,12 +116,12 @@ const Regiment = ({regiment, index, alliganceId, forceUpdate, artefacts, heroicT
         <div id={Styles.title}>
             <div id={Styles.titleSubContainer}>
                 <p id={Styles.text}>Regiment {index + 1}</p>
-                {isInfo ? null : <p id={Styles.points}>{regiment.points} Points</p>}
+                {isInfo && !regiment.points ? null : <p id={Styles.points}>{regiment.points} Points</p>}
             </div>
             {isInfo
                 ? isGeneral
                     ? <div id={Styles.rightBlock}>
-                        <button id={Styles.deleteButton} onClick={handleChooseGeneral}><img src={General} alt="" /></button>
+                        <span id={Styles.generalBadge}>General</span>
                     </div>
                     : null
                 : <div id={Styles.rightBlock}>
