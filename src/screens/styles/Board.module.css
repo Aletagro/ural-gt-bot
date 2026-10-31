@@ -188,12 +188,6 @@
     color: #efe6cc;
 }
 
-.leaderPoints {
-    margin-top: calc(var(--u) * 0.2) !important;
-    font-size: calc(var(--u) * 2.6);
-    color: #d9c98f;
-}
-
 .champions {
     display: grid;
     grid-template-columns: 1fr 1fr;

@@ -17,21 +17,6 @@
     width: 100%;
 }
 
-#disabledButton {
-  background: rgb(201, 200, 199);
-  color: white; 
-  border-radius: 4px;
-  border-width: 0px;
-  padding: 12px;
-  font-size: 16px;
-  margin-bottom: 16px;
-  width: 100%;
-}
-
-#note {
-  margin: 0px;
-}
-
 #errorsContainer {
   margin: 0 0 14px;
   padding: 12px 16px;
@@ -58,46 +43,6 @@
   margin: 0;
   color: #5c4a14;
   line-height: 1.5;
-}
-
-#publicCheckboxContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#publicNote {
-  font-size: 12px;
-  color: lightgray;
-  margin-top: -12px;
-}
-
-#listDeletedContainer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#listDeletedTitle {
-  font-size: 14px;
-  line-height: 18px;
-}
-
-#listDeletedSubtitle {
-  font-size: 12px;
-  line-height: 16px;
-  color: lightgray;
-}
-
-#modalTitle {
-  font-size: 20px;
-  line-height: 24px;
-  text-align: center;
-}
-
-#modalText {
-  font-size: 16px;
-  line-height: 20px;
 }
 
 #regiment {

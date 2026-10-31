@@ -392,20 +392,9 @@
     color: #888;
 }
 
-.empty {
-    margin: 8px 0;
-    font-size: 14px;
-    color: #888;
-}
-
 /* ---------- Блок судьи и ростер ---------- */
 .judgeBlock {
     margin-bottom: 12px;
-}
-
-.judgeStatus {
-    margin: 0 0 12px;
-    font-size: 16px;
 }
 
 .rosterMissing {
