@@ -10,11 +10,12 @@ import size from 'lodash/size'
 import findIndex from 'lodash/findIndex'
 
 import Styles from './styles/Vote.module.css'
+import InfoNote from '../components/InfoNote'
 import Button from '../components/Button'
 
 const Vote = () => {
     const navigate = useNavigate()
-    const [result, setResult] = useState([player?.info?.best_opp || 0])
+    const [result, setResult] = useState([player?.info?.best_opp])
     const disabledSendButton = size(result) !== 1
     
     const getOpponent = useCallback((value) => {
@@ -52,7 +53,7 @@ const Vote = () => {
     const renderOpponent = (opponent) => <Button key={opponent.id} type={result.includes(opponent.id) ? 'primary' : 'secondary'} className={Styles.button} onClick={handleClickOpp(opponent.id)}>{opponent.name}</Button>
 
     return <div id='column' className='Chapter'>
-        <p id={Styles.text}>Выберите игрока, с которыми у вас была самая приятная игра</p>
+        <InfoNote title='Голосование'><p>Выберите игрока, с которым у вас была самая приятная игра</p></InfoNote>
         {map(opponents, renderOpponent)}
         <Button className={Styles.sendButton} disabled={disabledSendButton} onClick={handleClickVote}>Проголосовать</Button>
     </div>

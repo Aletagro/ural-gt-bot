@@ -1,0 +1,43 @@
+.note {
+  margin: 0 0 12px;
+  padding: 12px 14px 12px 16px;
+  border: 1px solid #d8c88a;
+  border-left: 4px solid #b0953f;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fffdf8, #fbf6e6);
+}
+
+.title {
+  margin: 0 0 4px;
+  color: #8a6d1f;
+  font-family: 'Minion Pro Bold';
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.text,
+.text p {
+  margin: 0;
+  color: #2b2416;
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.text p + p {
+  margin-top: 8px;
+}
+
+.accent {
+  border-color: #b0953f;
+  background: linear-gradient(135deg, #14100a, #2a2210);
+}
+
+.accent .title {
+  color: #f0d98a;
+}
+
+.accent .text,
+.accent .text p {
+  color: #fbf3dc;
+}

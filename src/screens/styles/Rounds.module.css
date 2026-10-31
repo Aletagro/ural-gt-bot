@@ -1,31 +1,65 @@
-#row {
-    display: flex;
-    padding: 16px 0px;
-}
-#сolumn {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    font: inherit;
-    background: inherit;
-}
-#smallColumn {
-    display: flex;
-    min-width: 10%;
-    justify-content: center;
-    align-items: center;
-}
-.nextButton {
-    flex: 1;
-}
-#buttonContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    margin-top: 8px;
-    gap: 16px;
+/* Три колонки: кнопки одинаковой ширины по краям, «Раунд» по центру */
+.switcher {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 14px;
 }
 
+.switcher .nextButton {
+  width: 100%;
+  min-width: 0;
+  padding-left: 6px;
+  padding-right: 6px;
+  white-space: nowrap;
+}
+
+.roundTitle {
+  flex: none;
+  padding: 12px 18px;
+  border: 2px solid #b0953f;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #14100a, #2a2210);
+  color: #f0d98a;
+  font-family: 'Minion Pro Bold';
+  font-size: 21px;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(20, 16, 10, 0.25);
+}
+
+/* Подписи колонок: та же сетка, что у карточки пары */
+.head {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 88px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px 6px 11px;
+  color: #8a7a4f;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.head span {
+  display: block;
+}
+
+.headRight {
+  text-align: right;
+}
+
+.headTable {
+  text-align: center;
+}
+
+.headCenter {
+  text-align: center;
+}
+
+.empty {
+  padding: 24px 8px;
+  color: #8a7a4f;
+  text-align: center;
+}

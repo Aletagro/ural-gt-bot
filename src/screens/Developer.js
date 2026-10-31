@@ -1,4 +1,6 @@
 import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+import Button from '../components/Button'
 
 const tg = window.Telegram?.WebApp
 
@@ -35,10 +37,13 @@ const getCapabilities = () => {
 
 const Developer = () => {
     const [capabilities] = useState(getCapabilities)
+    const navigate = useNavigate()
     return <div style={{padding: 8}}>
         <p><b>Возможности устройства</b></p>
         {capabilities.map(([name, value]) => <p key={name}>{name}: <b>{String(value)}</b></p>)}
         <p style={{marginTop: 12}}>viewportHeight: {tg?.viewportHeight}</p>
+        <p style={{marginTop: 12, marginBottom: 8}}><b>Тестовые экраны</b></p>
+        <Button type='secondary' onClick={() => navigate('/roundsPreview')}>Раунды (моковые данные)</Button>
     </div>
 }
 

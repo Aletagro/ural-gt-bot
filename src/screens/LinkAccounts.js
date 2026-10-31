@@ -7,6 +7,7 @@ import {player} from '../utilities/appState'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 
 import Styles from './styles/LinkAccounts.module.css'
+import InfoNote from '../components/InfoNote'
 import Button from '../components/Button'
 
 const LinkAccounts = () => {
@@ -58,7 +59,7 @@ const LinkAccounts = () => {
     return <div id='column' className='Chapter'>
         {!player.info.link_code
             ? <>
-                <p id={Styles.text}>Введите полученный код</p>
+                <InfoNote title='Связка аккаунтов'><p>Введите полученный код</p></InfoNote>
                 <FloatingLabelInput
                     style={inputStyle}
                     onChange={handleChangeCode}
@@ -68,8 +69,10 @@ const LinkAccounts = () => {
                 <Button className={Styles.button} onClick={handleSetCode}>Отправить код</Button>
             </>
             : <>
-                <p id={Styles.text}>Чтобы связать аккаунты Телеграма и ВК, нажмите на кнопку "Получить код"</p>
-                <p id={Styles.text}>В боте вам придёт короткий код. Откройте приложение в той соц сети, где вы еще не зарегистрированы. Нажмите кнопку, "Войти как гость" и на таком же экранее, введите код</p>
+                <InfoNote title='Связка аккаунтов'>
+                    <p>Чтобы связать аккаунты Телеграма и ВК, нажмите на кнопку "Получить код"</p>
+                    <p>В боте вам придёт короткий код. Откройте приложение в той соц сети, где вы еще не зарегистрированы. Нажмите кнопку, "Войти как гость" и на таком же экране введите код</p>
+                </InfoNote>
                 <Button className={Styles.button} onClick={handleGetCode}>Получить код</Button>
             </>
 

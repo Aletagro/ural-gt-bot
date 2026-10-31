@@ -3,7 +3,7 @@ import {player} from '../utilities/appState'
 import PhotoUploader from '../components/PhotoUploader'
 import Constants from '../Constants'
 
-import Styles from './styles/TournamentRules.module.css'
+import InfoNote from '../components/InfoNote'
 
 const Photovalidation = () => {
     const handleDeletePhoto = useCallback(async (photoId) => {
@@ -32,8 +32,12 @@ const Photovalidation = () => {
             onDeletePhoto={handleDeletePhoto}
             maxFiles={3}
         />
-        <p id={Styles.text}>Для фотовалидации листов необходимо загрузить фото вашей армии на этом экране. Максимум можно загрузить 3 фотографии</p>
-        <p id={Styles.text}>Крайний срок подачи фото армии 23:59 2 ноября.</p>
+        <InfoNote title='Фотовалидация'>
+            <p>Для фотовалидации листов необходимо загрузить фото вашей армии на этом экране. Максимум можно загрузить 3 фотографии</p>
+        </InfoNote>
+        <InfoNote accent title='Дедлайн'>
+            <p>Крайний срок подачи фото армии 23:59 2 ноября.</p>
+        </InfoNote>
     </div>
 }
 

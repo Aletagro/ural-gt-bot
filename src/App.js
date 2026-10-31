@@ -11,6 +11,7 @@ import Players from './screens/Players'
 import PlayerInfo from './screens/PlayerInfo'
 import Rosters from './screens/Rosters'
 import Rounds from './screens/Rounds'
+import RoundsPreview from './screens/RoundsPreview'
 import Play from './screens/Play'
 import Vote from './screens/Vote'
 import PaintVote from './screens/PaintVote'
@@ -93,6 +94,7 @@ function App() {
       <Route path={'playerInfo'} element={<PlayerInfo setShareAction={setShareAction} />} />
       <Route path={'rosters'} element={<Rosters setShareAction={setShareAction} />} />
       <Route path={'rounds'} element={<Rounds />} />
+      <Route path={'roundsPreview'} element={<RoundsPreview />} />
       <Route path={'play'} element={<Play setShareAction={setShareAction} />} />
       <Route path={'vote'} element={<Vote />} />
       <Route path={'paintVote'} element={<PaintVote />} />

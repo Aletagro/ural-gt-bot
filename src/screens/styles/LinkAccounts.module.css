@@ -1,20 +1,8 @@
-#text {
-  padding-bottom: 8px;
-}
-#link {
-  padding-bottom: 8px;
-  word-break: break-all;
-}
 .battleplan {
     width: 100%;
-    margin-bottom: 12px;
-}
-#link {
-  color: blue;
-  display: inline;
+    margin-bottom: 10px;
 }
 .button {
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
-

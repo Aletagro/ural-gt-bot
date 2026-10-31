@@ -21,18 +21,21 @@ const getJson = async (url) => {
     return response.json()
 }
 
-const Rounds = () => {
+const Rounds = ({preview = false}) => {
     const navigate = useNavigate()
     const state = useLocation()?.state
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
-    const disablePrevButton = rounds.selected === 1
-    const disableNextButton = rounds.selected === meta.round
     if (state?.round) {
         rounds.selected = state.round
     }
+    const maxRound = Math.max(meta.round || 0, 1)
+    rounds.selected = Math.min(Math.max(rounds.selected, 1), maxRound)
+    const disablePrevButton = rounds.selected <= 1
+    const disableNextButton = rounds.selected >= maxRound
 
     const loadPlayers = useCallback(async () => {
+        if (preview) return
         try {
             const json = await getJson(`${Constants.domain}/players/`)
             const data = Array.isArray(json) ? json : json?.data
@@ -43,10 +46,10 @@ const Rounds = () => {
         } catch (error) {
             console.error(error)
         }
-    }, [])
+    }, [preview])
 
-    // Паринги закончившихся раундов не меняются, их берём из памяти. Паринги текущего раунда запрашиваем заново
     const loadRound = useCallback(async () => {
+        if (preview) return
         const selected = rounds.selected
         if (rounds[selected] && selected < meta.round) return
         try {
@@ -55,7 +58,7 @@ const Rounds = () => {
         } catch (error) {
             console.error(error)
         }
-    }, [])
+    }, [preview])
 
     useEffect(() => {
         loadRound()
@@ -87,18 +90,22 @@ const Rounds = () => {
     }, [loadPlayers])
 
     const handleClickPrevRound = () => {
-        navigate('/rounds')
-        rounds.selected = rounds.selected - 1
+        if (preview) forceUpdate()
+        else navigate('/rounds')
+        rounds.selected = Math.max(rounds.selected - 1, 1)
         rounds.stuckCount = rounds.stuckCount + 1
     }
 
     const handleClickNextRound = () => {
-        navigate('/rounds')
-        rounds.selected = rounds.selected + 1
+        if (preview) forceUpdate()
+        else navigate('/rounds')
+        rounds.selected = Math.min(rounds.selected + 1, maxRound)
         rounds.stuckCount = rounds.stuckCount + 1
     }
 
     const renderPlay = (play, index) => <RoundPlay
+        key={`${rounds.selected}-${index}`}
+        preview={preview}
         play={play}
         table={index}
         round={rounds.selected}
@@ -106,22 +113,22 @@ const Rounds = () => {
     />
 
     return <div id='column' className='Chapter'>
-        <div id={Styles.buttonContainer}>
-            <Button className={Styles.nextButton} disabled={disablePrevButton} onClick={handleClickPrevRound} type='secondary'>
+        <div className={Styles.switcher}>
+            <Button className={Styles.nextButton} disabled={disablePrevButton} onClick={handleClickPrevRound} type='secondary' size='sm'>
                 Предыдущий
             </Button>
-            <b>Раунд {rounds.selected}</b>
-            <Button className={Styles.nextButton} disabled={disableNextButton} onClick={handleClickNextRound} type='secondary'>
+            <span className={Styles.roundTitle}>Раунд {rounds.selected}</span>
+            <Button className={Styles.nextButton} disabled={disableNextButton} onClick={handleClickNextRound} type='secondary' size='sm'>
                 Следующий
             </Button>
         </div>
+        <div className={Styles.head}>
+            <span className={Styles.headTable}>№</span>
+            <span>Игрок 1</span>
+            <span className={Styles.headCenter}>Счёт</span>
+            <span className={Styles.headRight}>Игрок 2</span>
+        </div>
         <div>
-            <div id={Styles.row} style={{'background': '#ECECEC'}}>
-                <p id={Styles.smallColumn}>Стол</p>
-                <p id={Styles.сolumn}>Игрок 1</p>
-                <p id={Styles.smallColumn}>Результат</p>
-                <p id={Styles.сolumn}>Игрок 2</p>
-            </div>
             {size(players.data) ? map(rounds[rounds.selected], renderPlay) : null}
         </div>
         <ToastContainer />
