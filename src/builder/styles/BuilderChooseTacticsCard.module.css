@@ -1,23 +1,68 @@
-#cardContainer {
+.counter {
+  margin: 0 2px 12px;
+  color: #8a7a4f;
+  font-size: 14px;
+}
+
+.card {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  border: 1px solid black;
-  border-radius: 4px;
+  align-items: center;
+  margin-bottom: 10px;
+  border: 1.5px solid #d8c88a;
+  border-radius: 14px;
+  background: #fffdf8;
 }
-#name {
-  padding: 16px;
-  width: 100%; 
+
+.cardChecked {
+  border-color: #b0953f;
+  background: #fbf3dc;
 }
-#checkbox {
-  padding: 16px;
+
+.cardLocked {
+  opacity: 0.55;
 }
-#backButton {
-  background: rgb(167, 167, 167);
-  color: black;
-  border-radius: 4px;
-  border-width: 0px;
-  padding: 16px;
-  font-size: 18px;
+
+.name {
+  flex: 1;
+  padding: 14px 6px 14px 16px;
+  border: 0;
+  background: transparent;
+  color: #1d1810;
   font-family: 'Minion Pro Bold';
+  font-size: 17px;
+  line-height: 1.25;
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.check {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin: 0 14px;
+  padding: 0;
+  border: 2px solid #c9b36a;
+  border-radius: 50%;
+  background: #fff;
+  color: #fbf3dc;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.checkOn {
+  border-color: #b0953f;
+  background: #b0953f;
+}
+
+.check:disabled {
+  cursor: default;
+}
+
+.backButton {
+  width: 100%;
+  margin-top: 4px;
 }

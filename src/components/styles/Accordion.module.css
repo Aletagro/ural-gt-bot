@@ -1,30 +1,41 @@
 #typeContainer {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 #headerContainer {
-  color: white;
-  background: #2E2D32;
-  border-radius: 4px;
-  border-width: 0px;
-  padding: 12px 16px;
-  margin-bottom: 12px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #14100a, #2a2210);
+  box-shadow: none;
+  color: #f0d98a;
   text-align: start;
+}
+
+#headerContainer button,
+#headerContainer > * {
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  color: #f0d98a;
 }
 
 #header {
-  color: white;
-  background: rgb(46, 46, 49);
-  justify-content: space-between;
-  text-align: start;
+  margin: 0;
+  background: transparent;
+  color: #f0d98a;
+  font-family: 'Minion Pro Bold';
   font-size: 18px;
   line-height: 24px;
+  text-align: start;
 }
 
 #subtitle {
-  color: white;
+  margin: 2px 0 0;
+  color: #d8c88a;
   font-size: 14px;
   line-height: 18px;
 }

@@ -2,7 +2,7 @@ import React, {useReducer} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {roster} from '../utilities/appState'
 import {getStringAfterDash} from '../utilities/utils'
-import Checkbox from '../components/Checkbox'
+import Button from '../components/Button'
 import Constants from '../Constants'
 
 import map from 'lodash/map'
@@ -40,19 +40,34 @@ const BuilderChooseTacticsCard = () => {
         forceUpdate()
     }
 
+    const chosenCount = size(roster.tactics)
+
     const renderTacticsCard = (card) => {
-        const isChecked = find(roster.tactics, ['id', card.id])
-        return <div key={card.id} id={Styles.cardContainer}>
-            <b id={Styles.name} onClick={handleClickCard(card)}>{getStringAfterDash(card.title)}</b>
-            <div id={Styles.checkbox}>
-                <Checkbox onClick={handleClickCheckbox(card, isChecked)} checked={isChecked} />
-            </div>
+        const isChecked = Boolean(find(roster.tactics, ['id', card.id]))
+        const isLocked = !isChecked && chosenCount >= 2
+        return <div key={card.id} className={`${Styles.card} ${isChecked ? Styles.cardChecked : ''} ${isLocked ? Styles.cardLocked : ''}`}>
+            <button type='button' className={Styles.name} onClick={handleClickCard(card)}>{getStringAfterDash(card.title)}</button>
+            <button
+                type='button'
+                className={`${Styles.check} ${isChecked ? Styles.checkOn : ''}`}
+                role='checkbox'
+                aria-checked={isChecked}
+                aria-label='Выбрать карточку'
+                disabled={isLocked}
+                onClick={handleClickCheckbox(card, isChecked)}
+            >
+                {isChecked
+                    ? <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='3' strokeLinecap='round' strokeLinejoin='round' aria-hidden='true'><path d='M5 12.5l4.5 4.5L19 7.5' /></svg>
+                    : null
+                }
+            </button>
         </div>
     }
 
     return  <div id='column' className='Chapter'>
+        <p className={Styles.counter}>Выбрано: {chosenCount} из 2</p>
         {map(tacticsCard, renderTacticsCard)}
-        <button id={Styles.backButton} onClick={handleGoBack}>Back</button>
+        <Button className={Styles.backButton} type='secondary' onClick={handleGoBack}>Back</Button>
     </div>
 }
 

@@ -3,6 +3,8 @@ import {useLocation, useNavigate} from 'react-router-dom'
 import {roster} from '../utilities/appState'
 import {capitalizeFirstLetter} from '../utilities/utils'
 
+import Button from '../components/Button'
+
 import Styles from './styles/ChooseOption.module.css'
 
 const dataBase = require('../dataBase.json')
@@ -40,12 +42,14 @@ const ChooseOption = () => {
         navigate(-1)
     }
 
-    const renderOption = (option) => <button id={Styles.button} key={option.id} onClick={handleClickOption(option.otherWarscrollOption || option.markOfChaos)}>{option.otherWarscrollOption || capitalizeFirstLetter(option.markOfChaos)}</button>
+    const renderOption = (option) => <Button className={Styles.option} type='secondary' key={option.id} onClick={handleClickOption(option.otherWarscrollOption || option.markOfChaos)}>
+        {option.otherWarscrollOption || capitalizeFirstLetter(option.markOfChaos)}
+    </Button>
 
     return  <div id='column' className='Chapter'>
         <p id={Styles.name}>{optionGroup.name}</p>
         {options.map(renderOption)}
-        <button id={Styles.delete} onClick={handleDeleteOption}>Delete</button>
+        <Button className={Styles.option} type='soft' onClick={handleDeleteOption}>Delete</Button>
     </div>
 }
 

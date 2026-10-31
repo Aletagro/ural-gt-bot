@@ -1,5 +1,6 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
+import {Chevron} from '../components/RosterParts'
 
 import Styles from './styles/BuilderRow.module.css'
 
@@ -14,8 +15,9 @@ const BuilderRow = ({title, onClick, state, navigateTo}) => {
     }
 
     return <div className='container'>
-        <button  className={Styles.row} onClick={handleClick}>
-            <b>{title}</b>
+        <button type='button' className={Styles.row} onClick={handleClick}>
+            <b className={Styles.title}>{title}</b>
+            <Chevron />
         </button>
     </div>
 }

@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import Textarea from '@mui/joy/Textarea'
-import Checkbox from '../components/Checkbox'
+import Button from '../components/Button'
 import {getTextAfter, parseRegiments, getStringAfterDash, getFactionForWHAoS, parseRegimentsForWHAoS, findCommonOptionId, setRosterGrandAlliance, parseListForListbot} from '../utilities/utils'
 import {roster, navigationState} from '../utilities/appState'
 import Constants from '../Constants'
@@ -25,6 +25,12 @@ const dataBase = require('../dataBase.json')
 
 const spellIncludesTexts = ['Lore of', 'Spell Lore', 'Arcane']
 const manifestationsIncludesTexts = ['Lore of the Abyss']
+
+const sources = [
+    {key: 'OurApp', title: 'This App'},
+    {key: 'WHAoS', title: 'WH AoS App'},
+    {key: 'Listbot', title: 'Listbot'}
+]
 
 const PasteList = () => {
     const navigate = useNavigate()
@@ -391,34 +397,25 @@ const PasteList = () => {
         setList(e.target.value)
     }
 
-    const handleChooseOurApp = () => {
-        setSource('OurApp')
-    }
-
-    const handleChangeWHAoS = () => {
-        setSource('WHAoS')
-    }
-
-    const handleChangeListbot = () => {
-        setSource('Listbot')
-    }
+    const renderSource = (item) => <button
+        key={item.key}
+        type='button'
+        role='radio'
+        aria-checked={source === item.key}
+        className={`${Styles.source} ${source === item.key ? Styles.sourceActive : ''}`}
+        onClick={() => setSource(item.key)}
+    >
+        <span className={Styles.radio} />
+        <span className={Styles.sourceTitle}>{item.title}</span>
+    </button>
 
     return <div id='column' className='Chapter'>
-        <Textarea sx={inputStyles.listName} onBlur={handleBlurName} placeholder='Paste List' />
+        <Textarea sx={inputStyles.listName} minRows={6} onBlur={handleBlurName} placeholder='Paste List' />
         <p id={Styles.notice}>List created in:</p>
-        <div onClick={handleChooseOurApp} id={Styles.sourceRow}>
-            <Checkbox onClick={handleChooseOurApp} checked={source === 'OurApp'} />
-            <p id={Styles.sourceTitle}>This App</p>
+        <div className={Styles.sources} role='radiogroup'>
+            {map(sources, renderSource)}
         </div>
-        <div onClick={handleChangeWHAoS} id={Styles.sourceRow}>
-            <Checkbox onClick={handleChangeWHAoS} checked={source === 'WHAoS'} />
-            <p id={Styles.sourceTitle}>WH AoS App</p>
-        </div>
-        <div onClick={handleChangeListbot} id={Styles.sourceRow}>
-            <Checkbox onClick={handleChangeListbot} checked={source === 'Listbot'} />
-            <p id={Styles.sourceTitle}>Listbot</p>
-        </div>
-        <button id={Styles.button} onClick={handleNavigateToRoster}>Go To Builder</button>
+        <Button className={Styles.goButton} onClick={handleNavigateToRoster}>Go To Builder</Button>
     </div>
 }
 
@@ -426,11 +423,17 @@ export default PasteList
 
 const inputStyles = {
     listName: {
-        minHeight: '48px',
-        borderRadius: '4px',
-        borderColor: '#B4B4B4',
-        color: '#000000',
+        '--Textarea-focusedThickness': '2px',
+        '--Textarea-focusedHighlight': '#b0953f',
+        minHeight: '140px',
+        padding: '8px 6px',
+        borderRadius: '16px',
+        borderColor: '#c9b36a',
+        background: '#fff',
+        color: '#1d1810',
         fontFamily: 'Minion Pro Regular',
-        marginBottom: '16px'
+        fontSize: '16px',
+        marginBottom: '16px',
+        '&:hover': {borderColor: '#b0953f'}
     }
 }

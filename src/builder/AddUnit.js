@@ -3,7 +3,7 @@ import {useLocation, useNavigate} from 'react-router-dom'
 import {roster, builderFilters} from '../utilities/appState'
 import {unitsSortesByType, sortByName, isScourgeOfGhyran} from '../utilities/utils'
 import UnitRow from './UnitRow'
-import Checkbox from '../components/Checkbox'
+import ToggleRow from '../components/ToggleRow'
 import Accordion from '../components/Accordion'
 
 import find from 'lodash/find'
@@ -246,25 +246,22 @@ const AddUnit = () => {
         builderFilters.showLegends = !showLegends
     }
 
-    const renderRow = (unit) => <UnitRow key={unit?.id} unit={unit} onClick={handleClick} isAddUnit isRegimentsOfRenown={isRegimentsOfRenown}/>
+    const renderRow = (unit) => <UnitRow key={unit?.id} unit={unit} onClick={handleClick} isAddUnit withoutMargin isRegimentsOfRenown={isRegimentsOfRenown}/>
 
     const renderUnitsType = (type) => <Accordion
+        key={type.title}
         title={type.title}
         data={type.units}
         renderItem={renderRow}
     />
 
     return <div id='column' className='Chapter'>
-        {hasPotentialLegends
-            ? <div id={Styles.potentialLegendsContainer} onClick={handleChangeHidePotentialLegends}>
-                <p id={Styles.potentialLegends}>Hide Potential Legends</p>
-                <Checkbox onClick={handleChangeHidePotentialLegends} checked={hidePotentialLegends} />
-            </div>
-            : null
-        }
-        <div id={Styles.potentialLegendsContainer} onClick={handleChangeShowLegends}>
-            <p id={Styles.potentialLegends}>Show Legends</p>
-            <Checkbox onClick={handleChangeShowLegends} checked={showLegends} />
+        <div className={Styles.filters}>
+            {hasPotentialLegends
+                ? <ToggleRow label='Hide Potential Legends' checked={hidePotentialLegends} onChange={handleChangeHidePotentialLegends} />
+                : null
+            }
+            <ToggleRow label='Show Legends' checked={showLegends} onChange={handleChangeShowLegends} />
         </div>
         {heroId || isAuxiliary
             ? units.map(renderUnitsType)

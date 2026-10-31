@@ -250,6 +250,7 @@ ${roster.points.all}/${roster.pointsLimit} Pts
             </div>
             : null
         }
+        <div className={Styles.list}>
         <p>Grand Alliance: {roster.grandAlliance}</p>
         <p>Faction: {roster.allegiance}</p>
         <p>Battle Formation: {roster.battleFormation}{roster.points.battleFormation ? ` (${roster.points.battleFormation}pts)` : ''}</p>
@@ -283,6 +284,7 @@ ${roster.points.all}/${roster.pointsLimit} Pts
         }
         <p>Wounds: {wounds}</p>
         <p>{roster.points.all}/{roster.pointsLimit} Pts</p>
+        </div>
         <ToastContainer />
     </div>
 }

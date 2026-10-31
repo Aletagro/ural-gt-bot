@@ -5,6 +5,8 @@ import {replaceAsterisks} from '../utilities/utils'
 import Plus from '../icons/plus.svg'
 import Minus from '../icons/minus.svg'
 
+import Button from '../components/Button'
+
 import Styles from './styles/ChooseWeapon.module.css'
 
 const dataBase = require('../dataBase.json')
@@ -53,7 +55,7 @@ const ChooseWeapon = () => {
         const weaponCount = weaponOption[weapon.name] || 0
         const disabledMinus = weaponCount === 0
         const disabledPlus = weaponOptionCount === limit
-        return <div id={Styles.row}>
+        return <div key={optionWeapon.weaponId} id={Styles.row}>
             <p id={Styles.text}>{weapon.name}</p>
             <div id={Styles.countContainer}>
                 <button id={disabledMinus ? Styles.disabledButton : Styles.button} disabled={disabledMinus} onClick={handleClickMinus(weaponOptionId, weapon)}><img src={Minus} alt="" /></button>
@@ -66,7 +68,7 @@ const ChooseWeapon = () => {
     const renderWeaponOption = (weaponOption) => {
         const options = dataBase.data.option.filter(option => option.optionGroupId === weaponOption.id)
         const optionWeapons = options.map(optionWeapon => dataBase.data.option_weapon.find(weapon => weapon.optionId === optionWeapon.id))
-        return <div>
+        return <div key={weaponOption.id}>
             <p id={Styles.note}>{replaceAsterisks(weaponOption.name)}</p>
             {optionWeapons.map(renderWeapon(weaponOption.id, isReinforced ? weaponOption.reinforcedLimit : weaponOption.limit))}
         </div>
@@ -74,7 +76,7 @@ const ChooseWeapon = () => {
 
     return  <div id='column' className='Chapter'>
         {weaponOptions.map(renderWeaponOption)}
-        <button id={Styles.applyButton} onClick={handleApply}>Apply</button>
+        <Button className={Styles.applyButton} onClick={handleApply}>Apply</Button>
     </div>
 }
 

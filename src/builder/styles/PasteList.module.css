@@ -1,24 +1,64 @@
-#button {
-    background: rgb(245, 201, 80);
-    color: black;
-    border-radius: 4px;
-    border-width: 0px;
-    padding: 12px;
-    font-size: 16px;
-    width: 100%;
-}
-  
-#disabledButton {
-    background: rgb(201, 200, 199);
-    color: white; 
-    border-radius: 4px;
-    border-width: 0px;
-    padding: 12px;
-    font-size: 16px;
-    width: 100%;
+#notice {
+  margin: 0 2px 10px;
+  color: #8a7a4f;
+  font-size: 14px;
 }
 
-#notice {
-    padding-bottom: 12px;
-    font-size: 12px;
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.source {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid #d8c88a;
+  border-radius: 14px;
+  background: #fffdf8;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sourceActive {
+  border-color: #b0953f;
+  background: #fbf3dc;
+}
+
+.radio {
+  position: relative;
+  flex: 0 0 auto;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #c9b36a;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.sourceActive .radio {
+  border-color: #b0953f;
+}
+
+.sourceActive .radio::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: #b0953f;
+}
+
+.sourceTitle {
+  color: #1d1810;
+  font-family: 'Minion Pro Bold';
+  font-size: 17px;
+}
+
+.goButton {
+  width: 100%;
 }

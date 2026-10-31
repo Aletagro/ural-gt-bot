@@ -1,15 +1,28 @@
 .row {
-    background-color: rgb(236, 236, 236);
-    color: black;
-    padding: 8px 8px;
-    margin-bottom: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    flex-direction: row;
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    border-radius: 8px;
+    gap: 10px;
     width: 100%;
-    border: 1px solid rgb(211, 211, 211);
-    font-family: 'Minion Pro Semi-Bold';
-  }
+    margin-bottom: 8px;
+    padding: 14px 16px;
+    border: 1px solid #d8c88a;
+    border-radius: 14px;
+    background: #fffdf8;
+    color: #b0953f;
+    font-family: inherit;
+    text-align: start;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.row:active {
+    background: #fbf3dc;
+}
+
+.title {
+    color: #1d1810;
+    font-family: 'Minion Pro Bold';
+    font-size: 17px;
+    line-height: 1.25;
+}

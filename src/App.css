@@ -41,9 +41,20 @@ b {
     color: black;
     font-family: 'Minion Pro Bold';
 }
+/* Safari подсвечивает синим любой кликабельный контейнер (cursor: pointer): отключаем для всех элементов */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
 button {
     color: black;
     font-family: 'Minion Pro Regular';
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+button:focus,
+button:focus-visible {
+    outline: none;
 }
 .Chapter {
     display: flex;
