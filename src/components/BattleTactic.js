@@ -18,8 +18,8 @@ const BattleTactic = ({tactic}) => {
     }
 
     return <>
-        <button id={Styles.battleTactic} onClick={handlleClick} style={{border: `1px solid ${borderColor}`}}>
-            <div id={Styles.header} style={{background: borderColor}}>
+        <button id={Styles.battleTactic} onClick={handlleClick} style={{borderColor}}>
+            <div id={Styles.header} style={{backgroundColor: borderColor}}>
                 <b id={Styles.headerText}>{upperFirst(tactic.battleTacticType)}</b>
                 <div id={Styles.valueContainer}>
                     <p id={Styles.value}>{tactic.victoryPoints}</p>

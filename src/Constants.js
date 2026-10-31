@@ -131,20 +131,21 @@ const Constants = {
             name: 'Faction Terrain'
         }
     ],
+    // Цвета фаз в палитре приложения: те же оттенки, что и раньше, но мягче и теплее
     abilitiesTypes: {
-        startOfTurn: 'black',
-        combatPhase: 'darkred',
-        heroPhase: 'rgb(201 189 82)',
-        movementPhase: 'grey',
-        defensive: 'darkgreen',
-        chargePhase: 'rgb(182, 92, 28)',
-        shootingPhase: 'rgb(26, 72, 110)',
-        endOfTurn: 'indigo'
+        startOfTurn: '#020101',
+        combatPhase: '#992212',
+        heroPhase: '#b0953f',
+        movementPhase: '#54534f',
+        defensive: '#3f6b3a',
+        chargePhase: '#c86011',
+        shootingPhase: '#2f5d86',
+        endOfTurn: '#5b3f7a'
     },
     tacticsTypes: {
-        affray: 'darkgreen',
-        strike: 'rgb(26, 72, 110)',
-        domination: 'rgb(182, 92, 28)'
+        affray: '#3f6b3a',
+        strike: '#2f5d86',
+        domination: '#b05f22'
     },
     regimentOfRenownsWithWizard: [
         {

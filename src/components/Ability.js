@@ -24,7 +24,7 @@ const Ability = ({ability, abilityKeywordsName, abilityIdName, isRegimentOfRenow
     const keywordsIds = map(filter(dataBase.data[_abilityKeywordsName], keyword => keyword[_abilityIdName] === ability.id), item => item.keywordId)
     const keywords = map(keywordsIds, keywordId => find(dataBase.data.keyword, keyword => keyword.id === keywordId))
     const keywordsLength = keywords.length
-    const borderColor = Constants.abilitiesTypes[ability.phase]
+    const borderColor = Constants.abilitiesTypes[ability.phase] || Constants.abilitiesTypes.heroPhase
     const usedKeywords = useMemo(() => findKeywordsInAbility(ability), [ability])
     // У абилок, которые привязаны к Regiment Of Renown сложность каста приходит в cpCost
     const castingValue = ability.castingValue || ability.cost || (isRegimentOfRenown && ability.cpCost)
@@ -72,8 +72,8 @@ ${keywords.length ? `Keywords: ${join(map(keywords, (keyword) => keyword.name), 
     const renderUsedKeyword = (keyword, index) => <p id={Styles.usedKeyword} key={index} onClick={handlleClickUsedKeyword(keyword)}>{keyword}</p>
 
     return <>
-        <button id={Styles.ability} onClick={handlleClick} style={{border: `1px solid ${borderColor}`}}>
-            <div id={Styles.header} style={{background: borderColor}}>
+        <button id={Styles.ability} onClick={handlleClick} style={{borderColor}}>
+            <div id={Styles.header} style={{backgroundColor: borderColor}}>
                 <b id={Styles.headerText}>{removeAsterisks(ability.phaseDetails)}</b>
                 <div>
                     {ability.cpCost && !isRegimentOfRenown ? <b id={Styles.cpCost}>{ability.cpCost}&nbsp;CP</b> : null}
