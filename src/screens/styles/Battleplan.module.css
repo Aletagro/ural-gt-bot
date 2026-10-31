@@ -1,5 +1,7 @@
 #text {
-    white-space: pre-line;
-    margin-bottom: 12px;
-    font-size: 18px;
-  }
+  margin: 0 0 12px;
+  color: #2b2416;
+  font-size: 17px;
+  line-height: 1.5;
+  white-space: pre-line;
+}

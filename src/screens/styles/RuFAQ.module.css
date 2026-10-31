@@ -1,13 +1,55 @@
 #container {
-  padding-bottom: 24px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid #d8c88a;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fffdf8, #fbf6e6);
 }
-#answer {
-  white-space: pre-line;
-  font-size: 18px;
-}
+
 #question {
-  white-space: pre-line;
-  font-style: italic;
-  padding-bottom: 4px;
+  display: flex;
+  gap: 10px;
+  margin: 0 0 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e6d9a6;
+  color: #1d1810;
+  font-family: 'Minion Pro Bold';
   font-size: 18px;
+  line-height: 1.3;
+  white-space: pre-line;
+}
+
+#answer {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  color: #2b2416;
+  font-size: 17px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+/* Метки Q / A: золотые «значки» */
+/* классы, чтобы вариант ответа мог переопределить цвета */
+.mark {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: #14100a;
+  color: #f0d98a;
+  font-family: 'Minion Pro Bold';
+  font-size: 13px;
+  line-height: 1;
+}
+
+.markAnswer {
+  background: #fbf3dc;
+  border: 1.5px solid #b0953f;
+  color: #6b5212;
 }

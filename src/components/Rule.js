@@ -23,35 +23,40 @@ const Rule = ({rule}) => {
 
     const renderAbility = (ability) => <Ability key={ability.id} ability={ability} abilityKeywordsName='ability_keyword' abilityIdName='abilityId' />
 
-    const renderBullet = (bullet) => <p key={bullet.id}>&#8226; {replaceAsterisks(bullet.text)}</p>
+    const renderBullet = (bullet) => <p id={Styles.bullet} key={bullet.id}>
+        <span id={Styles.bulletMark} />
+        <span>{replaceAsterisks(bullet.text)}</span>
+    </p>
 
     const renderContent = () => {
+        console.log(rule)
         switch (rule.contentType) {
             case 'text':
                 return <p id={Styles.text} key={rule.id}>{replaceAsterisks(rule.textContent)}</p>
             case 'header':
+                return <h4 id={Styles.heading} key={rule.id}>{replaceAsterisks(rule.textContent)}</h4>
             case 'textBold':
-                return <b id={Styles.text} key={rule.id}>{replaceAsterisks(rule.textContent)}</b>
+                return <b id={Styles.textBold} key={rule.id}>{replaceAsterisks(rule.textContent)}</b>
             case 'textItalic':
                 return <p id={Styles.textItalic} key={rule.id}>{replaceAsterisks(rule.textContent)}</p>
             case 'boxedText':
-                return <p id={Styles.lightgreyContainer} key={rule.id}>{replaceAsterisks(rule.textContent)}</p>
+                return <div id={Styles.box} key={rule.id}><p>{replaceAsterisks(rule.textContent)}</p></div>
             case 'accordion':
-                return <div id={Styles.lightgreyContainer} key={rule.id}>
-                    <h4>{rule.title}</h4>
+                return <div id={Styles.box} key={rule.id}>
+                    <h4 id={Styles.boxTitle}>{rule.title}</h4>
                     <p>{replaceAsterisks(rule.textContent)}</p>
                 </div>
             case 'loreAccordion':
                     return <p id={Styles.textItalic} key={rule.id}>{replaceAsterisks(rule.textContent)}</p>
             case 'image':
-                return <img src={rule.imageUrl} alt={rule.altText} width='100%' />
+                return <img id={Styles.image} src={rule.imageUrl} alt={rule.altText} />
             case 'ability':
                 const abilities = filter(dataBase.data.ability, (ability) => ability.id === rule.abilityId)
                 return map(abilities, renderAbility)
             case 'bullets':
                 const bullets = filter(dataBase.data.bullet_point, (point) => point.ruleContainerComponentId === rule.id)
                 bullets.sort((a, b) => a.displayOrder - b.displayOrder)
-                return <div id={Styles.lightgreyContainer}>
+                return <div id={Styles.box}>
                     {map(bullets, renderBullet)}
                 </div>
             default:

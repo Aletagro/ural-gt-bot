@@ -1,26 +1,110 @@
 #container {
-background: transparent;
-border-width: 0px;
-text-align: start;
-padding: 0px;
-width: 100%;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border-width: 0;
+  background: transparent;
+  text-align: start;
+  font-size: 1em;
 }
-#lightgreyContainer {
-  background: lightgrey;
-  border-radius: 8px;
-  padding: 8px;
-  white-space: pre-line;
-  margin-bottom: 16px;
-  font-size: 18px;
-}
+
 #text {
+  margin: 0 0 12px;
+  color: #2b2416;
+  font-size: 17px;
+  line-height: 1.5;
   white-space: pre-line;
-  margin-bottom: 12px;
-  font-size: 18px;
 }
-#textItalic {
+
+/* Подзаголовок внутри правил: золотая линия справа, как у заголовков секций */
+#heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 12px;
+  color: #1d1810;
+  font-family: 'Minion Pro Bold';
+  font-size: 19px;
+  line-height: 1.25;
   white-space: pre-line;
+}
+
+#heading::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  min-width: 16px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #b0953f, rgba(176, 149, 63, 0));
+}
+
+#textBold {
+  display: block;
+  margin: 0 0 12px;
+  color: #1d1810;
+  font-family: 'Minion Pro Bold';
+  font-size: 17px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+/* Лор и курсив: золотая вертикальная черта слева */
+#textItalic {
+  margin: 4px 0 16px;
+  padding: 2px 0 2px 14px;
+  border-left: 3px solid #b0953f;
+  color: #6b5a2c;
+  font-size: 17px;
   font-style: italic;
-  margin-bottom: 12px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+#box {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border: 1px solid #d8c88a;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fffefb, #fffdf5);
+  white-space: pre-line;
+}
+
+#box p {
+  margin: 0;
+  color: #2b2416;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+#boxTitle {
+  margin: 0 0 6px;
+  color: #8a6d1f;
+  font-family: 'Minion Pro Bold';
   font-size: 18px;
+  line-height: 1.25;
+}
+
+#bullet {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 0 !important;
+  padding: 3px 0;
+}
+
+#bulletMark {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  margin-top: 0.62em;
+  border-radius: 50%;
+  background: #b0953f;
+}
+
+#image {
+  display: block;
+  width: 100%;
+  margin: 0 0 16px;
+  border: 1px solid #d8c88a;
+  border-radius: 14px;
 }

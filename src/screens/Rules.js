@@ -20,11 +20,11 @@ const Rules = ({info}) => {
     const renderRule = (rule) => {
         const components = filter(dataBase.data.rule_container_component, (component) => component.ruleContainerId === rule.id)
         components.sort((a, b) => a.displayOrder - b.displayOrder)
-        return <>
-            <h4 id={Styles.title} key={rule.id}>{rule.title}</h4>
-            {rule.subtitle ? <h5>{rule.subtitle}</h5> : null}
+        return <div id={Styles.block} key={rule.id}>
+            <h4 id={Styles.title}>{rule.title}</h4>
+            {rule.subtitle ? <h5 id={Styles.subtitle}>{rule.subtitle}</h5> : null}
             {map(components, renderRuleComponent)}
-        </>
+        </div>
     }
 
     return <div id={Styles.container}>
