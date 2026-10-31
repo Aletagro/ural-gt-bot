@@ -1,15 +1,23 @@
-#rosterOption {
+#rosterOption,
+#armyOfRenown {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 2px 12px;
+  color: #1d1810;
   font-family: 'Minion Pro Bold';
-  font-size: 20px;
-  margin: 12px 0px;
+  font-size: 19px;
 }
 
-#armyOfRenown {
-  font-family: 'Minion Pro Bold';
-  font-size: 20px;
-  margin: 12px 0px;
+#rosterOption::after,
+#armyOfRenown::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, #b0953f, rgba(176, 149, 63, 0));
 }
 
 #rosterOptionText {
-  padding-bottom: 4px;
+  padding: 0px 4px 4px;
+  color: #2b2416;
 }

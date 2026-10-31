@@ -103,7 +103,6 @@ const Roster = ({roster, info}) => {
             image={manifestation.rowImage}
             navigateTo='warscroll'
             state={{unit: manifestation}}
-            card
         />
     }
 
@@ -138,7 +137,6 @@ const Roster = ({roster, info}) => {
                 image={_unit?.rowImage}
                 navigateTo='warscroll'
                 state={{unit: _unit}}
-                card
             />
     }
 

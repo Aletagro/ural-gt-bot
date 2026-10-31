@@ -260,7 +260,6 @@ const Builder = () => {
             image={unit?.rowImage}
             navigateTo='warscroll'
             state={{unit}}
-            card
         />
 
     const renderManifestation = (manifestation) => <Row
@@ -269,7 +268,6 @@ const Builder = () => {
         image={manifestation.rowImage}
         navigateTo='warscroll'
         state={{unit: manifestation, allegianceId: _alliganceId}}
-        card
     />
 
     const renderEnhancementPoints = (type) => {

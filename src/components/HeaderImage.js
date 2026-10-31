@@ -3,10 +3,12 @@ import placeholder from '../images/placeholder.png'
 
 const Styles = {
     big: {
+        display: 'block',
         width: '100%',
         aspectRatio: 1.85
     },
     wide: {
+        display: 'block',
         width: '100%',
         aspectRatio: 3.75
     }
@@ -25,7 +27,7 @@ const HeaderImage = ({src, alt, isWide}) => {
         setError(true)
     }
 
-    return <div>
+    return <div style={{borderBottom: '2px solid #b0953f'}}>
         {!loaded && <img src={placeholder} alt={alt} style={placeholderStyles}/>}
         {error ? null : <img src={src} alt={alt} style={isWide ? Styles.wide : Styles.big} onLoad={handleImageLoaded} onError={handleError}/>}
     </div>

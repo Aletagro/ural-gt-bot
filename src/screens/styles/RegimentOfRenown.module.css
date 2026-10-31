@@ -1,7 +1,27 @@
 #text {
+  margin: 0 0 6px;
+  padding: 12px 14px;
+  border: 1px solid #d8c88a;
+  border-radius: 14px;
+  background: white;
+  color: #2b2416;
+  line-height: 1.4;
   white-space: pre-line;
-  padding-bottom: 16px
 }
+
 #title {
-  padding-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 2px 12px;
+  color: #1d1810;
+  font-family: 'Minion Pro Bold';
+  font-size: 19px;
+}
+
+#title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, #b0953f, rgba(176, 149, 63, 0));
 }

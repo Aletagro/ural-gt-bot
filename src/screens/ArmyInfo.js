@@ -4,6 +4,7 @@ import Constants from '../Constants'
 import {replaceAsterisks, sortByName} from '../utilities/utils'
 import Ability from '../components/Ability'
 import HeaderImage from '../components/HeaderImage'
+import {Group} from '../components/RosterParts'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -23,13 +24,9 @@ const ArmyInfo = () => {
 
     const renderBlock = (block) => {
         const abilities = sortByName(block.abilities, 'displayOrder')
-        return <div key={block.id}>
-            <div id={Styles.blockHeader}>
-                <b id={Styles.title}>{block.name}</b>
-                {block.points ? <p id={Styles.title}>{block.points} pts</p> : null}
-            </div>
+        return <Group key={block.id} title={block.name} subtitle={block.points ? `${block.points} pts` : undefined}>
             {map(abilities, renderAbility)}
-        </div>
+        </Group>
     }
 
     return <>

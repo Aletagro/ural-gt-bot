@@ -1,50 +1,104 @@
 #container {
   display: flex;
-  justify-content: space-between;
-  background-color: rgb(236, 236, 236);
-  color: black;
-  padding: 8px 8px;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
   margin-bottom: 8px;
+  padding: 8px 10px;
+  border: 1px solid #d8c88a;
+  border-radius: 14px;
+  background-color: white;
+  color: #1d1810;
   font-size: 16px;
   text-align: start;
   cursor: pointer;
-  align-items: center;
-  border-radius: 8px;
-  width: 100%;
-  border: 1px solid rgb(211, 211, 211);
+}
+#container:active {
+  background-color: #fbf3dc;
 }
 #titleContainer {
   flex: 1;
+  min-width: 0;
 }
 #title {
   margin: 0;
-  flex: 1;
+  color: #1d1810;
+  font-family: 'Minion Pro Bold';
+  font-size: 17px;
+  line-height: 1.25;
   text-align: start;
-  font-family: 'Minion Pro Semi-Bold';
 }
 #subtitle {
+  margin: 2px 0 0;
+  color: #8a7a4f;
   font-size: 14px;
-  color: #676767;
 }
 #rightText {
   margin: 0;
-  color: #676767;
-}
-
-/* Карточный вариант (ростер): в цветах нового оформления */
-#container.card {
-  padding: 8px 10px;
-  margin-bottom: 8px;
-  border: 1px solid #d8c88a;
-  border-radius: 14px;
-  background-color: #fff;
-  -webkit-tap-highlight-color: transparent;
-}
-#container.card:active {
-  background-color: #fbf3dc;
-}
-#container.card #title {
+  padding: 3px 10px;
+  border: 1px solid #e3d49a;
+  border-radius: 999px;
+  background: white;
+  color: #8a6d1f;
   font-family: 'Minion Pro Bold';
-  font-size: 17px;
-  color: #1d1810;
+  font-size: 15px;
+  line-height: 20px;
+  white-space: nowrap;
+}
+/* Плашка-показатель справа: число и подпись под ним */
+.chip {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  min-width: 48px;
+  padding: 4px 10px 3px;
+  border: 1px solid #d8c88a;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff9e3, #fefcf0);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+.chipPair {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+.chipPair .chipCell + .chipCell {
+  padding-left: 10px;
+  border-left: 1px solid rgba(138, 109, 31, 0.35);
+}
+.chipCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.chipValue {
+  color: #6b5212;
+  font-family: 'Minion Pro Bold';
+  font-size: 18px;
+  line-height: 1.1;
+}
+.chipLabel {
+  color: #8a7a4f;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+.arrow {
+  display: flex;
+  flex: 0 0 auto;
+  color: #b0953f;
+}
+/* Выделенная строка: тёмная подложка с золотым текстом */
+#container.accent {
+  padding: 13px 14px;
+  border-color: #b0953f;
+  background: linear-gradient(135deg, #14100a, #2a2210);
+}
+#container.accent #title {
+  color: #f0d98a;
+}
+#container.accent .arrow {
+  color: #f0d98a;
 }
