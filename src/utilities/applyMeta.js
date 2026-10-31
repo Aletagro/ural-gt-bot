@@ -1,6 +1,7 @@
 import Constants from '../Constants'
 import {meta} from './appState'
 import {toMs, getClockOffset} from './roundTimer'
+import {parsePool} from './missionPool'
 
 // Переносит ответ /tournament-meta/ в общий объект meta. sentAt нужен, чтобы посчитать сдвиг часов относительно сервера
 export const applyMeta = (data, sentAt = Date.now()) => {
@@ -14,6 +15,7 @@ export const applyMeta = (data, sentAt = Date.now()) => {
     meta.isChallengesOpen = data.isChallengesOpen
     meta.isRegOpen = data.isRegOpen
     meta.battleplan = data.battleplan
+    meta.missionPool = parsePool(data.missionPool)
     meta.playersLimit = data.playersLimit
     meta.isFinished = data.isFinished
     meta.roundEndsAt = toMs(data.roundEndsAt)

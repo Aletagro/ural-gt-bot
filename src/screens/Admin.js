@@ -11,6 +11,7 @@ import {fetchMeta} from '../utilities/applyMeta'
 import {getNewEndsAt, getShiftedEndsAt, ADJUST_STEP_MIN} from '../utilities/roundTimer'
 import RoundTimer from '../components/RoundTimer'
 import Section from '../components/Section'
+import {getMissionPool, saveMission, resetMissionPool, clearMission} from '../utilities/missionPool'
 import ToggleRow from '../components/ToggleRow'
 import Modal from '../components/Modal'
 import {ModalActions, ModalButton} from '../components/ModalActions'
@@ -107,6 +108,14 @@ const Admin = () => {
         })
             .then(async () => {
                 toast.success(isStarting ? 'Раунд начался' : 'Раунд окончен', Constants.toastParams)
+                if (!isStarting) {
+                    try {
+                        await clearMission()
+                    } catch (error) {
+                        console.error(error)
+                        toast.warning('Миссия прошлого тура не сбросилась, выберите новую вручную', Constants.toastParams)
+                    }
+                }
                 // Таймер ставим отдельным запросом: если сервер его пока не поддерживает, сам старт раунда это не сломает
                 try {
                     const response = await fetch(`${Constants.domain}/tournament-meta/`, {
@@ -151,11 +160,11 @@ const Admin = () => {
     }
 
     // Ссылка на большой экран. Берём адрес приложения без хвоста Telegram (после #)
-    const handleCopyBoardLink = async () => {
-        const link = `${window.location.href.split('#')[0]}#/board`
+    const handleCopyBoardLink = (withControl) => async () => {
+        const link = `${window.location.href.split('#')[0]}#/board${withControl ? '?control=1' : ''}`
         try {
             await navigator.clipboard.writeText(link)
-            toast.success('Ссылка на большой экран скопирована', Constants.toastParams)
+            toast.success(withControl ? 'Ссылка с управлением скопирована' : 'Ссылка на большой экран скопирована', Constants.toastParams)
             setBoardLink('')
         } catch (error) {
             // в некоторых окнах Telegram буфер недоступен: показываем ссылку, её можно скопировать вручную
@@ -276,19 +285,26 @@ const Admin = () => {
     }
 
     const handleSetBattleplan = useCallback(async (battleplan) => {
-        await fetch(`${Constants.domain}/tournament-meta/`, {
-            method: 'PUT',
-            body: JSON.stringify({battleplan}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .then(() => {
-                handleGetMeta()
-            })
-            .catch(error => console.error(error))
+        try {
+            const {poolSaved} = await saveMission(battleplan)
+            if (!poolSaved) toast.warning('Миссия выбрана, но пул миссий не обновился', Constants.toastParams)
+        } catch (error) {
+            console.error(error)
+            toast.error('Не удалось выбрать миссию', Constants.toastParams)
+        }
+        await handleGetMeta()
     }, [handleGetMeta])
+
+    const handleResetMissionPool = useCallback(async () => {
+        try {
+            await resetMissionPool()
+            toast.success('Пул миссий восстановлен', Constants.toastParams)
+        } catch (error) {
+            console.error(error)
+            toast.error('Не удалось восстановить пул миссий', Constants.toastParams)
+        }
+        forceUpdate()
+    }, [])
 
     const handleClickBattleplan = (battleplan) => () => {
         handleSetBattleplan(battleplan)
@@ -456,6 +472,18 @@ const Admin = () => {
             <div id={Styles.battleplansContainer}>
                 {map(Constants.tournamentBattleplans, renderBattleplan)}
             </div>
+            <p className={Styles.note}>
+                В пуле для жеребьёвки: {size(getMissionPool())} из {size(Constants.tournamentMissionPool)}
+                {size(getMissionPool()) ? ` (${getMissionPool().join(', ')})` : ''}
+            </p>
+            <Button
+                type='soft'
+                size='sm'
+                className={Styles.button}
+                onClick={() => askConfirm('Вернуть все миссии в пул жеребьёвки?', 'Вернуть', handleResetMissionPool)}
+            >
+                Сбросить пул миссий
+            </Button>
         </Section>
         <Section title='Сообщение игрокам' hint='Придёт всем участникам в Telegram'>
             {renderSendMessage()}
@@ -465,7 +493,8 @@ const Admin = () => {
         </Section>
         <Section title='Инструменты' collapsible defaultOpen={false}>
             <Button type='soft' className={Styles.button} onClick={handleDownloadRosters} disabled={pdfLoading}>{pdfLoading ? 'Готовлю PDF…' : 'Скачать все ростеры (PDF)'}</Button>
-            <Button type='soft' className={Styles.button} onClick={handleCopyBoardLink}>Скопировать ссылку на большой экран</Button>
+            <Button type='soft' className={Styles.button} onClick={handleCopyBoardLink(false)}>Скопировать ссылку на большой экран</Button>
+            <Button type='soft' className={Styles.button} onClick={handleCopyBoardLink(true)}>Ссылка на большой экран с жеребьёвкой миссий</Button>
             {boardLink ? <input id={Styles.boardLink} value={boardLink} readOnly onFocus={(e) => e.target.select()} /> : null}
         </Section>
         <Modal {...confirmData} onClose={closeConfirm} />

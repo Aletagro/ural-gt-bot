@@ -1,10 +1,13 @@
-import React, {useEffect, useReducer} from 'react'
+import React, {useEffect, useReducer, useState} from 'react'
+import {useLocation} from 'react-router-dom'
 
 import Constants from '../Constants'
 import {players, meta} from '../utilities/appState'
 import {fetchMeta} from '../utilities/applyMeta'
 import {useRoundTimer} from '../utilities/useRoundTimer'
 import {getChampions, getArmyImage} from '../utilities/utils'
+import {getMissionPool, isDrawNeeded, drawMission} from '../utilities/missionPool'
+import MissionDraw from '../components/MissionDraw'
 
 import map from 'lodash/map'
 
@@ -46,6 +49,9 @@ const Board = () => {
     // eslint-disable-next-line
     const [_, forceUpdate] = useReducer((x) => x + 1, 0)
     const timer = useRoundTimer()
+    // Кнопка жеребьёвки есть только на экране, открытом по ссылке с управлением (#/board?control=1): обычную ссылку видят все
+    const isControl = new URLSearchParams(useLocation().search).has('control')
+    const [draw, setDraw] = useState(null)
 
     // Данные обновляются сами: на экране никто ничего не нажимает
     useEffect(() => {
@@ -82,6 +88,41 @@ const Board = () => {
     const idle = getIdleText()
     const isRunning = timer.status !== 'off'
 
+    const handleDraw = async () => {
+        const pool = getMissionPool()
+        if (!pool.length || draw) return
+        setDraw({pool, title: null, round: meta.round})
+        try {
+            const result = await drawMission(pool)
+            setDraw({pool, title: result.title, round: meta.round, poolSaved: result.poolSaved})
+        } catch (error) {
+            console.error(error)
+            setDraw({pool, title: null, round: meta.round, error: 'Ответ сервера не получен. Попробуйте ещё раз'})
+        }
+    }
+
+    const handleCloseDraw = () => {
+        setDraw(null)
+        fetchMeta().then(() => forceUpdate())
+    }
+
+    const renderMission = () => {
+        if (draw) return null
+        return <div className={Styles.missionBlock}>
+            {meta.battleplan
+                ? <>
+                    <p className={Styles.missionLabel}>Миссия</p>
+                    <p className={Styles.missionName}>{meta.battleplan}</p>
+                </>
+                : null
+            }
+            {isControl && isDrawNeeded()
+                ? <button type='button' className={Styles.drawButton} onClick={handleDraw}>Определить миссию</button>
+                : null
+            }
+        </div>
+    }
+
     const renderTimer = () => <section className={`${Styles.timer} ${STATUS_CLASS[timer.status] || ''}`}>
         {isRunning
             ? <>
@@ -96,6 +137,7 @@ const Board = () => {
                 <p className={Styles.idleTitle}>{idle.title}</p>
             </>
         }
+        {renderMission()}
     </section>
 
     const renderLeader = () => <section className={Styles.leader}>
@@ -131,6 +173,7 @@ const Board = () => {
     }
 
     return <div className={Styles.board}>
+        {draw ? <MissionDraw {...draw} onDone={handleCloseDraw} /> : null}
         <header className={Styles.top}>
             <span className={Styles.brand}>IceHammer 2026</span>
         </header>

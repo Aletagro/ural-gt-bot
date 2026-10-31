@@ -1,5 +1,6 @@
 /* Большой экран для проектора. Все размеры считаются от --u, чтобы экран одинаково выглядел на любом мониторе 16:9 */
 .board {
+    position: relative;
     --u: min(1vw, 1.78vh);
     display: flex;
     flex-direction: column;
@@ -41,6 +42,7 @@
 
 /* ---------- Таймер ---------- */
 .timer {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -257,4 +259,43 @@
     .board {
         --u: min(1.9vw, 1vh);
     }
+}
+
+/* ---------- Миссия тура ---------- */
+.missionBlock {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(var(--u) * 2.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--u) * 0.6);
+    padding: 0 calc(var(--u) * 2);
+}
+.missionLabel {
+    font-size: calc(var(--u) * 1.8);
+    letter-spacing: 0.30em;
+    text-transform: uppercase;
+    color: #a39a80;
+}
+.missionName {
+    font-family: 'Minion Pro Bold';
+    font-size: calc(var(--u) * 3.0);
+    line-height: 1.1;
+    color: #f0d98a;
+}
+.drawButton {
+    margin-top: calc(var(--u) * 1);
+    padding: calc(var(--u) * 1.1) calc(var(--u) * 3.4);
+    border: calc(var(--u) * 0.2) solid #b0953f;
+    border-radius: 999px;
+    background: #b0953f;
+    color: #14100a;
+    font-family: 'Minion Pro Bold';
+    font-size: calc(var(--u) * 2.4);
+    cursor: pointer;
+}
+.drawButton:hover {
+    background: #c7a94b;
 }

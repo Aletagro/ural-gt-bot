@@ -545,6 +545,8 @@ const Constants = {
         'The Iron March',
         'Allies of the Free Cities'
     ],
+    // Пул миссий текущего турнира (из регламента). Из него жеребьёвка выбирает миссию на каждый тур
+    tournamentMissionPool: ['Bloodstained Coasts', 'Avalanche of Ash', "What's Yours is Ours", 'Treacherous Ground', 'Escape From the Coast', 'Power of the Realms'],
     tournamentBattleplans: [
         {
             "id": "3954f6d2-275b-4286-b1b4-a0f1af2cda16",
