@@ -99,7 +99,7 @@ const Players = () => {
             <p id={Styles.сolumn}>{_player}</p>
             {city ? <p id={Styles.subtitle}>{city}</p> : null}
         </div>
-        {meta.round || !meta.isRostersShow
+        {meta.round || meta.isRostersShow
             ? <>
                 <p className={Styles.armyCell}>{army}</p>
                 <p id={Styles.winsColumn} className={!isHeader && !w && !d ? Styles.zero : ''}>
@@ -109,7 +109,7 @@ const Players = () => {
                 <p id={Styles.smallColumn} className={isHeader ? '' : tp ? Styles.score : Styles.zero}>{tp || 0}</p>
                 <p id={Styles.smallColumn} className={!isHeader && !last ? Styles.zero : ''}>{last || 0}</p>
             </>
-            : <>
+            : <div>
                 {withRoster
                     ? <img id={Styles.rosterIcon} src={General} alt="" />
                     : null
@@ -120,7 +120,7 @@ const Players = () => {
                         : <PaintIcon crossed id={Styles.painIcon} />
                     : null
                 }
-            </>
+            </div>
         }
     </div>
 
