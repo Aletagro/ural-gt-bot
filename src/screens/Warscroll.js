@@ -163,12 +163,10 @@ const Warscroll = () => {
         {replaceAsterisks(option.optionText)}
     </p>
 
-    const renderCharacteristic = (characteristic, index) => <div key={index} id={Styles.characteristicSubContainer} style={{width: '20%'}}>
-        <div id={Styles.characteristicValueContainer}>
-            <p id={size(characteristic?.value) > 3 ? Styles.characteristicLongValue : Styles.characteristicValue}>
-                {characteristic.value}
-            </p>
-        </div>
+    const renderCharacteristic = (characteristic, index) => <div key={index} id={Styles.characteristicSubContainer}>
+        <p id={size(characteristic?.value) > 3 ? Styles.characteristicLongValue : Styles.characteristicValue}>
+            {characteristic.value}
+        </p>
         <p id={Styles.characteristicTitle}>{characteristic.title}</p>
     </div>
 
@@ -214,7 +212,7 @@ const Warscroll = () => {
                     {unit.baseSize ? <p id={Styles.unitDetailsText}><b>Base size:</b> {unit.baseSize}</p> : null}
                     {regimentOptions.length > 0
                         ? <>
-                            <b>Regiment Options</b>
+                            <b className={Styles.subTitle}>Regiment Options</b>
                             <div id={Styles.regimentOptionContainer}>
                                 {map(regimentOptions, renderRegimentOption)}
                             </div>
