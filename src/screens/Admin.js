@@ -10,6 +10,10 @@ import {useRosterPdf} from '../utilities/useRosterPdf'
 import {fetchMeta} from '../utilities/applyMeta'
 import {getNewEndsAt, getShiftedEndsAt, ADJUST_STEP_MIN} from '../utilities/roundTimer'
 import RoundTimer from '../components/RoundTimer'
+import Section from '../components/Section'
+import ToggleRow from '../components/ToggleRow'
+import Modal from '../components/Modal'
+import {ModalActions, ModalButton} from '../components/ModalActions'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -31,7 +35,24 @@ const Admin = () => {
     const [message, setMessage] = useState('')
     const {start: handleDownloadRosters, isBuilding: pdfLoading, readyModal} = useRosterPdf()
     const [boardLink, setBoardLink] = useState('')
+    const [pending, setPending] = useState({})
+    const [confirmData, setConfirmData] = useState({visible: false, title: ''})
     const [pairingsError, setPairingsError] = useState('')
+
+    const closeConfirm = () => setConfirmData({visible: false, title: ''})
+
+    // Окно подтверждения для действий, которые видят все игроки или которые нельзя отменить
+    const askConfirm = (title, confirmLabel, onConfirm) => setConfirmData({
+        visible: true,
+        title,
+        Content: () => <ModalActions>
+            <ModalButton onClick={closeConfirm}>Отмена</ModalButton>
+            <ModalButton type='primary' onClick={() => {
+                closeConfirm()
+                onConfirm()
+            }}>{confirmLabel}</ModalButton>
+        </ModalActions>
+    })
 
     const handleCreateParings = useCallback(async () => {
         setPairingsError('')
@@ -205,35 +226,49 @@ const Admin = () => {
         })
     }, [])
 
+    // Переключатель меняется сразу, а при ошибке сервера возвращается обратно
     const handleChangeMetaParam = useCallback((param) => async () => {
-        await fetch(`${Constants.domain}/tournament-meta/`, {
-            method: 'PUT',
-            body: JSON.stringify({[param]: !meta[param]}),
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .then(() => {
-                handleGetMeta()
+        const previous = meta[param]
+        setPending((prev) => ({...prev, [param]: true}))
+        meta[param] = !previous
+        forceUpdate()
+        try {
+            const response = await fetch(`${Constants.domain}/tournament-meta/`, {
+                method: 'PUT',
+                body: JSON.stringify({[param]: !previous}),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': "application/json, text/javascript, /; q=0.01"
+                }
             })
-            .catch(error => console.error(error))
+            if (!response.ok) throw new Error(`HTTP ${response.status}`)
+            await handleGetMeta()
+        } catch (error) {
+            console.error(error)
+            meta[param] = previous
+            forceUpdate()
+            toast.error('Не удалось сохранить настройку', Constants.toastParams)
+        } finally {
+            setPending((prev) => ({...prev, [param]: false}))
+        }
     }, [handleGetMeta])
 
     const handleSendMessage = useCallback(async () => {
-        setMessage('')
-        await fetch(`${Constants.domain}/messages/send_mas_message/?message=${message}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': "application/json, text/javascript, /; q=0.01"
-            }
-        })
-            .then(() => {
-                toast.success('Сообщение всем игрокам отправлено', Constants.toastParams)
-                forceUpdate()
+        try {
+            const response = await fetch(`${Constants.domain}/messages/send_mas_message/?message=${encodeURIComponent(message)}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': "application/json, text/javascript, /; q=0.01"
+                }
             })
-            .catch(error => console.error(error))
+            if (!response.ok) throw new Error(`HTTP ${response.status}`)
+            setMessage('')
+            toast.success('Сообщение всем игрокам отправлено', Constants.toastParams)
+        } catch (error) {
+            console.error(error)
+            toast.error('Сообщение не отправлено, текст сохранён. Попробуйте ещё раз', Constants.toastParams)
+        }
       }, [message])
 
     const handleChangeMessage = (e) => {
@@ -280,13 +315,13 @@ const Admin = () => {
         else if (isSameCity) tableClass += ` ${Styles.conflictCity}`
         else if (isSameFaction) tableClass += ` ${Styles.conflictMirror}`;
 
-        return <div className={tableClass}>
+        return <div key={index} className={tableClass}>
             <div className={Styles.tableHeader}>
                 <span className={Styles.tableName}>Стол {index}</span>
                 <div className={Styles.badges}>
-                    {alreadyPlayed && <span className={Styles.badgeAlready} title="Уже играли!">🚫 Уже играли!</span>}
-                    {isSameCity && <span className={Styles.badgeCity} title="Игроки из одного города">📍 {player1.city}</span>}
-                    {isSameFaction && <span className={Styles.badgeMirror} title="Зеркальный матч армий!">⚔️ Mirror</span>}
+                    {alreadyPlayed && <span className={Styles.badgeAlready} title="Уже играли!">Уже играли</span>}
+                    {isSameCity && <span className={Styles.badgeCity} title="Игроки из одного города">{player1.city}</span>}
+                    {isSameFaction && <span className={Styles.badgeMirror} title="Зеркальный матч армий!">Зеркало</span>}
                 </div>
             </div>
             <div 
@@ -319,7 +354,13 @@ const Admin = () => {
             label='Cообщение всем игрокам'
             value={message}
         />
-        <Button className={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</Button>
+        <Button
+            className={Styles.sendMessageButton}
+            disabled={!trim(message)}
+            onClick={() => askConfirm('Отправить сообщение всем игрокам?', 'Отправить', handleSendMessage)}
+        >
+            Отправить
+        </Button>
     </div>
 
     const renderBattleplan = (battleplan) =>
@@ -332,22 +373,54 @@ const Admin = () => {
             {battleplan.title}
         </Button>
 
-    return <div id='column' className='Chapter'>
-        <b id={Styles.text}>Состояние турнира</b>
-        <p id={Styles.text}>Статус: {setTournamentStatus(meta.isRoundActive, meta.round)}</p>
-        {meta.round === 0
-            ? <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('rostersBeingAccepted')}>{meta.rostersBeingAccepted ? 'Прекратить приём ростеров' : 'Начать принимать ростера'}</Button>
+    const nextRound = meta.round + 1
+    const toggles = [
+        {param: 'isRegOpen', label: 'Регистрация открыта', hint: 'Игроки могут подать заявку на турнир'},
+        ...(meta.round === 0 ? [{param: 'rostersBeingAccepted', label: 'Приём ростеров', hint: 'Игроки могут отправлять списки армий'}] : []),
+        {param: 'isRostersShow', label: 'Ростеры видны всем', hint: 'Игроки видят списки друг друга'},
+        {param: 'isTournamentRulesShow', label: 'Регламент виден всем'},
+        {param: 'isPlayersListShow', label: 'Список участников виден всем'},
+        {param: 'isChallengesOpen', label: 'Челленджи открыты', hint: 'Игроки могут бросать вызовы'}
+    ]
+
+    const renderToggle = ({param, label, hint}) => <ToggleRow
+        key={param}
+        label={label}
+        hint={hint}
+        checked={Boolean(meta[param])}
+        disabled={Boolean(pending[param])}
+        onChange={handleChangeMetaParam(param)}
+    />
+
+    const renderRoundControl = () => <>
+        <div className={Styles.status}>
+            <span className={Styles.statusLabel}>Сейчас</span>
+            <b className={Styles.statusValue}>{setTournamentStatus(meta.isRoundActive, meta.round)}</b>
+        </div>
+        {meta.isRoundActive
+            ? <>
+                <RoundTimer />
+                {meta.roundEndsAt
+                    ? <div id={Styles.timerButtons}>
+                        <Button type='secondary' className={Styles.half} onClick={handleChangeTimer(-ADJUST_STEP_MIN)}>−{ADJUST_STEP_MIN} мин</Button>
+                        <Button type='secondary' className={Styles.half} onClick={handleChangeTimer(ADJUST_STEP_MIN)}>+{ADJUST_STEP_MIN} мин</Button>
+                    </div>
+                    : <Button type='secondary' className={Styles.button} onClick={handleChangeTimer(0)}>Запустить таймер раунда</Button>
+                }
+            </>
             : null
         }
-        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isRostersShow')}>{meta.isRostersShow ? 'Скрыть ростера' : 'Открыть ростера для всех'}</Button>
-        <Button type='soft' className={Styles.button} onClick={handleDownloadRosters} disabled={pdfLoading}>{pdfLoading ? 'Готовлю PDF…' : 'Скачать все ростеры (PDF)'}</Button>
-        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isTournamentRulesShow')}>{meta.isTournamentRulesShow ? 'Скрыть регламент' : 'Открыть регламент для всех'}</Button>
-        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isPlayersListShow')}>{meta.isPlayersListShow ? 'Скрыть список участников' : 'Открыть список участников для всех'}</Button>
-        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isChallengesOpen')}>{meta.isChallengesOpen ? 'Закрыть челленджи' : 'Открыть челленджи'}</Button>
-        <Button type='soft' className={Styles.button} onClick={handleChangeMetaParam('isRegOpen')}>{meta.isRegOpen ? 'Закрыть регистрацию' : 'Открыть регистрацию'}</Button>
-        <Button type='soft' className={Styles.button} onClick={handleCopyBoardLink}>Скопировать ссылку на большой экран</Button>
-        {boardLink ? <input id={Styles.boardLink} value={boardLink} readOnly onFocus={(e) => e.target.select()} /> : null}
-        <Button type='primary' className={Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>Создать паринги {meta.round + 1} раунда</Button>
+        {meta.isRoundActive
+            ? <Button type='danger' className={Styles.button} onClick={() => askConfirm('Закончить раунд?', 'Закончить', handleChangeRoundActive)}>Закончить раунд</Button>
+            : <Button className={Styles.button} onClick={handleChangeRoundActive}>Начать раунд для игроков</Button>
+        }
+    </>
+
+    const renderPairings = () => <>
+        <Button type={isEmpty(pairings) ? 'primary' : 'secondary'} className={Styles.button} onClick={handleCreateParings} disabled={meta.isRoundActive}>
+            {isEmpty(pairings) ? `Создать паринги ${nextRound} раунда` : 'Создать заново'}
+        </Button>
+        {meta.isRoundActive ? <p className={Styles.note}>Пока идёт раунд, паринги следующего создать нельзя</p> : null}
         {pairingsError
             ? <div id={Styles.errorBox}>
                 <b>Не удалось создать паринги</b>
@@ -358,35 +431,44 @@ const Admin = () => {
         {isEmpty(pairings)
             ? null
             : <>
-                <b id={Styles.text}>Паринги</b>
+                <p className={Styles.note}>Нажмите на двух игроков, чтобы поменять их местами</p>
                 <div id={Styles.pairingsGrid}>
                     {map(pairings, renderTable)}
                 </div>
-                <Button type='soft' className={Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
-                    Запарить выбранных игроков друг на друга
+                <Button type='secondary' className={Styles.button} onClick={handleChangePlayers} disabled={isChangeButtonDisabled}>
+                    Поменять выбранных игроков ({size(playersForChange)} из 2)
                 </Button>
-                <Button type='soft' className={Styles.button} onClick={handleStartRound}>Принять паринги</Button>
+                <Button className={Styles.button} onClick={() => askConfirm(`Принять паринги ${nextRound} раунда? Игроки увидят свои столы`, 'Принять', handleStartRound)}>
+                    Принять паринги
+                </Button>
             </>
         }
-        <Button type='primary' className={Styles.button} onClick={handleChangeRoundActive}>{meta.isRoundActive ? 'Закончить раунд' : 'Начать раунд для игроков'}</Button>
-        {meta.isRoundActive
-            ? <>
-                <RoundTimer />
-                {meta.roundEndsAt
-                    ? <div id={Styles.timerButtons}>
-                        <Button type='soft' className={Styles.button} onClick={handleChangeTimer(-ADJUST_STEP_MIN)}>−{ADJUST_STEP_MIN} мин</Button>
-                        <Button type='soft' className={Styles.button} onClick={handleChangeTimer(ADJUST_STEP_MIN)}>+{ADJUST_STEP_MIN} мин</Button>
-                    </div>
-                    : <Button type='soft' className={Styles.button} onClick={handleChangeTimer(0)}>Запустить таймер раунда</Button>
-                }
-            </>
-            : null
-        }
-        {renderSendMessage()}
-        <b id={Styles.text}>Установить активную миссию</b>
-        <div id={Styles.battleplansContainer}>
-            {map(Constants.tournamentBattleplans, renderBattleplan)}
-        </div>
+    </>
+
+    return <div id='column' className={`Chapter ${Styles.admin}`}>
+        <Section title='Раунд' hint='Ход турнира и таймер'>
+            {renderRoundControl()}
+        </Section>
+        <Section title='Паринги' hint={`Подготовка ${nextRound} раунда`}>
+            {renderPairings()}
+        </Section>
+        <Section title='Миссия' hint={meta.battleplan ? `Сейчас: ${meta.battleplan}` : 'Активная миссия не выбрана'}>
+            <div id={Styles.battleplansContainer}>
+                {map(Constants.tournamentBattleplans, renderBattleplan)}
+            </div>
+        </Section>
+        <Section title='Сообщение игрокам' hint='Придёт всем участникам в Telegram'>
+            {renderSendMessage()}
+        </Section>
+        <Section title='Что видят игроки' hint='Включите или отключите разделы приложения' collapsible defaultOpen={meta.round === 0}>
+            {toggles.map(renderToggle)}
+        </Section>
+        <Section title='Инструменты' collapsible defaultOpen={false}>
+            <Button type='soft' className={Styles.button} onClick={handleDownloadRosters} disabled={pdfLoading}>{pdfLoading ? 'Готовлю PDF…' : 'Скачать все ростеры (PDF)'}</Button>
+            <Button type='soft' className={Styles.button} onClick={handleCopyBoardLink}>Скопировать ссылку на большой экран</Button>
+            {boardLink ? <input id={Styles.boardLink} value={boardLink} readOnly onFocus={(e) => e.target.select()} /> : null}
+        </Section>
+        <Modal {...confirmData} onClose={closeConfirm} />
         <ToastContainer />
         {readyModal}
     </div>

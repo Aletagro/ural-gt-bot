@@ -2,22 +2,31 @@
     padding-bottom: 12px;
 }
 .button {
-    margin-bottom: 16px;
+    width: 100%;
+    margin-bottom: 12px;
+}
+.half {
+    flex: 1;
+    margin-bottom: 12px;
+}
+.admin {
+    color: #1d1810;
 }
 #sendMessageContainer {
     display: flex;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     align-items: center;
 }
 .sendMessageButton {
-    height: 46px;
-    margin-left: 16px;
+    height: 52px;
+    margin-left: 10px;
 }
 #battleplansContainer {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 8px;
     width: 100%;
+    padding-bottom: 8px;
 }
 
 /* паринги */
@@ -28,9 +37,10 @@
     padding-bottom: 16px;
 }
 .tableCard {
-    background-color: #141416;
-    border-radius: 12px;
-    padding: 16px;
+    background-color: #fffdf8;
+    border: 1.5px solid #d8c88a;
+    border-radius: 16px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -39,68 +49,72 @@
     max-width: 400px;
 }
 .conflictMirror {
-    background: linear-gradient(180deg, #141416 0%, #d4a373 200%);
-    box-shadow: 0 4px 20px rgba(212, 163, 115, 0.05);
+    border-color: #b0953f;
+    background: linear-gradient(180deg, #fffdf8 0%, #f6ecc9 100%);
 }
 .conflictCity {
-    background: linear-gradient(180deg, #201313 0%, #043447 100%);
-    box-shadow: 0 4px 20px rgba(122, 31, 29, 0.1);
-}  
+    border-color: #d1a45a;
+    background: linear-gradient(180deg, #fffdf8 0%, #fbeccd 100%);
+}
 .alreadyPlayed {
-    background: linear-gradient(180deg, #201313 0%, #470504 50%);
-    box-shadow: 0 4px 20px rgba(122, 31, 29, 0.1);
-}  
+    border-color: #c9887d;
+    background: linear-gradient(180deg, #fffdf8 0%, #f8dcd6 100%);
+}
 .tableHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    gap: 8px;
+    border-bottom: 1px solid #efe6c6;
     padding-bottom: 8px;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
 }
 .tableName {
     font-size: 16px;
-    font-weight: bold;
-    color: #ffffff;
+    color: #1d1810;
     font-family: 'Minion Pro Bold', serif;
 }
 .badges {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 6px;
 }
 .badgeCity, .badgeMirror, .badgeAlready {
     font-size: 11px;
-    font-weight: bold;
+    font-family: 'Minion Pro Bold';
     padding: 3px 8px;
     border-radius: 20px;
     text-transform: uppercase;
-}  
+    letter-spacing: 0.3px;
+}
 .badgeCity {
-    background-color: rgba(105, 218, 238, 0.15);
-    color: #57a4ec;
+    background-color: #f3dcaa;
+    color: #7a5410;
 }
 .badgeMirror {
-    background-color: rgba(212, 163, 115, 0.15);
-    color: #e6b88a;
+    background-color: #efe0a8;
+    color: #6f5a12;
 }
 .badgeAlready {
-    background-color: rgba(229, 27, 27, 0.15);
-    color: #ff4141;
+    background-color: #f2c4bc;
+    color: #8c2a1d;
 }
 .playerRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px 12px;
-    background-color: rgba(36, 39, 41, 0.8);
-    border: 1px solid transparent;
-    border-radius: 8px;
+    background-color: #fbf6e6;
+    border: 1.5px solid transparent;
+    border-radius: 12px;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     transition: all 0.15s ease;
 }
 .playerSelected {
-    background-color: rgba(36, 129, 204, 0.1) !important;
-    border-color: #2481cc;
+    background-color: #f3e3a8 !important;
+    border-color: #b0953f;
 }
 .playerInfo {
     display: flex;
@@ -109,33 +123,62 @@
     max-width: 85%;
 }
 .playerName {
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
+    color: #1d1810;
+    font-size: 15px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .playerFaction {
-    color: #848895;
+    color: #8a7a4f;
     font-size: 12px;
 }
 .customCheck {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #353945;
+    flex: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #d8c88a;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 11px;
-    font-weight: bold;
-    color: #ffffff;
+    font-size: 12px;
+    color: #8a6d1f;
+    background: #fff;
     transition: all 0.15s ease;
 }
 .playerSelected .customCheck {
-    background-color: #2481cc;
-    border-color: #2481cc;
+    background-color: #b0953f;
+    border-color: #b0953f;
+    color: #fbf3dc;
+}
+
+/* Статус и пояснения */
+.status {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: #f6ecc9;
+}
+.statusLabel {
+    color: #8a7a4f;
+    font-size: 13px;
+}
+.statusValue {
+    color: #1d1810;
+    font-family: 'Minion Pro Bold';
+    font-size: 17px;
+    text-align: right;
+}
+.note {
+    margin-bottom: 10px;
+    color: #8a7a4f;
+    font-size: 13px;
+    line-height: 1.3;
 }
 
 #timerButtons {
@@ -148,8 +191,10 @@
     margin-bottom: 8px;
     padding: 8px;
     box-sizing: border-box;
-    border: 1px solid #b4b4b4;
-    border-radius: 4px;
+    border: 1.5px solid #d8c88a;
+    border-radius: 12px;
+    background: #fff;
+    color: #1d1810;
     font-size: 14px;
 }
 #errorBox {

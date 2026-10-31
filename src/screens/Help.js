@@ -29,14 +29,14 @@ const Help = () => {
                 <div id={Styles.answerContainer}>
                     <p id={Styles.answer}>{prediction}</p>
                 </div>
-                <Button type='soft' className={Styles.button} onClick={handleClear}>Еще вопрос?</Button>
+                <Button type='secondary' className={Styles.button} onClick={handleClear}>Еще вопрос?</Button>
             </React.Fragment>
             : <React.Fragment key='questions'>
-                <Button type='soft' className={Styles.button} onClick={handlePrediction('charge')}>Чарджить?</Button>
-                <Button type='soft' className={Styles.button} onClick={handlePrediction('double')}>Брать дабл?</Button>
-                <Button type='soft' className={Styles.button} onClick={handlePrediction('divide')}>Делить атаки?</Button>
-                <Button type='soft' className={Styles.button} onClick={handlePrediction('doubleRoll')}>Что кидать на ролл офф?</Button>
-                <Button type='soft' className={Styles.button} onClick={handlePrediction('justification')}>Как объяснить, почему проиграл игру</Button>
+                <Button type='secondary' className={Styles.button} onClick={handlePrediction('charge')}>Чарджить?</Button>
+                <Button type='secondary' className={Styles.button} onClick={handlePrediction('double')}>Брать дабл?</Button>
+                <Button type='secondary' className={Styles.button} onClick={handlePrediction('divide')}>Делить атаки?</Button>
+                <Button type='secondary' className={Styles.button} onClick={handlePrediction('doubleRoll')}>Что кидать на ролл офф?</Button>
+                <Button type='secondary' className={Styles.button} onClick={handlePrediction('justification')}>Как объяснить, почему проиграл игру</Button>
             </React.Fragment>
         }
     </div>
