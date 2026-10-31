@@ -8,6 +8,8 @@ import RosterEasy from '../components/RosterEasy'
 import Checkbox from '../components/Checkbox'
 import Modal from '../components/Modal'
 import {ModalActions, ModalButton} from '../components/ModalActions'
+import Section from '../components/Section'
+import ToggleRow from '../components/ToggleRow'
 import PhotoGallery from '../components/PhotoGallery'
 import FloatingLabelInput from '../components/FloatingLabelInput'
 import PlayerHero from '../components/PlayerHero'
@@ -234,7 +236,7 @@ const PlayerInfo = ({setShareAction}) => {
             label='Cообщение игроку (от бота)'
             value={message}
         />
-        <Button className={Styles.sendMessageButton} onClick={handleSendMessage}>Отправить</Button>
+        <Button className={Styles.sendMessageButton} disabled={!message.trim()} onClick={handleSendMessage}>Отправить</Button>
     </div>
 
     const renderTabs = () => {
@@ -285,15 +287,37 @@ const PlayerInfo = ({setShareAction}) => {
 
     // Вкладка «Судье»
     const renderJudge = () => <div className={CardStyles.judgeBlock}>
-        <p className={CardStyles.judgeStatus}>Статус игрока: <b>{isPlayerActive ? 'Активен' : 'Не активен'}</b></p>
-        {size(photos)
-            ? <PhotoGallery photos={photos} />
-            : null
-        }
-        <Button className={Styles.rulesButton} onClick={handleClickPhotovalidation}>{paintChecked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}</Button>
-        <Button className={Styles.rulesButton} onClick={handleOpenStatusModal}>Изменить статус игрока на {isPlayerActive ? '"Не активен"' : '"Активен"'}</Button>
-        <Button className={Styles.rulesButton} onClick={handleOpenDropModal}>Удалить игрока с турнира</Button>
-        {renderSendMessage()}
+        <Section
+            title='Фотовалидация'
+            hint={paintChecked ? 'Принята' : size(photos) ? `Ждёт проверки · фото: ${size(photos)}` : 'Фото ещё не загружены'}
+        >
+            {size(photos)
+                ? <PhotoGallery photos={photos} />
+                : <p className={Styles.judgeNote}>Игрок пока не загрузил фото армии</p>
+            }
+            <Button
+                type={paintChecked ? 'secondary' : 'primary'}
+                className={Styles.judgeButton}
+                onClick={handleClickPhotovalidation}
+            >
+                {paintChecked ? 'Отменить фотовалидацию' : 'Принять фотовалидацию'}
+            </Button>
+            <p className={Styles.judgeNote}>Игроку придёт сообщение от бота с результатом проверки</p>
+        </Section>
+        <Section title='Участие в турнире'>
+            <ToggleRow
+                label='Игрок активен'
+                hint='Перед изменением попросим подтвердить'
+                checked={isPlayerActive}
+                onChange={handleOpenStatusModal}
+            />
+        </Section>
+        <Section title='Сообщение игроку' hint='Придёт от имени бота'>
+            {renderSendMessage()}
+        </Section>
+        <Section title='Удаление игрока' hint='Необратимое действие' collapsible defaultOpen={false}>
+            <Button className={Styles.judgeButton} onClick={handleOpenDropModal} type='danger'>Удалить игрока с турнира</Button>
+        </Section>
     </div>
 
     return <div id='column' className='Chapter'>

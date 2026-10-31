@@ -1,7 +1,115 @@
-#container {
-    padding-top: 16px;
+.gallery {
+    margin-bottom: 12px;
 }
-#title {
-    font-size: 16px;
-    padding-bottom: 12px;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 10px;
+}
+.thumb {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    padding: 0;
+    overflow: hidden;
+    border: 1.5px solid #c9b36a;
+    border-radius: 16px;
+    background: #14100a;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.15s ease;
+}
+.thumb:active {
+    transform: scale(0.97);
+}
+.thumb img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.thumbIndex {
+    position: absolute;
+    left: 6px;
+    bottom: 6px;
+    min-width: 20px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: rgba(20, 16, 10, 0.78);
+    color: #f0d98a;
+    font-family: 'Minion Pro Bold';
+    font-size: 12px;
+    line-height: 18px;
+}
+
+/* Просмотр на весь экран */
+.viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(12, 9, 4, 0.94);
+    animation: fadeIn 0.2s ease both;
+}
+.photo {
+    max-width: 94vw;
+    max-height: 82vh;
+    object-fit: contain;
+    border: 2px solid #b0953f;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+.round {
+    position: absolute;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    outline: none;
+    border: 1.5px solid #b0953f;
+    border-radius: 50%;
+    background: rgba(20, 16, 10, 0.8);
+    color: #f0d98a;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+.round:focus-visible {
+    box-shadow: 0 0 0 3px rgba(240, 217, 138, 0.5);
+}
+.round:active {
+    background: #b0953f;
+    color: #14100a;
+}
+.closeButton {
+    top: 64px;
+    right: 12px;
+}
+.prev {
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.next {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.counter {
+    position: absolute;
+    bottom: 20px;
+    padding: 5px 14px;
+    border: 1.5px solid #5a4a1f;
+    border-radius: 999px;
+    background: rgba(20, 16, 10, 0.8);
+    color: #f0d98a;
+    font-family: 'Minion Pro Bold';
+    font-size: 14px;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
