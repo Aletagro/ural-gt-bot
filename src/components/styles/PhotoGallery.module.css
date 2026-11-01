@@ -51,6 +51,11 @@
     justify-content: center;
     background: rgba(12, 9, 4, 0.94);
     animation: fadeIn 0.2s ease both;
+    /* жесты (щипок, перемещение) обрабатываем сами: браузер не должен их перехватывать */
+    touch-action: none;
+    overscroll-behavior: contain;
+    -webkit-user-select: none;
+    user-select: none;
 }
 .photo {
     max-width: 94vw;
@@ -59,6 +64,8 @@
     border: 2px solid #b0953f;
     border-radius: 14px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    will-change: transform;
+    -webkit-user-drag: none;
 }
 .round {
     position: absolute;
