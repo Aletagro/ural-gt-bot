@@ -40,7 +40,7 @@ function PhotoUploader({onUploadSuccess, photoUrls, apiUrl, onDeletePhoto, maxFi
       setPreviews([])
     }
     const options = {
-      maxSizeMB: 1,
+      maxSizeMB: 5,
       maxWidthOrHeight: 1200,
       useWebWorker: true,
       fileType: 'image/jpeg'
