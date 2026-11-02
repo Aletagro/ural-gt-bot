@@ -333,7 +333,7 @@ const Admin = () => {
 
         return <div key={index} className={tableClass}>
             <div className={Styles.tableHeader}>
-                <span className={Styles.tableName}>Стол {index}</span>
+                <span className={Styles.tableName}>Стол{Constants.noBreakSpace}{index}</span>
                 <div className={Styles.badges}>
                     {alreadyPlayed && <span className={Styles.badgeAlready} title="Уже играли!">Уже играли</span>}
                     {isSameCity && <span className={Styles.badgeCity} title="Игроки из одного города">{player1.city}</span>}
