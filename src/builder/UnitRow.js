@@ -7,6 +7,7 @@ import Plus from '../icons/plus.svg'
 import Minus from '../icons/minus.svg'
 import DarkGeneral from '../icons/darkGeneral.svg'
 import InfoIcon from '../icons/InfoIcon'
+import UnitStats from '../components/UnitStats'
 import {capitalizeFirstLetter, camelCaseToWords} from '../utilities/utils'
 
 import map from 'lodash/map'
@@ -236,6 +237,7 @@ const UnitRow = ({
             </div>
             : null
         }
+        {!isAddUnit && !isRegimentsOfRenown ? <div className={Styles.statsFooter}><UnitStats unit={isInfo ? unitInfo : unit} /></div> : null}
     </div>
 }
 

@@ -109,7 +109,7 @@
 }
 #chooseEnhancementButton:active,
 #infoEnhancementButton:active {
-  background: #f6ecc9;
+  background: rgba(176, 149, 63, 0.14);
 }
 #button {
   display: flex;
@@ -121,11 +121,11 @@
   padding: 0;
   border: 1.5px solid #c9b36a;
   border-radius: 50%;
-  background: #fbf6e6;
+  background: #fff;
   cursor: pointer;
 }
 #button:active {
-  background: #f6ecc9;
+  background: rgba(176, 149, 63, 0.14);
 }
 #infoButton {
   display: flex;
@@ -155,4 +155,13 @@
   width: 15px;
   height: 15px;
   object-fit: contain;
+}
+
+.statsFooter {
+  padding: 6px 10px;
+  border-top: 1px solid #efe5c2;
+  background: white;
+}
+.statsFooter:empty {
+  display: none;
 }

@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import Row from './Row'
+import UnitStats from './UnitStats'
 import Modal from './Modal'
 import Regiment from '../builder/Regiment'
 import UnitRow from '../builder/UnitRow'
 import Constants from '../Constants'
-import {getInfo, getStringAfterDash} from '../utilities/utils'
+import {getInfo, getStringAfterDash, getUnitsRowRightText} from '../utilities/utils'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -97,12 +98,14 @@ const Roster = ({roster, info}) => {
 
     const renderManifestation = ({id}) => {
         const manifestation = find(dataBase.data.warscroll, ['id', id])
+        const loreId = find(dataBase.data.lore, ['name', roster.manifestationLore])?.id
         return <Row
             key={manifestation.id}
             title={manifestation.name}
             image={manifestation.rowImage}
+            rightText={getUnitsRowRightText(manifestation, {allegianceId: roster.allegianceId, loreId})}
             navigateTo='warscroll'
-            state={{unit: manifestation}}
+            state={{unit: manifestation, allegianceId: roster.allegianceId, loreId}}
         />
     }
 
@@ -135,6 +138,7 @@ const Roster = ({roster, info}) => {
                 key={`${_unit.id}-${index}`}
                 title={`${_unit.modelCount} ${_unit.name}`}
                 image={_unit?.rowImage}
+                extra={<UnitStats unit={_unit} />}
                 navigateTo='warscroll'
                 state={{unit: _unit}}
             />

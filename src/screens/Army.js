@@ -1,6 +1,8 @@
 import React from 'react'
-import {useLocation} from 'react-router-dom'
-import Row from '../components/Row'
+import {useLocation, useNavigate} from 'react-router-dom'
+import ImageCard from '../components/ImageCard'
+import Tile from '../components/Tile'
+import {ListCard, ListItem, SectionTitle} from '../components/ListCard'
 import HeaderImage from '../components/HeaderImage'
 import Constants from '../Constants'
 import {roster, navigationState} from '../utilities/appState'
@@ -17,8 +19,10 @@ import Styles from './styles/Army.module.css'
 
 const dataBase = require('../dataBase.json')
 
+
 const Army = () => {
     const {allegiance, isArmyOfRenown, allegianceId, grandAlliance} = useLocation().state
+    const navigate = useNavigate()
     let _allegiance = allegiance
     if (!allegiance) {
         _allegiance = find(dataBase.data.faction_keyword, faction => faction.id === allegianceId)
@@ -91,59 +95,61 @@ const Army = () => {
         navigationState.isBuilder = true
     }
 
-    const renderRow = (item) => <Row
-        key={item.title}
-        title={item.title}
-        navigateTo={item.screen || 'armyInfo'}
-        state={{allegiance: _allegiance, info: item}}
-    />
+    const handleOpenBuilder = () => {
+        handleClickBuilder()
+        navigate('/builder', {state: {title: 'Builder', alliganceId: _allegiance.id}})
+    }
 
-    const renderBuilderRow = () => <Row
-        title='Builder'
-        navigateTo='builder'
-        state={{alliganceId: _allegiance.id}}
-        onClick={handleClickBuilder}
-    />
-
-    const renderRoRRow = () => <Row 
-        title='Regiment Of Renown'
-        navigateTo='regimentOfRenownList'
-        state={{alliganceId: _allegiance.id}}
-    />
-
-    const renderAddendas = () => <Row
-        title={addendas.name}
-        navigateTo='ruleChapters'
-        state={{chapter: addendas}}
-    />
-
-    const renderArmyOfRenown = (item) => <Row
-        key={item.title}
+    const renderArmyOfRenown = (item) => <ImageCard
+        key={item.id}
         title={item.name}
+        image={item.selectFactionImage}
         navigateTo='armyOfRenown'
         state={{allegiance: item, isArmyOfRenown: true, grandAlliance}}
     />
 
-    const renderRosterOptions = (option) => <p id={Styles.rosterOptionText} key={option.id}>&#8226; {replaceAsterisks(option.text)}</p>
+    const renderRosterOptions = (option) => <p className={Styles.rosterOptionText} key={option.id}>&#8226; {replaceAsterisks(option.text)}</p>
+
+    const [warscrolls, ...rules] = items
+
+    const renderTile = (item) => <Tile
+        key={item.title}
+        compact
+        title={item.title}
+        navigateTo='armyInfo'
+        state={{allegiance: _allegiance, info: item}}
+    />
 
     return <>
         <HeaderImage src={_allegiance.rosterHeaderImage} alt={_allegiance.name} isWide />
         <div id='column' className='Chapter'>
-            {items.map(renderRow)}
-            {renderBuilderRow()}
-            {renderRoRRow()}
-            {addendas && renderAddendas()}
+            <Tile
+                featured
+                title='Warscrolls'
+                text='All units of the army'
+                navigateTo='units'
+                state={{allegiance: _allegiance, info: warscrolls}}
+            />
+            {size(rules)
+                ? <div className={Styles.grid}>{map(rules, renderTile)}</div>
+                : null
+            }
+            <ListCard>
+                <ListItem title='Builder' onClick={handleOpenBuilder} />
+                <ListItem title='Regiments of Renown' navigateTo='regimentOfRenownList' state={{alliganceId: _allegiance.id}} />
+                {addendas ? <ListItem title={addendas.name} navigateTo='ruleChapters' state={{chapter: addendas}} /> : null}
+            </ListCard>
             {armyOfRenown.length > 0
-                ? <div>
-                    <p id={Styles.armyOfRenown}>Army of Renown</p>
+                ? <>
+                    <SectionTitle>Armies of Renown</SectionTitle>
                     {map(armyOfRenown, renderArmyOfRenown)}
-                </div>
+                </>
                 : null
             }
             {isArmyOfRenown
                 ? <>
-                    <h4 id={Styles.rosterOption}>Roster Options</h4>
-                    {map(rosterOptions, renderRosterOptions)}
+                    <SectionTitle>Roster Options</SectionTitle>
+                    <div className={Styles.options}>{map(rosterOptions, renderRosterOptions)}</div>
                 </>
                 : null
             }

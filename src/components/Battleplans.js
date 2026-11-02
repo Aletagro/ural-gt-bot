@@ -1,5 +1,5 @@
 import React from 'react';
-import Row from './Row'
+import {ListCard, ListItem} from './ListCard'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
@@ -10,7 +10,7 @@ const Battleplans = ({id}) => {
     const battleplans = filter(dataBase.data.rule_container, (group) => group.ruleSectionId === id)
     battleplans.sort((a, b) => a.displayOrder - b.displayOrder)
 
-    const renderRow = (battleplan) => <Row
+    const renderRow = (battleplan) => <ListItem
         key={battleplan.id}
         title={battleplan.title}
         navigateTo='battleplan'
@@ -18,7 +18,9 @@ const Battleplans = ({id}) => {
     />
 
     return <div id='column' className='Chapter'>
-        {battleplans && map(battleplans, renderRow)}
+        <ListCard>
+            {battleplans && map(battleplans, renderRow)}
+        </ListCard>
     </div>
 }
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import Constants from '../Constants'
-import Row from '../components/Row'
-import HeaderImage from '../components/HeaderImage'
+import ImageCard from '../components/ImageCard'
 
 import map from 'lodash/map'
 import filter from 'lodash/filter'
@@ -31,19 +30,18 @@ const Legends = () => {
         }
     })
 
-    const renderRow = (grandAlliance) => <Row
+    const renderRow = (grandAlliance) => <ImageCard
         key={grandAlliance.id}
         title={grandAlliance.name}
+        image={grandAlliance.image}
+        size='lg'
         navigateTo='legendUnits'
         state={{units: sortedUnits[grandAlliance.name], image: grandAlliance.image}}
     />
 
-    return <>
-        <HeaderImage src='https://dhss9aar8ocw.cloudfront.net/8b513e4a-acff-43fe-823d-77c34ce62687' alt='legends' />
-        <div id='column' className='Chapter'>
-            {map(Constants.grandAlliances, renderRow)}
-        </div>
-    </>
+    return <div id='column' className='Chapter'>
+        {map(Constants.grandAlliances, renderRow)}
+    </div>
 }
 
 export default Legends

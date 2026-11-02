@@ -1,8 +1,7 @@
 import React from 'react';
 import {useLocation} from 'react-router-dom'
 import {sortByName} from '../utilities/utils'
-import Row from '../components/Row'
-import HeaderImage from '../components/HeaderImage'
+import ImageCard from '../components/ImageCard'
 import Constants from '../Constants'
 
 import map from 'lodash/map'
@@ -26,20 +25,19 @@ const Catalog = () => {
 
     const renderRow = (allegiance) => {
         const isLegendaryArmies = includes(Constants.legendaryArmies, allegiance.id)
-        return <Row
+        return <ImageCard
             key={allegiance.id}
-            title={`${allegiance.name}${isLegendaryArmies ? ' (Legend)' : ''}`}
+            title={allegiance.name}
+            image={allegiance.selectFactionImage}
+            badge={isLegendaryArmies ? 'Legend' : undefined}
             navigateTo='army'
             state={{allegiance, grandAlliance: grandAlliance.name}}
         />
     }
 
-    return <>
-        <HeaderImage src={grandAlliance.image} alt={grandAlliance.name} isWide />
-        <div id='column' className='Chapter'>
-            {allegiances && map(allegiances, renderRow)}
-        </div>
-    </>
+    return <div id='column' className='Chapter'>
+        {allegiances && map(allegiances, renderRow)}
+    </div>
 }
 
 export default Catalog

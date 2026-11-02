@@ -1,6 +1,5 @@
 import React from 'react';
-import Row from '../components/Row'
-import HeaderImage from '../components/HeaderImage'
+import {ListCard, ListItem} from '../components/ListCard'
 import Constants from '../Constants'
 import {sortByName} from '../utilities/utils'
 
@@ -16,7 +15,7 @@ const CoreDocuments = () => {
     let documents = map(documentsIds, ({publicationId}) => find(dataBase.data.publication, ['id', publicationId]))
     documents = sortByName(documents)
 
-    const renderRow = (document) => <Row
+    const renderRow = (document) => <ListItem
         key={document.id}
         title={document.name}
         navigateTo='ruleSections'
@@ -28,13 +27,12 @@ const CoreDocuments = () => {
     //     navigateTo='ruFAQ'
     // />
 
-    return <>
-        <HeaderImage src={Constants.rulesImage} alt='Core Documents' />
-        <div id='column' className='Chapter'>
+    return <div id='column' className='Chapter'>
+        <ListCard>
             {documents && map(documents, renderRow)}
-            {/* {renderRuFAQRow()} */}
-        </div>
-    </>
+        </ListCard>
+        {/* {renderRuFAQRow()} */}
+    </div>
 }
 
 export default CoreDocuments

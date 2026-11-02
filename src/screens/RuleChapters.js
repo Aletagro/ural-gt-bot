@@ -1,6 +1,6 @@
 import React from 'react';
 import {useLocation} from 'react-router-dom'
-import Row from '../components/Row'
+import {ListCard, ListItem} from '../components/ListCard'
 import Battleplans from '../components/Battleplans'
 import Tactics from '../components/Tactics'
 import Rules from './Rules'
@@ -15,7 +15,7 @@ const RuleChapters = () => {
     const ruleChapters = filter(dataBase.data.rule_section, (section) => section.parentId === chapter.id)
     ruleChapters.sort((a, b) => a.displayOrder - b.displayOrder)
 
-    const renderRow = (paragraph) => <Row
+    const renderRow = (paragraph) => <ListItem
         key={paragraph.id}
         title={paragraph.name}
         navigateTo='rules'
@@ -23,11 +23,11 @@ const RuleChapters = () => {
     />
 
     return ruleChapters.length > 0
-        ? <>
-            <div id='column' className='Chapter'>
+        ? <div id='column' className='Chapter'>
+            <ListCard>
                 {ruleChapters && map(ruleChapters, renderRow)}
-            </div>
-        </>
+            </ListCard>
+        </div>
         : chapter.name === 'Battleplans 2026-27'
             ? <Battleplans id={chapter.id} />
             : chapter.name === 'Battle Tactics 2026-27'

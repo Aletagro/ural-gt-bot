@@ -79,7 +79,7 @@
 }
 
 .statButton:active {
-    background: #fbf3dc;
+    background: rgba(176, 149, 63, 0.1);
 }
 
 .statButton .statValue {
@@ -142,7 +142,7 @@
 }
 
 .factMain:active {
-    background: #fbf3dc;
+    background: rgba(176, 149, 63, 0.1);
 }
 
 .factText {
@@ -194,7 +194,7 @@
 }
 
 .infoButton:active {
-    background: #fbf3dc;
+    background: rgba(176, 149, 63, 0.1);
 }
 
 .group {
@@ -202,7 +202,7 @@
     overflow: hidden;
     border: 1.5px solid #c9b36a;
     border-radius: 18px;
-    background: #fbf6e6;
+    background: #fcfaf3;
 }
 
 .groupHead {

@@ -1,0 +1,58 @@
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 6px 2px 12px;
+  color: #1d1810;
+  font-family: 'Minion Pro Bold';
+  font-size: 20px;
+  line-height: 1.2;
+}
+.sectionTitle::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, #b0953f, rgba(176, 149, 63, 0));
+}
+.card {
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1.5px solid #c9b36a;
+  border-radius: 16px;
+  background: #fff;
+}
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 15px 16px;
+  border: 0;
+  border-bottom: 1px solid #ece3c4;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.item:last-child {
+  border-bottom: 0;
+}
+.item:active {
+  background: rgba(176, 149, 63, 0.1);
+}
+.title {
+  flex: 1;
+  min-width: 0;
+  color: #1d1810;
+  font-family: 'Minion Pro Bold';
+  font-size: 17px;
+  line-height: 1.25;
+}
+.chevron {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid #b0953f;
+  border-right: 2px solid #b0953f;
+  transform: rotate(45deg);
+}

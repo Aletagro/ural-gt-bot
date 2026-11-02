@@ -49,13 +49,13 @@
   padding: 0;
   border: 1.5px solid #c9b36a;
   border-radius: 50%;
-  background: #fbf6e6;
+  background: #fcfaf3;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
 #button:active {
-  background: #f6ecc9;
+  background: rgba(176, 149, 63, 0.14);
 }
 
 #disabledButton {

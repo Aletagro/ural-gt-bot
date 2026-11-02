@@ -142,6 +142,8 @@ const ChooseGrandAlliance = () => {
     const renderRow = (grandAlliance) => <BuilderRow
         key={grandAlliance.id}
         title={grandAlliance.name}
+        image={grandAlliance.image}
+        size='lg'
         navigateTo='chooseFaction'
         state={{grandAlliance}}
         onClick={handleClick}

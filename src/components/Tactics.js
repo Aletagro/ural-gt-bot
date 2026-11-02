@@ -1,5 +1,5 @@
 import React from 'react'
-import Row from './Row'
+import {ListCard, ListItem} from './ListCard'
 import {sortByName, getStringAfterDash} from '../utilities/utils'
 
 import map from 'lodash/map'
@@ -11,7 +11,7 @@ const Tactics = ({id}) => {
     const tactics = filter(dataBase.data.rule_container, (group) => group.ruleSectionId === id)
     sortByName(tactics, 'displayOrder')
 
-    const renderRow = (tactic) => <Row
+    const renderRow = (tactic) => <ListItem
         key={tactic.id}
         title={getStringAfterDash(tactic.title)}
         navigateTo='tactic'
@@ -19,7 +19,9 @@ const Tactics = ({id}) => {
     />
 
     return <div id='column' className='Chapter'>
-        {tactics && map(tactics, renderRow)}
+        <ListCard>
+            {tactics && map(tactics, renderRow)}
+        </ListCard>
     </div>
 }
 

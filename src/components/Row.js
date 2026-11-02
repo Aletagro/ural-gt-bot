@@ -30,7 +30,7 @@ export const renderRightText = (data) => {
     </div>
 }
 
-const Row = ({title, subtitle, rightText, image, navigateTo, state, onClick, accent}) => {
+const Row = ({title, subtitle, rightText, image, navigateTo, state, onClick, accent, extra}) => {
     const navigate = useNavigate()
 
     const handleClick = () => {
@@ -47,6 +47,7 @@ const Row = ({title, subtitle, rightText, image, navigateTo, state, onClick, acc
         <div id={Styles.titleContainer}>
             <b id={Styles.title}>{title}</b>
             {subtitle ? <p id={Styles.subtitle}>{subtitle}</p> : null}
+            {extra ? <div className={Styles.extra}>{extra}</div> : null}
         </div>
         {rightText ? renderRightText(rightText) : null}
         <span className={Styles.arrow}><Chevron /></span>
