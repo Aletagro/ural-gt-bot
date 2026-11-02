@@ -48,12 +48,17 @@
     z-index: 1;
     cursor: pointer;
 }
+#headerDeleteIcon,
+#headerCopyIcon {
+    top: 28px;
+    display: flex;
+    padding: 0;
+    transform: translateY(-50%);
+}
 #headerDeleteIcon {
-    top: 14px;
     right: 48px;
 }
 #headerCopyIcon {
-    top: 12px;
     right: 80px;
 }
 #separator {

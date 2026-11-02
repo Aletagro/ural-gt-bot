@@ -78,7 +78,7 @@ const CustomModal = ({title, text, visible, ability, onClose, Content}) => {
     const renderContent = () => Content()
 
     return <>
-        <Modal open={visible} onClose={handleClose} slotProps={{backdrop: {sx: backdropSx}}}>
+        <Modal open={visible} onClose={handleClose} sx={{zIndex: 10000}} slotProps={{backdrop: {sx: backdropSx}}}>
         <ModalDialog layout='center' sx={getDialogSx(Boolean(ability))}>
             <ModalClose sx={closeSx} />
             {ability
