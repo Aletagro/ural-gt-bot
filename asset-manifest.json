@@ -1,10 +1,9 @@
 {
   "files": {
-    "main.css": "/ural-gt-bot/static/css/main.ba7f493d.css",
-    "main.js": "/ural-gt-bot/static/js/main.c8351cdb.js",
+    "main.css": "/ural-gt-bot/static/css/main.208ec201.css",
+    "main.js": "/ural-gt-bot/static/js/main.4d8bcee7.js",
     "static/media/IceHammer.png": "/ural-gt-bot/static/media/IceHammer.77fb02d034c4b921ec55.png",
     "static/media/placeholder.png": "/ural-gt-bot/static/media/placeholder.816f67bc014b91894c3e.png",
-    "static/media/malekith.png": "/ural-gt-bot/static/media/malekith.6e0b07f7d78ebe386dc6.png",
     "static/media/Fyreslayers.webp": "/ural-gt-bot/static/media/Fyreslayers.8b672db5773cdf198bee.webp",
     "static/media/SonsOfBehemat.webp": "/ural-gt-bot/static/media/SonsOfBehemat.3c1440acaa250a5df74d.webp",
     "static/media/Sylvaneth.webp": "/ural-gt-bot/static/media/Sylvaneth.d4000ce163c46a5bec00.webp",
@@ -49,11 +48,11 @@
     "static/media/general.svg": "/ural-gt-bot/static/media/general.38560f8a3e8fd25424a3ba1ad3c9e899.svg",
     "static/media/plus.svg": "/ural-gt-bot/static/media/plus.1821b69dd59c40f640858714c03302df.svg",
     "static/media/minus.svg": "/ural-gt-bot/static/media/minus.e96d94d06862f0e438941502b49deb0e.svg",
-    "main.ba7f493d.css.map": "/ural-gt-bot/static/css/main.ba7f493d.css.map",
-    "main.c8351cdb.js.map": "/ural-gt-bot/static/js/main.c8351cdb.js.map"
+    "main.208ec201.css.map": "/ural-gt-bot/static/css/main.208ec201.css.map",
+    "main.4d8bcee7.js.map": "/ural-gt-bot/static/js/main.4d8bcee7.js.map"
   },
   "entrypoints": [
-    "static/css/main.ba7f493d.css",
-    "static/js/main.c8351cdb.js"
+    "static/css/main.208ec201.css",
+    "static/js/main.4d8bcee7.js"
   ]
 }
