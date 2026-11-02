@@ -15,13 +15,13 @@ const Manifestations = () => {
     let lores = filter(dataBase.data.lore, (lore) => lore.publicationId === Constants.manifestationsPublicationId)
     sortByName(lores)
 
-    const renderUnit = (unit) => <Row
+    const renderUnit = (loreId) => (unit) => <Row
         key={unit.id}
         title={unit.name}
-        rightText={getUnitsRowRightText(unit)}
+        rightText={getUnitsRowRightText(unit, {loreId})}
         image={unit?.rowImage}
         navigateTo='warscroll'
-        state={{unit}}
+        state={{unit, loreId}}
     />
 
     const renderLore = (lore) => {
@@ -34,7 +34,7 @@ const Manifestations = () => {
             title={lore.name}
             subtitle={lore.points ? `${lore.points} pts` : undefined}
             data={units}
-            renderItem={renderUnit}
+            renderItem={renderUnit(lore.id)}
         />
     }
 

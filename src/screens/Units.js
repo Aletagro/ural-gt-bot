@@ -85,7 +85,7 @@ const Units = () => {
     const renderRow = (unit) => <Row
         key={unit?.id}
         title={unit?.name}
-        rightText={getUnitsRowRightText(unit)}
+        rightText={getUnitsRowRightText(unit, {allegianceId: allegiance?.id})}
         image={unit?.rowImage}
         navigateTo='warscroll'
         state={{unit, allegianceId: allegiance?.id}}

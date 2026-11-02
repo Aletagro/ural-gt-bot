@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {useLocation, useNavigate} from 'react-router-dom'
 import Constants from '../Constants'
 import {calc} from '../utilities/appState'
-import {getValue, replaceAsterisks, getRegimentOption} from '../utilities/utils'
+import {getValue, replaceAsterisks, getRegimentOption, getManifestationInfo} from '../utilities/utils'
 import Ability from '../components/Ability'
 import HeaderImage from '../components/HeaderImage'
 import Modal from '../components/Modal'
@@ -23,29 +23,14 @@ const Warscroll = () => {
     window.scrollTo(0, 0)
     const [modalData, setModalData] = useState({visible: false, title: '', text: ''})
     const navigate = useNavigate()
-    const {unit, allegianceId} = useLocation().state
+    const {unit, allegianceId, loreId} = useLocation().state
     const weapons = filter(dataBase.data.warscroll_weapon, weapon => weapon.warscrollId === unit.id)
     const meleeWeapons = filter(weapons, weapon => weapon.type === 'melee')
     const rangeWeapons = filter(weapons, weapon => weapon.type === 'ranged')
     let abilities = filter(dataBase.data.warscroll_ability, ability => ability.warscrollId === unit.id)
     const regimentOptions = filter(dataBase.data.warscroll_regiment_option, option => option.warscrollId === unit.id)
     const isManifestation = includes(unit.referenceKeywords, 'Manifestation')
-    let manifestationInfo = undefined
-    if (isManifestation) {
-        if (allegianceId) {
-            const loreId = find(dataBase.data.lore, lore => lore.factionId === allegianceId && find(Constants.manifestationIncludesTexts, text => includes(lore.name, text)))?.id
-            const lores = filter(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])
-            const loresInfo = map(lores, ({loreAbilityId}) => find(dataBase.data.lore_ability, ['id', loreAbilityId]))
-            manifestationInfo = find(loresInfo, ['loreId', loreId])
-            if (!manifestationInfo) {
-                const loreAbilityId = find(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])?.loreAbilityId
-                manifestationInfo = find(dataBase.data.lore_ability, ['id', loreAbilityId])
-            }
-        } else {
-            const loreAbilityId = find(dataBase.data.lore_ability_linked_warscroll, ['warscrollId', unit.id])?.loreAbilityId
-            manifestationInfo = find(dataBase.data.lore_ability, ['id', loreAbilityId])
-        }
-    }
+    const manifestationInfo = getManifestationInfo(unit, {allegianceId, loreId})
     const characteristics = [
         {value: unit.move, title: 'Move'},
         {value: unit.health, title: 'Health'},

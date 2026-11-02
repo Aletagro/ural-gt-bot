@@ -39,7 +39,7 @@ const RegimentsOfRenownList = () => {
         return <Row
             key={regiment.id}
             title={regiment.name}
-            rightText={regiment?.regimentOfRenownPointsCost ? `${regiment?.regimentOfRenownPointsCost} pts` : undefined}
+            rightText={regiment?.regimentOfRenownPointsCost ? {points: regiment.regimentOfRenownPointsCost} : undefined}
             navigateTo='regimentOfRenown'
             state={{regiment}}
             image={image}

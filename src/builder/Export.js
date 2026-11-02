@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import Constants from '../Constants'
 import {roster, player, meta} from '../utilities/appState'
-import {getErrors, getWarnings, getWoundsCount, cleanBuilder, toTelegramSafe} from '../utilities/utils'
+import {getErrors, getWarnings, getWoundsCount, cleanBuilder, toTelegramSafe, getDropsCount} from '../utilities/utils'
 
 import map from 'lodash/map'
 import get from 'lodash/get'
@@ -23,7 +23,7 @@ const Export = () => {
     const warnings = getWarnings(roster)
     const [disableButton, setDisableButton] = useState(Boolean(errors.length || warnings.length))
     const wounds = getWoundsCount(roster)
-    const drops = roster.regiments.length + roster.auxiliaryUnits.length + (roster.regimentOfRenown ? 1 : 0)
+    const drops = getDropsCount(roster)
     const navigate = useNavigate()
 
     const getUniques = () => {
