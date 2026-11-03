@@ -1,5 +1,6 @@
 import React, {useState, useCallback} from 'react'
 import Modal from './Modal'
+import BadgeIcon from './BadgeIcon'
 
 import map from 'lodash/map'
 
@@ -29,7 +30,7 @@ const PlayerBadges = ({badges}) => {
             ? <div className={Styles.badges}>
                 {map(earned, (badge) =>
                     <div key={badge.id} onClick={handleClickBadge(badge)} className={`${Styles.badge} ${badge.kind === 'fun' ? Styles.badgeFun : ''}`}>
-                        <span className={Styles.badgeIcon}>{badge.icon}</span>
+                        <span className={Styles.badgeIcon}><BadgeIcon name={badge.icon} /></span>
                         <p className={Styles.badgeTitle}>{badge.title}</p>
                         <p className={Styles.badgeCaption}>{badge.caption}</p>
                     </div>
@@ -47,7 +48,7 @@ const PlayerBadges = ({badges}) => {
                     ? <div className={Styles.lockedList}>
                         {map(locked, (badge) =>
                             <div key={badge.id} className={Styles.locked}>
-                                <span className={Styles.lockedIcon}>{badge.icon}</span>
+                                <span className={Styles.lockedIcon}><BadgeIcon name={badge.icon} size={20} /></span>
                                 <div>
                                     <p className={Styles.lockedTitle}>{badge.title}</p>
                                     <p className={Styles.lockedHow}>{badge.how}</p>

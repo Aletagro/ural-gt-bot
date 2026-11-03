@@ -145,49 +145,43 @@ const wonWhere = (me, predicate) => me.sides.some((s) => s.outcome === 'win' && 
 export const BADGES = [
     // ---------- Серьёзные ----------
     {
-        id: 'champion', kind: 'main', icon: '🏆', needsFinish: true,
+        id: 'champion', kind: 'main', icon: 'trophy', needsFinish: true,
         title: 'Чемпион турнира', caption: 'Все остальные смотрят на вас снизу вверх',
         how: 'Занять 1 место по итогам турнира',
         check: (ctx, me) => me.place === 1,
     },
     {
-        id: 'podium', kind: 'main', icon: '🏅', needsFinish: true,
+        id: 'podium', kind: 'main', icon: 'medal', needsFinish: true,
         title: 'Призёр', caption: 'Пьедестал занят, и вы на нём',
         how: 'Занять 2 или 3 место по итогам турнира',
         check: (ctx, me) => me.place !== null && me.place >= 2 && me.place <= TOP_PLACES,
     },
     {
-        id: 'alliance_leader', kind: 'main', icon: '🛡️',
+        id: 'alliance_leader', kind: 'main', icon: 'shield',
         title: 'Лучший в Альянсе', caption: 'Никто из вашего Гранд Альянса не выступил лучше',
         how: 'Занять лучшее место среди игроков своего Гранд Альянса',
         check: (ctx, me) => ctx.allianceLeaders.get(me.profile.grandAlliance) === me.id,
     },
     {
-        id: 'paint_winner', kind: 'main', icon: '🎨', needsFinish: true,
+        id: 'paint_winner', kind: 'main', icon: 'brush', needsFinish: true,
         title: 'Мастер кисти', caption: 'Лучший покрас турнира по мнению игроков',
         how: 'Получить больше всех голосов в конкурсе покраса',
         check: (ctx, me) => ctx.nominations.paint === me.id,
     },
     {
-        id: 'sport_winner', kind: 'main', icon: '🤝', needsFinish: true,
+        id: 'sport_winner', kind: 'main', icon: 'heart', needsFinish: true,
         title: 'Самый приятный игрок', caption: 'С ним приятно играть: так решили соперники',
         how: 'Получить больше всех голосов за спортивность',
         check: (ctx, me) => ctx.nominations.sport === me.id,
     },
     {
-        id: 'hardest_path', kind: 'main', icon: '⛰️', needsFinish: true,
+        id: 'hardest_path', kind: 'main', icon: 'mountain', needsFinish: true,
         title: 'Сложнейший путь', caption: 'Самые сильные соперники турнира достались именно вам',
         how: 'Пройти самый сложный турнирный путь',
         check: (ctx, me) => ctx.nominations.hardestPath === me.id,
     },
     {
-        id: 'verified', kind: 'main', icon: '✅',
-        title: 'Армия проверена', caption: 'Фотовалидация пройдена, к бою готов',
-        how: 'Пройти фотовалидацию ростера',
-        check: (ctx, me) => Boolean(Number(me.profile.player.paint_checked)) || me.profile.player.paint_checked === true,
-    },
-    {
-        id: 'undefeated', kind: 'main', icon: '💎',
+        id: 'undefeated', kind: 'main', icon: 'diamond',
         title: 'Без поражений', caption: 'Ни одного поражения, соперники в печали',
         how: `Не проиграть ни одной игры (сыграв не меньше ${MIN_GAMES_UNDEFEATED})`,
         check: (ctx, me) => me.sides.length >= MIN_GAMES_UNDEFEATED && me.losses === 0,
@@ -195,43 +189,43 @@ export const BADGES = [
 
     // ---------- Шуточные ----------
     {
-        id: 'iron_streak', kind: 'fun', icon: '⛓️',
+        id: 'iron_streak', kind: 'fun', icon: 'chain',
         title: 'Железная серия', caption: 'Остановить этот поезд оказалось невозможно',
         how: `Выиграть ${IRON_STREAK} игры подряд`,
         check: (ctx, me) => me.streak >= IRON_STREAK,
     },
     {
-        id: 'crush', kind: 'fun', icon: '💥',
+        id: 'crush', kind: 'fun', icon: 'burst',
         title: 'Разгром', caption: 'Соперник до сих пор пересчитывает очки',
         how: `Победить с разницей от ${BIG_WIN_DIFF} VP`,
         check: (ctx, me) => wonWhere(me, (s) => s.vpDiff !== null && s.vpDiff >= BIG_WIN_DIFF),
     },
     {
-        id: 'nerves', kind: 'fun', icon: '🧊',
+        id: 'nerves', kind: 'fun', icon: 'snowflake',
         title: 'Стальные нервы', caption: 'Две победы на последних очках, пульс при этом 60',
         how: `Дважды победить с разницей не больше ${CLOSE_WIN_DIFF} VP`,
         check: (ctx, me) => me.sides.filter((s) => s.outcome === 'win' && s.vpDiff !== null && s.vpDiff <= CLOSE_WIN_DIFF).length >= 2,
     },
     {
-        id: 'diplomat', kind: 'fun', icon: '🌍',
+        id: 'diplomat', kind: 'fun', icon: 'globe',
         title: 'Дипломат', caption: 'Успел повоевать со всеми Гранд Альянсами',
         how: 'Сыграть против игроков всех четырёх Гранд Альянсов',
         check: (ctx, me) => new Set(me.sides.map((s) => s.opponent.grandAlliance).filter(Boolean)).size >= GRAND_ALLIANCES.length,
     },
     {
-        id: 'mirror', kind: 'fun', icon: '🪞',
+        id: 'mirror', kind: 'fun', icon: 'mirror',
         title: 'Зеркальщик', caption: 'Сыграл против себя самого (ну, почти)',
         how: 'Сыграть зеркальную игру',
         check: (ctx, me) => me.sides.some((s) => s.isMirror),
     },
     {
-        id: 'lone_army', kind: 'fun', icon: '🦄',
+        id: 'lone_army', kind: 'fun', icon: 'person',
         title: 'Единственный в своём роде', caption: 'Больше никто не решился взять эту армию',
         how: 'Быть единственным игроком со своей армией',
         check: (ctx, me) => ctx.total >= MIN_PLAYERS_FOR_UNIQUE && Boolean(me.profile.allegiance) && ctx.armyCounts.get(me.profile.allegiance) === 1,
     },
     {
-        id: 'heavy', kind: 'fun', icon: '🐘',
+        id: 'heavy', kind: 'fun', icon: 'weight',
         title: 'Тяжеловес', caption: 'Больше всех вундов на столе, ставить миниатюры тесно',
         how: 'Иметь больше всех вундов в ростере',
         check: (ctx, me) => {
@@ -240,7 +234,7 @@ export const BADGES = [
         },
     },
     {
-        id: 'minimal', kind: 'fun', icon: '🪶',
+        id: 'minimal', kind: 'fun', icon: 'feather',
         title: 'Минималист', caption: 'Меньше всех вундов, зато с характером',
         how: 'Иметь меньше всех вундов в ростере',
         check: (ctx, me) => {
@@ -249,25 +243,25 @@ export const BADGES = [
         },
     },
     {
-        id: 'vp_record', kind: 'fun', icon: '🎯',
+        id: 'vp_record', kind: 'fun', icon: 'target',
         title: 'Рекордсмен VP', caption: 'Самая результативная игра турнира',
         how: 'Набрать больше всех VP за одну игру',
         check: (ctx, me) => ctx.topVp > 0 && me.maxVp === ctx.topVp,
     },
     {
-        id: 'draw_master', kind: 'fun', icon: '⚖️',
+        id: 'draw_master', kind: 'fun', icon: 'scales',
         title: 'Мастер ничьей', caption: 'Идеальный баланс сил, все разошлись довольными',
         how: 'Сыграть вничью',
         check: (ctx, me) => me.draws >= 1,
     },
     {
-        id: 'hometown', kind: 'fun', icon: '🏠',
+        id: 'hometown', kind: 'fun', icon: 'home',
         title: 'Землякам привет', caption: 'Пришлось играть с земляком, даже здесь от них не спрятаться',
         how: 'Сыграть с игроком из своего города',
         check: (ctx, me) => Boolean(me.city) && me.sides.some((s) => normalize(s.opponent.profile.player.city) === me.city),
     },
     {
-        id: 'comeback', kind: 'fun', icon: '🔄',
+        id: 'comeback', kind: 'fun', icon: 'cycle',
         title: 'Камбэк', caption: 'Начал с поражения, а закончил с улыбкой',
         how: `Проиграть первую игру и выиграть после неё минимум ${COMEBACK_WINS}`,
         check: (ctx, me) => me.sides.length > 0
@@ -275,13 +269,13 @@ export const BADGES = [
             && me.sides.slice(1).filter((s) => s.outcome === 'win').length >= COMEBACK_WINS,
     },
     {
-        id: 'lone_city', kind: 'fun', icon: '🧭',
+        id: 'lone_city', kind: 'fun', icon: 'compass',
         title: 'Далёкий гость', caption: 'Единственный участник из своего города',
         how: 'Быть единственным участником из своего города',
         check: (ctx, me) => ctx.total >= MIN_PLAYERS_FOR_UNIQUE && Boolean(me.city) && ctx.cityCounts.get(me.city) === 1,
     },
     {
-        id: 'giant_slayer', kind: 'fun', icon: '🗡️',
+        id: 'giant_slayer', kind: 'fun', icon: 'sword',
         title: 'Убийца гигантов', caption: `Победил игрока из топ-${TOP_PLACES}, и это было красиво`,
         how: `Выиграть у игрока из топ-${TOP_PLACES}, находясь за его пределами`,
         check: (ctx, me) => me.place !== null && me.place > TOP_PLACES
