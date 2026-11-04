@@ -87,14 +87,20 @@ export const calcPreTournamentStats = (playersData = []) => {
             max: values.length ? Math.max(...values) : null,
         }
     })
-    const most = woundsEntries.reduce((best, x) => (!best || x.value > best.value ? x : best), null)
-    const fewest = woundsEntries.reduce((best, x) => (!best || x.value < best.value ? x : best), null)
+    // Все игроки с максимальным / минимальным числом вундов (при равенстве показываем всех)
+    const getExtreme = (pick) => {
+        if (!woundsEntries.length) return null
+        const value = pick(...woundsEntries.map((x) => x.value))
+        return {fullNames: woundsEntries.filter((x) => x.value === value).map((x) => x.entry.fullName), value}
+    }
+    const most = getExtreme(Math.max)
+    const fewest = getExtreme(Math.min)
     const wounds = {
         byAlliance: woundsByAlliance,
         overallAvg: average(woundsEntries.map((x) => x.value)),
         scaleMax: woundsEntries.length ? Math.max(...woundsEntries.map((x) => x.value)) : 0,
-        most: most && {fullName: most.entry.fullName, value: most.value},
-        fewest: fewest && {fullName: fewest.entry.fullName, value: fewest.value},
+        most,
+        fewest,
     }
 
     // 4. Дропы (гистограмма от минимума до максимума, пропуски заполняем нулями)

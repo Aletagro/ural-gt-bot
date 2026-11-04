@@ -131,11 +131,11 @@ const Statistics = () => {
         >
             {map(wounds.byAlliance, (row) => <WoundsRow key={row.name} row={row} scaleMax={wounds.scaleMax || 1} />)}
             {wounds.most
-                ? <p className={Styles.fact}>Больше всего вундов: <b>{wounds.most.fullName}</b> ({wounds.most.value})</p>
+                ? <p className={Styles.fact}>Больше всего вундов: <b>{wounds.most.fullNames.join(', ')}</b> ({wounds.most.value})</p>
                 : null
             }
             {wounds.fewest
-                ? <p className={Styles.fact}>Меньше всего вундов: <b>{wounds.fewest.fullName}</b> ({wounds.fewest.value})</p>
+                ? <p className={Styles.fact}>Меньше всего вундов: <b>{wounds.fewest.fullNames.join(', ')}</b> ({wounds.fewest.value})</p>
                 : null
             }
         </Section>

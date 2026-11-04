@@ -28,6 +28,19 @@ import upperFirst from 'lodash/upperFirst'
 
 const dataBase = require('../dataBase.json')
 
+// Энхансы с одинаковым названием есть и в обычном AoS, и в Spearhead (и у разных фракций).
+// Ищем по имени, но игнорируем группы Spearhead и предпочитаем группу фракции ростера
+export const findEnhancementByName = (name, allegianceId) => {
+    const abilities = filter(dataBase.data.ability, ['name', name])
+    if (size(abilities) <= 1) {
+        return abilities[0]
+    }
+    const getGroup = (ability) => find(dataBase.data.ability_group, ['id', ability.abilityGroupId])
+    const regular = filter(abilities, ability => getGroup(ability)?.abilityGroupType !== 'spearheadEnhancements')
+    const candidates = size(regular) ? regular : abilities
+    return find(candidates, ability => getGroup(ability)?.factionId === allegianceId) || candidates[0]
+}
+
 export const sortByName = (array, param) => param
     ? array.sort((a,b) => (a[param] > b[param]) ? 1 : ((b[param] > a[param]) ? -1 : 0))
     : array.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))

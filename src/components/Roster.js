@@ -6,7 +6,7 @@ import Modal from './Modal'
 import Regiment from '../builder/Regiment'
 import UnitRow from '../builder/UnitRow'
 import Constants from '../Constants'
-import {getInfo, getStringAfterDash, getUnitsRowRightText} from '../utilities/utils'
+import {getInfo, findEnhancementByName, getStringAfterDash, getUnitsRowRightText} from '../utilities/utils'
 
 import map from 'lodash/map'
 import find from 'lodash/find'
@@ -68,7 +68,7 @@ const Roster = ({roster, info}) => {
     }
 
     const handleOpenModal = (title, type) => () => {
-        const ability = find(dataBase.data.ability, ['name', title])
+        const ability = findEnhancementByName(title, roster.allegianceId)
         setModalData({visible: true, title, ability})
     }
 

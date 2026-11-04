@@ -186,7 +186,7 @@ const PasteList = () => {
         const regimentsOfRenownUnits = []
         forEach(regimentsOfRenownWarscrollsIds, item => {
             const warscroll = find(dataBase.data.warscroll, ['id', item.warscrollId])
-            for (let i = item.instanceCount; i > 0; i--) {
+            for (let i = item.maxCount; i > 0; i--) {
                 regimentsOfRenownUnits.push(warscroll)
             }
         })
