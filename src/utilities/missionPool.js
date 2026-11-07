@@ -20,7 +20,7 @@ export const getMissionPool = () => Array.isArray(meta.missionPool) ? meta.missi
 
 // Жеребьёвку можно запускать между турами: раунд не идёт, а миссия ещё не выбрана.
 // Выбранная миссия сбрасывается, когда раунд заканчивается (см. clearMission), поэтому «не выбрана» значит «следующий тур без миссии»
-export const isDrawNeeded = () => !meta.isFinished && !meta.isRoundActive && !meta.battleplan && getMissionPool().length > 0
+export const isDrawNeeded = () => !meta.isFinished && !meta.battleplan && getMissionPool().length > 0
 
 const putMeta = async (body) => {
     const response = await fetch(`${Constants.domain}/tournament-meta/`, {
